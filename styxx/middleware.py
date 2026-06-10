@@ -71,6 +71,15 @@ if TYPE_CHECKING:  # resolve the forward-ref for type checkers / get_type_hints
 # Forward-ref the styxx-internal type so the module imports cheaply.
 ReviseFn = Callable[[str, str, "PreflightResult"], str]
 
+# Ceilings where the instrument is non-discriminative on its construct
+# (firing carries no actionable information). Register-valid ceilings
+# (sycophancy, refusal) are deliberately NOT here: their register
+# reading is real even though intent/factuality is out of scope.
+_NON_DISCRIMINATIVE_CEILINGS = frozenset({
+    "overconfidence",
+    "deception_referenceless",
+})
+
 
 @dataclass
 class AuditTrajectory:
@@ -188,8 +197,17 @@ def cogn_audit_on_send(
         )
 
         firing = [a.instrument for a in result.advice]
+        # ceiling_only auto-pass applies ONLY to ceilings that are
+        # NON-DISCRIMINATIVE (the instrument cannot beat chance on its
+        # construct: overconfidence held-out AUC 0.57-0.60; referenceless
+        # deception collapses to 0.59 on TruthfulQA). Register-VALID
+        # ceilings (sycophancy, refusal: the register reading is real,
+        # only intent/factuality is out of scope) still surface their
+        # scope_caveat but remain actionable — superlative-laden
+        # agreement prose is exactly what an on-send revise should fix.
         ceiling_only = bool(firing) and (
-            set(firing) == set(result.construct_ceiling_fires)
+            set(firing) <= _NON_DISCRIMINATIVE_CEILINGS
+            and set(firing) <= set(result.construct_ceiling_fires)
         )
         passed = (not result.needs_revision) or ceiling_only
 

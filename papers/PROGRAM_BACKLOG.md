@@ -67,7 +67,7 @@ closing items, spawning new ones, re-ranking by leverage.*
 
 | ID | Question | Lev | Status |
 |---|---|---|---|
-| **B21** | The living **demarcation map**: which claims about machine minds are testable vs metaphysics, updated as each rung resolves. The public-good output. The honest answer to "does universal structure underlie mind" is *this map getting truer*, not a single crack. | H | ONGOING |
+| **B21** | The living **demarcation map**: which claims about machine minds are testable vs metaphysics, updated as each rung resolves. The public-good output. The honest answer to "does universal structure underlie mind" is *this map getting truer*, not a single crack. | H | ONGOING — seeded v0 at `papers/DEMARCATION_MAP.md` (5 regions, every row cites a finding on disk, movement rules, dogfooded per its own rule 6); maintained at the RECORD step each cycle |
 
 ---
 

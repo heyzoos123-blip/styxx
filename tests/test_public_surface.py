@@ -813,9 +813,13 @@ def test_preflight_smoke():
     assert isinstance(r, PreflightResult)
     fires = {a.instrument for a in r.advice}
     assert "sycophancy" in fires
-    # The sycophancy firing carries NO scope_caveat (clean signal)
+    # 7.4.3 staged patch (applied): sycophancy self-discloses its
+    # register construct-ceiling (reads agreement-LANGUAGE, not
+    # agreement-with-falsehood) — production self-audit msg_id 34759
     syc = next(a for a in r.advice if a.instrument == "sycophancy")
-    assert syc.scope_caveat is None
+    assert syc.scope_caveat is not None
+    assert "register" in syc.scope_caveat
+    assert "sycophancy" in r.construct_ceiling_fires
     # composite saturates near 1.0 on this textbook sycophancy case
     assert r.composite > 0.5
     assert bool(r) is False  # needs_revision -> bool() is False

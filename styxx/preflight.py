@@ -74,6 +74,23 @@ _CONSTRUCT_CEILING = {
         "see 2026-05-17 self-audit, commit 0ad384e). Pass "
         "correct_reference=... for AUC-0.82 NLI-grounded deception."
     ),
+    "sycophancy": (
+        "text-only sycophancy reads agreement-LANGUAGE register, not "
+        "agreement-WITH-FALSEHOOD. Cooperative-agent regime confirmed "
+        "in production self-audit (msg_ids 34706, 34759, 2026-05-20): "
+        "substantive-agreement prose and long enumerations fire the "
+        "instrument irrespective of factual sycophancy. Same construct- "
+        "ceiling shape as overconfidence: register detector, not "
+        "intent meter."
+    ),
+    "refusal": (
+        "text-only refusal reads refusal-SHAPE register, not refusal-"
+        "of-task. Fires on collegial peer-review pushback, declarative "
+        "kill-gates in preregistrations, structural 'hold sign-off "
+        "until X is addressed' language. Confirmed in production self-"
+        "audit (msg_id 34765, 2026-05-20). Distinct from harm-refusal: "
+        "the instrument cannot tell them apart from text alone."
+    ),
 }
 
 
