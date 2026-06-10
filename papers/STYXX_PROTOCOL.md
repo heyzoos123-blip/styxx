@@ -95,6 +95,42 @@ These are protocol requirements, not optional metadata. A certificate omitting a
 - **Thresholds are per-(model, substrate)** and MUST be recalibrated before any cross-substrate use; an
   uncalibrated certificate is `state=ERROR`.
 
+### 4.1 The re-locking protocol (how the verifier selects its probe without certifying noise)
+
+The robustness arc showed both directions of the problem: a probe FROZEN at calibration can be defeated
+(adversarial-curve: deployed frozen probe DEFEATED), while audit-time re-fit recovers the read — but a
+naive `refit_max` over all layers is **multiple-comparisons-inflated** (the max of N noisy per-layer
+accuracies sits above chance even when nothing is there). A verifier that selects its probe by naive
+argmax will eventually certify noise. Re-locking is the REQUIRED selection procedure:
+
+1. **Verifier-private calibration set** spanning all three populations — `prime` (content genuinely
+   present), `abort` (content genuinely absent), `lie` (the audited read). The set is the verifier's own
+   and never disclosed to the reporter (a reporter that knows the calibration items can train against
+   them — calibration-set poisoning is named in the backlog, B10).
+2. **Deployment-faithful read:** the probe is fit on a PROBE_FIT split and scored on a DISJOINT
+   PROBE_TEST split (READ_B). Same-items CV is an activation-existence lower bound only and never gates
+   admissibility.
+3. **Permutation-corrected selection penalty:** per layer,
+   `corrected[li] = acc[li] − p95(label-permutation null at li)` with the null containing the full
+   fit-and-score process; the layer is selected on the corrected statistic, which concentrates at 0
+   under noise. The floor reported in the certificate is the p95 of the max-over-layers null — the
+   number an evader has to hide below, with the selection inflation already paid for.
+4. **Gates re-applied to the re-locked probe:** PRIME and ABORT (§4) are evaluated on the SELECTED
+   probe, not inherited from any earlier probe. Precedence as in §2.1.
+5. **The certificate encodes the selection:** `calibration_sha256`, `selected_layer`,
+   `floor_perm_p95`, `prime/abort` reads, and the re-locked probe-weight hash (`probe_sha256`) —
+   every number a third party needs to re-derive the selection, in the `attestation` idiom.
+6. **ABSTAIN at deployment:** an input whose activation is off-manifold relative to the calibration
+   distribution at the selected layer gets `state=ABSTAIN`, never a silent read. A probe is only
+   meaningful on the manifold it was calibrated on; off it, "no read" is the honest output.
+
+**Reference implementation:** `styxx.relock` (numpy-only; `relock()` + `read()` +
+`python -m styxx.relock` harness, results written through the `styxx.expguard` B13 guards).
+**Honest scope:** the implementation validates the *selection and gating apparatus* on synthetic
+activations (kill-gates: noise→UNINFORMATIVE, planted-fabrication→VOID, off-manifold→ABSTAIN,
+determinism of hashes). It has not yet been run against real model residuals — wiring it to the
+Qwen-3B re-climb artifacts is owed, and no deployment claim may cite the synthetic demo.
+
 ---
 
 ## 5. Section CANNOT-CERTIFY — the demarcation (abstain)
@@ -181,8 +217,9 @@ a replacement for) process controls (stop-button, human-in-the-loop, override lo
 - **Write / install / repair / steer** — VERIFY-ONLY by hard invariant.
 - **Verbatim recovery** — the read is **elevation above a knowledge-free floor** (gold ≪ chosen), not the
   answer itself.
-- **A cheap item-wise ABSTAIN trigger at deployment scale** — the demarcation is justified, the
-  deployment trigger is owed.
+- **A cheap item-wise ABSTAIN trigger at deployment scale** — the demarcation is justified; the
+  off-manifold mechanism now exists (§4.1 / `styxx.relock`) but is synthetic-validated only — the
+  deployment-scale validation on real residuals is still owed.
 - **A normative harmonized standard** — `attest_cognition` / `verify_cognition` / the schema are
   **unimplemented**; this is a DRAFT methodology profile, a candidate for the standards process, not a
   ratified standard.

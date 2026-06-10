@@ -356,6 +356,7 @@ from . import attestation  # noqa: F401  # 7.7.11: Verifiable Cognometric Attest
 from .attestation import attest, verify_attestation, Attestation, VerificationResult
 from .attestation import attest_chain, verify_chain, AttestationChain, ChainVerificationResult
 from . import expguard  # noqa: F401  # B13: experiment-integrity guards (smoke quarantine / scorer SHA / instrument floor)
+from . import relock  # noqa: F401  # B11: verifier-side probe re-locking (selection penalty / PRIME-ABORT / ABSTAIN)
 from .expguard import scorer_sha256, quarantine_path, apply_instrument_gate, write_result
 from . import transparency  # noqa: F401  # 7.7.12: Cognometric Transparency Log (RFC 6962)
 from .transparency import TransparencyLog
