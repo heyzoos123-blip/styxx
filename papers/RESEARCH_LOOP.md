@@ -51,6 +51,12 @@ not an obstacle to it. **A loop that cannot kill its own conclusions is a hype g
    score.** A claim that can't state in advance what would kill it is not admitted.
 3. **RUN.** Execute. One GPU experiment at a time (8 GB ceiling); reasoning/verification workflows run in
    parallel. Smoke-test before the full run; guard NaNs; never background-detach in a way that loses the result.
+   **The smoke-artifact lesson (v3, 2026-06-08) is structural now:** runners write results through
+   `styxx.expguard.write_result` — a smoke run physically cannot produce a citable filename
+   (`*_SMOKE_INVALID.json`, `citable: false`), every result JSON carries the scorer's SHA-256, and a reference
+   signal that can't clear the permutation floor by the preregistered margin is forced to
+   `VOID-INSTRUMENT (claim nothing)` no matter what verdict the scorer computed. Discipline failed once;
+   the guard is code now (B13).
 4. **RED-TEAM.** An adversarial verification workflow attacks the verdict **before it is claimed** — is the
    gate fair? is the apparatus vacuous? is there a stronger attack / a confound / a circular metric? Kill
    overclaims here. This step is non-optional; it is where v1 and v2 were caught.
