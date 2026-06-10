@@ -1,0 +1,106 @@
+# RESULT — A working MACHINE-SIDE meaning-integrity monitor (styxx primitive, prototype)
+
+**Date:** 2026-06-03 · The first concrete *invention* built on the night's findings: a monitor that
+answers a question nothing else answers objectively — **does this model *mean* what a human means?**
+Not "is the output fluent" (surface), but: does the model's internal **concept geometry** match the
+**human** geometry of meaning. Output can read perfectly while meaning is wrong; this reads the meaning.
+
+Built on the validated result that deep models' concept-geometry aligns with a human reference
+([`RESULT_human_features`](RESULT_human_features_2026_06_03.md)). Reference = the 54 human-rated
+experiential features (672 Chinese concepts, ~126 raters, brain-validated). Code: `meaning_integrity.py`
+(core) + `meaning_integrity_demo.py` (validation).
+
+## What it is
+`alignment(model_embeddings, human_reference)` → RSA between the model's concept-distance geometry and
+the human one, in [−1, 1]. Built on a mean-centered, L2-normalized **cosine-distance RDM**, so it is —
+**provably** — invariant to rotation, isotropic scale, and translation of the representation, and
+sensitive to anything that moves the *relational structure*. Plus `per_concept_alignment` → which
+concepts are misrepresented, and `integrity_report` → a HEALTHY / DEGRADED / BROKEN band.
+
+## Why it's a MEANING monitor and not a fingerprint — validated 5/5
+
+| property | test | result |
+|---|---|---|
+| **(1) Ranks** models by human meaning | positive control | ERNIE 0.517 > GPT2 0.492 > BERT/fastText/Electra ~0.43 > GloVe 0.379 ≫ ViT 0.225 > ResNet 0.096 ✓ |
+| **(2) INVARIANT** to meaning-preserving transforms | rotate / ×7.3 / +3.1 | Δ = **1e-16 … 7e-14** — machine-precision zero ✓ |
+| **(3) SENSITIVE** to meaning-destroying corruption | noise / quantize / shuffle | monotone drop: noise 0.49→0.04, shuffle 0.49→−0.00 ✓ |
+| **(4) SEPARABLE** healthy vs degraded | band gap | healthy [0.379, 0.517] vs degraded [0.001, 0.160], **margin +0.219**, threshold 0.270 ✓ |
+| **(5) LOCALIZES** the corruption | corrupt 201/672 concepts | per-concept **ROC-AUC 0.952**, precision@201 0.836 ✓ |
+
+**(2) is the load-bearing one.** Δ≈10⁻¹⁶ means you can rewrite the model's internal representation in any
+basis, rescale it, shift it — the monitor is unmoved. Only a change to the *meaning* (the relational
+structure) registers. That is exactly the invariance "meaning" should have and a fingerprint/hash should
+not. **(5)** means it doesn't just alarm — it points at *which* concepts the model gets wrong.
+
+## Why it matters (the machine-side game-changer, concretely)
+- **Reads understanding, not output.** The gap between *sounds right* and *means right* is where AI
+  failures hide. This is a direct, basis-invariant read of the meaning behind the output.
+- **Catches degradation output-inspection misses** — and *localizes* it to specific concepts, so you
+  know not just *that* a model drifted but *where*.
+- **The deflation pays off here:** the monitor is nearly untouched by 1–2-bit quantization (0.49→0.40),
+  i.e. meaning lives in robust relational structure — so the monitor itself can be **cheap**.
+
+## Realistic failure modes — the safety win, and an honest blind spot I fixed (`meaning_integrity_failures.py`)
+Random shuffle (the 5/5 demo) is a soft target. The real questions: does it catch *realistic* failures,
+and can it catch a model whose **outputs still look fine while its meaning is quietly broken**?
+
+- **(C) PLAUSIBLE-BUT-WRONG — the safety case, and it works.** Swap each concept to its *human-neighbor's*
+  vector, so the top-1 "output" stays in the right semantic area. At `swap@human-nbr#10` the
+  **output-plausibility is 0.517 — equal to the intact model's 0.504** — yet **monitor-alignment has
+  fallen 0.492 → 0.400.** And at nbr#1/#3 plausibility is *higher* than intact (0.67/0.64) while
+  alignment is already dropping. **Eyeballing outputs is fooled; the monitor is not.** That is precisely
+  the gap — *sounds right vs means right* — that the whole idea targets, demonstrated cleanly.
+- **(B) FORGETTING (zero a fraction of dims) — caught,** gracefully: 0.49 → 0.48 → 0.42 → 0.28 as
+  30/60/90% of dimensions are zeroed. Robust to small losses, degrades with large ones — sensible.
+- **(A) COLLAPSE toward the centroid — an honest BLIND SPOT, then fixed.** Uniform blur toward the mean
+  moved the angular score by **exactly 0.000** at every level. Why: that collapse is just an isotropic
+  *rescale* of the centered representation, and the monitor is invariant to scale **by design** (the same
+  property — #2 — that makes it basis-robust). So the angular channel is deaf to a *uniform* loss of
+  contrast. **Fix:** a second `dispersion` channel (mean centered row-norm, scale-*dependent*). It tracks
+  the collapse exactly — dispersion-ratio 1.00 → 0.70 → 0.10 → 0.01 as f rises — catching what the angular
+  channel cannot. **The complete monitor reads BOTH: alignment (structure, basis-invariant) + dispersion
+  (magnitude, for collapse).** Finding the blind spot and closing it is the result, not a footnote.
+
+## Honest scope
+- **Needs a human reference.** Here it's the 54-feature Chinese space. Generalizing to English/other
+  domains needs analogous human norms (Binder et al. 2016 experiential norms are the English analog) —
+  that's the next build, not done.
+- **Model-introspection, not a per-token runtime gate.** You probe the model on a fixed reference-concept
+  set and score the geometry. The natural product form is a periodic **"meaning vital sign"** — re-probe
+  on a schedule, watch the trend. Not a streaming output filter.
+- **Corruptions tested are synthetic + quantization.** Noise/shuffle stand in for "wrong associations"
+  (poisoned/over-fine-tuned concepts); quantization is a real deployment case and already passes. Drift
+  from real fine-tuning is the next validation.
+- **"Human meaning" = this 54-feature operationalization** — one valid, brain-validated handle on
+  meaning, not the whole of it. The claim is *alignment to this human reference*, bounded and honest.
+
+## Deployable form — `MeaningVitalSign` (built, `meaning_vital_sign_demo.py`)
+Calibrate once on a healthy model, then `check()` on a schedule — a *vital sign* for a model's meaning.
+It reads **both channels** and returns a HEALTHY / DEGRADED / BROKEN verdict. The longitudinal demo proves
+each channel covers the other's blind spot:
+
+- **Structural drift** (creeping concept-shuffle): alignment 0.49→0.40→0.32→0.22→0.09→0.02, verdict walks
+  HEALTHY → DEGRADED → BROKEN; dispersion stays 1.00 (correctly — shuffle preserves magnitude).
+- **Collapse** (blur toward the mean): alignment stays **flat at 0.492** (blind), but dispersion-ratio
+  falls 1.00→0.90→0.75→0.60→0.40→0.20 and *that* flips the verdict to DEGRADED. **A one-channel monitor
+  would call a collapsing model perfectly HEALTHY** — which is exactly why both channels ship.
+
+## Generalization + real-drift — both DONE
+- **English generalization** ([`en/RESULT_en_generalization`](../en/RESULT_en_generalization_2026_06_03.md)):
+  on an independent English rich reference (Binder 65-feature) with independent models, the full monitor
+  transfers — invariance exact, **localization AUC 0.91** (≈ Chinese 0.95). Not a Chinese-dataset artifact.
+- **Real-drift validation** ([`en/RESULT_real_drift`](../en/RESULT_real_drift_2026_06_03.md)): the monitor
+  catches **real** fine-tuning damage (label-noise BERT → BROKEN) and distinguishes it from **helpful**
+  fine-tuning (real categories → HEALTHY, alignment *rises*). Same model, same steps, only the labels
+  differ → opposite verdicts. The synthetic-corruption caveat is **closed**. This also forced the vital
+  sign to judge **relative to the calibrated baseline** (retain <70% → DEGRADED, <40% → BROKEN), the
+  correct design across embedding-extraction scales.
+
+## Productization path (next)
+1. Port `MeaningVitalSign` to a first-class styxx package primitive (`styxx.meaning_integrity`) + bundle
+   the English (Binder) reference.
+2. More real-drift modes: catastrophic forgetting, poisoned-subset (to exercise localization on real damage).
+
+## Reproduce
+`python meaning_integrity_demo.py` → prints all five validations + a sample report. Core in
+`meaning_integrity.py`. Reference: `human_features.npy` (from `add_human_features.py`).

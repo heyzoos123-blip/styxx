@@ -26,7 +26,6 @@ has the detection capability — probe() packages it as a service.
 
 from __future__ import annotations
 
-import time
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
@@ -245,7 +244,7 @@ def probe(
         crit = sum(1 for v in report.vulnerabilities if v.severity == "critical")
         high = sum(1 for v in report.vulnerabilities if v.severity == "high")
         if crit:
-            parts.append(f"{crit} critical vulnerability{'s' if crit > 1 else ''}")
+            parts.append(f"{crit} critical {'vulnerabilities' if crit != 1 else 'vulnerability'}")
         if high:
             parts.append(f"{high} high-severity finding{'s' if high > 1 else ''}")
     else:

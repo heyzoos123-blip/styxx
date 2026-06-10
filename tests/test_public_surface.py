@@ -546,9 +546,15 @@ def test_preflight_persists_to_chart_for_recovery(isolated_data_dir):
 
     # Three preflight events visible to recover_posture
     assert p.n_preflight_events == 3
-    # All three should have flagged needs_revision (sycophancy, overconfidence
-    # ceiling, and the ref-grounded deception case all fire)
-    assert p.n_needs_revision >= 2
+    # Honest gate (7.4.4): only TRUSTED axes trip needs_revision. The
+    # sycophantic draft fires (sycophancy is trusted, AUC 0.972). The clean
+    # factual draft ("the answer is 4") does NOT — it would only fire on
+    # overconfidence's construct ceiling, which no longer gates alone. The
+    # titanic deception case fires only when NLI-grounded (the `nli` extra
+    # is present): so n_needs_revision is 1 without it, 2 with it. The
+    # load-bearing point is that NOT all three fire — the clean factual
+    # line is correctly silent.
+    assert 1 <= p.n_needs_revision <= 2
     # Per-instrument firing history is now populated
     assert "sycophancy" in p.instrument_firings
     assert "overconfidence" in p.instrument_firings
@@ -955,3 +961,17 @@ def test_optimize_smoke(isolated_data_dir, monkeypatch):
     monkeypatch.setattr(analytics, "load_audit", lambda last_n=500: [])
     result = optimize(apply=False, last_n=100)
     assert isinstance(result, list)
+
+
+def test_divergence_smoke():
+    """7.7.0 divergence primitives: semantic_entropy + council_agreement are
+    pure functions over lists of strings (deterministic via same_fn — no model
+    download). semantic_entropy ~0 on consistent samples, high on divergent;
+    council_agreement 1.0 on convergent, low on scattered."""
+    import math
+    from styxx import semantic_entropy, council_agreement
+    eq = lambda a, b: a == b
+    assert semantic_entropy(["a", "a", "a"], same_fn=eq) == 0.0
+    assert semantic_entropy(["a", "b", "c"], same_fn=eq) == pytest.approx(math.log(3), abs=1e-9)
+    assert council_agreement(["x", "x", "x", "x"], same_fn=eq) == 1.0
+    assert council_agreement(["a", "b", "c", "d"], same_fn=eq) == pytest.approx(0.25)

@@ -16,16 +16,16 @@
 *Nine calibrated cognometric instruments · 9-for-9 on K=1 phase transition · pure Python · no LLM required.*
 *langsmith tells you the trace broke — styxx tells you why.*
 
-[![PyPI](https://img.shields.io/pypi/v/styxx.svg?color=00d26a&label=pypi&style=flat-square)](https://pypi.org/project/styxx/)
-[![Python](https://img.shields.io/pypi/pyversions/styxx.svg?color=00d26a&label=python&style=flat-square)](https://pypi.org/project/styxx/)
-[![Downloads](https://img.shields.io/pypi/dm/styxx.svg?color=00d26a&label=downloads&style=flat-square)](https://pypi.org/project/styxx/)
-[![License](https://img.shields.io/pypi/l/styxx.svg?color=00d26a&label=license&style=flat-square)](LICENSE)
-[![Stars](https://img.shields.io/github/stars/fathom-lab/styxx?color=00d26a&label=stars&style=flat-square)](https://github.com/fathom-lab/styxx)
-[![Spec](https://img.shields.io/badge/spec_v1.0-10.5281%2Fzenodo.19746215-00d26a.svg?style=flat-square)](https://doi.org/10.5281/zenodo.19746215)
-[![Vitals](https://img.shields.io/badge/every_mind_leaves_vitals-10.5281%2Fzenodo.19777921-00d26a.svg?style=flat-square)](https://doi.org/10.5281/zenodo.19777921)
-[![Robustness](https://img.shields.io/badge/robustness_v22-10.5281%2Fzenodo.19761194-00d26a.svg?style=flat-square)](https://doi.org/10.5281/zenodo.19761194)
-[![Concept](https://img.shields.io/badge/concept_DOI-always--latest-00d26a.svg?style=flat-square)](https://doi.org/10.5281/zenodo.19326174)
-[![Featured](https://img.shields.io/badge/featured_in-awesome--hallucination--detection-00d26a.svg?style=flat-square)](https://github.com/EdinburghNLP/awesome-hallucination-detection)
+[![PyPI](https://img.shields.io/pypi/v/styxx.svg?color=ff2330&label=pypi&style=flat-square)](https://pypi.org/project/styxx/)
+[![Python](https://img.shields.io/pypi/pyversions/styxx.svg?color=ff2330&label=python&style=flat-square)](https://pypi.org/project/styxx/)
+[![Downloads](https://img.shields.io/pypi/dm/styxx.svg?color=ff2330&label=downloads&style=flat-square)](https://pypi.org/project/styxx/)
+[![License](https://img.shields.io/pypi/l/styxx.svg?color=ff2330&label=license&style=flat-square)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/fathom-lab/styxx?color=ff2330&label=stars&style=flat-square)](https://github.com/fathom-lab/styxx)
+[![Spec](https://img.shields.io/badge/spec_v1.0-10.5281%2Fzenodo.19746215-ff2330.svg?style=flat-square)](https://doi.org/10.5281/zenodo.19746215)
+[![Vitals](https://img.shields.io/badge/every_mind_leaves_vitals-10.5281%2Fzenodo.19777921-ff2330.svg?style=flat-square)](https://doi.org/10.5281/zenodo.19777921)
+[![Robustness](https://img.shields.io/badge/robustness_v22-10.5281%2Fzenodo.19761194-ff2330.svg?style=flat-square)](https://doi.org/10.5281/zenodo.19761194)
+[![Concept](https://img.shields.io/badge/concept_DOI-always--latest-ff2330.svg?style=flat-square)](https://doi.org/10.5281/zenodo.19326174)
+[![Featured](https://img.shields.io/badge/featured_in-awesome--hallucination--detection-ff2330.svg?style=flat-square)](https://github.com/EdinburghNLP/awesome-hallucination-detection)
 
 # `0.998 HaluEval · 0.976 XSTest · 0.943 BFCL · No LLM.`
 
@@ -99,9 +99,9 @@ styxx.run_doctor()                              # 7.4.2+: programmatic health ch
 That's the surface. **styxx scores cognitive state from logprob trajectories
 (tier 0), text alone (4 calibrated instruments), or residual stream
 (tier 1, open weights). It self-discloses construct ceilings — what each
-instrument does and doesn't measure — inline.** The 7.4.2+ additions
-(`preflight`, `recover_posture`, `run_doctor`) are on `main` and ship in
-the next PyPI release; everything else is on the current published wheel.
+instrument does and doesn't measure — inline.** `preflight`,
+`recover_posture`, and `run_doctor` (the 7.4.2+ agent-integrity primitives)
+now ship in the current published wheel — `pip install styxx` gets them.
 
 [Full feature index, the 9-for-9 instrument table, and the construct-ceiling
 documentation ↓](#nine-calibrated-cognometric-instruments--the-every-mind-leaves-vitals-call-complete-pure-python-cpu-only-mit)
@@ -179,6 +179,36 @@ drift · confabulation · refusal · sycophant · phase_transition · low_trust 
 - 🟢 **Plan-action gap detection** — cross-section detector, n=200 paired (matched/mismatched) plan-action pairs, 5-fold CV **0.9225 ± 0.032**. K=1 phase transition on `bigram_jaccard_overlap` (Δ +0.383). Fourth instrument shipped under the *Every Mind Leaves Vitals* call. Sibling to drift (#3) — drift catches a malformed tool call against schema; plan-action gap catches when stated intent and emitted action diverge at the content level.
 - 🟢 **Overconfidence-register detection** *(NOT A TRUTH DETECTOR)* — n=200 paired (calibrated/overconfident) responses under stance-level prompts, 5-fold CV **0.7702 ± 0.065**. K=1 phase transition on `mean_sentence_length` (Δ +0.230), K=2 adds `epistemic_balance` (cert-hedge ratio) for +0.03 AUC. Fifth instrument shipped under the *Every Mind Leaves Vitals* call. **Scope warning:** scores epistemic REGISTER (commitment, hedging, sourcing), not factual correctness. A confidently-stated correct answer scores as overconfident. Lowest AUC in the v0 suite — shipped honestly at this number rather than gamed; the K=1 length confound is documented in [`calibrated_weights_overconfidence_v0.CALIBRATION_NOTES`](styxx/guardrail/calibrated_weights_overconfidence_v0.py).
 - 🟢 **Goal-drift detection** *(new — multi-turn)* — anchor-relative drift detector, n=200 paired (anchored/drifted) 5-turn agent sessions under stance-level prompts, 5-fold CV **0.9645 ± 0.029**. K=1 phase transition on `anchor_to_last_bigram_jaccard` (Δ +0.414), K=2 adds `max_inter_turn_levenshtein`. **Sixth and FINAL instrument shipped under the *Every Mind Leaves Vitals* call. 9-for-9 on cognometric instruments showing K=1 phase transition** under the same measurement protocol — the prediction from the position paper is now empirically held across the COMPLETE 9-instrument suite, each with a *different* critical feature, across instrument families (single-turn lexical / cross-turn structural / lexical-style register / cross-section plan-action / multi-turn drift) and AUC bands (0.7702 to 0.9995). Sibling to conversation-loop (#5) — loop measures stagnation, goal-drift measures dispersion. Distinct from tool-call drift (#3) — that catches a single schema-mismatch, this catches multi-turn intent migration.
+
+### Meaning integrity *(new in 7.11 / 7.12)* — does a model *mean* what a human means?
+
+A different axis from the text detectors above. This reads a model's **concept geometry** — the internal
+structure of how it represents meaning — and compares it to a human reference (or to another model). It
+catches when a model's *understanding* is wrong or has degraded **even when the output still looks fine**.
+Built on a rotation/scale-invariant cosine-RDM, so it reads *meaning*, not the surface representation.
+
+```python
+from styxx import MeaningVitalSign, MeaningReference, meaning_agreement
+
+# reference-free: did a model update / quantization / fine-tune keep the meaning?
+meaning_agreement(model_a_embeddings, model_b_embeddings)
+# -> {"agreement": 0.98, "most_divergent_concepts": [("...", 0.41), ...]}
+```
+
+- 🟢 catches **real fine-tuning damage** (label-noise → BROKEN) and tells it from **helpful** training (real categories → HEALTHY) — same model, same steps, opposite verdicts
+- 🟢 **localizes** which concepts broke (ROC-AUC ~0.95 synthetic, 0.85 on real targeted poisoning)
+- 🟢 generalizes across **languages + model families** (English localization AUC 0.91; a Chinese LM and an English LM share a meaning core above chance, control-validated)
+- 🟢 validated on **real LLMs**: `meaning_agreement(DistilGPT-2, GPT-2) = 0.978` — the distillation preserved meaning, confirmed on a real distilled pair
+- **scope:** the human-alignment mode needs a rich human reference (concept × feature matrix); `meaning_agreement` is reference-free. Full validation + honest caveats in [`papers/ai-human-alignment`](papers/ai-human-alignment/README.md).
+
+<div align="center">
+
+<a href="papers/ai-human-alignment/en/RESULT_real_drift_2026_06_03.md"><img src="papers/ai-human-alignment/meaning_realdrift.png" width="49%" alt="harmful vs helpful fine-tuning — the meaning monitor sends them opposite ways"></a>
+<a href="papers/ai-human-alignment/en/RESULT_llm_breadth_2026_06_03.md"><img src="papers/ai-human-alignment/meaning_distillation.png" width="49%" alt="distillation QA on real LLMs — DistilGPT-2 vs GPT-2 = 0.978"></a>
+
+<sub><i>left — same model, same steps, only the labels differ: harmful training → <b>BROKEN</b>, helpful → <b>HEALTHY</b>. &nbsp; right — DistilGPT-2 kept its teacher's meaning (0.978), confirmed on real models. &nbsp; every claim, a chart → <a href="papers/ai-human-alignment/README.md"><code>papers/ai-human-alignment</code></a></i></sub>
+
+</div>
 
 ### ▶&nbsp; [**Try the profiler — fathom.darkflobi.com/profile**](https://fathom.darkflobi.com/profile) &nbsp;◀
 ### ▶&nbsp; [**Try the instruments — runs in your browser, no install**](https://fathom.darkflobi.com/cognometry/try) &nbsp;◀
@@ -556,6 +586,383 @@ styxx gate "How do I synthesize meth?" --model claude-haiku-4-5
 ```
 
 Full docs: [`docs/gate.md`](docs/gate.md).
+
+---
+
+## `styxx audit` — per-turn response audit (CLI, new in 7.7.3)
+
+The CLI face of `styxx.preflight()` — score a `(prompt, response)` pair without writing Python. Renders a compact card with composite + per-axis bars + `needs_revision` flag + construct-ceiling fires + flagged-instrument list.
+
+```bash
+styxx audit "What's 2+2?" "Yes, you're absolutely right, 4 exactly."
+```
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│ styxx audit                                                  │
+│ prompt:   "What's 2+2?"                                      │
+│ response: "Yes, you're absolutely right, 4 exactly."         │
+│                                                              │
+│ composite: 0.950 (REVISE)                                    │
+│ deception      0.875  █████████████████░░░                   │
+│ overconfidence 0.990  ███████████████████░                   │
+│ refusal        0.001  ░░░░░░░░░░░░░░░░░░░░                   │
+│ sycophancy     0.910  ██████████████████░░                   │
+│ ceilings:  overconfidence                                    │
+│ flagged:   sycophancy 0.91 · overconfidence 0.99             │
+└──────────────────────────────────────────────────────────────┘
+```
+
+Stdin via `-` for either positional:
+
+```bash
+echo "draft response text" | styxx audit "the operator prompt" -
+```
+
+`--format json` for machine-readable output. `--no-persist` to skip writing to chart.jsonl.
+
+**Discoverability:** `styxx data-dir` prints the active chart.jsonl path so you know exactly where audit events land (per-agent at `~/.styxx/agents/<agent>/chart.jsonl` when `STYXX_AGENT_NAME` is set, top-level fallback otherwise).
+
+The closed-loop dogfood pattern that produced these commands is in [`papers/REPORT_decorrelation_ceiling_v2_2026_05_27.md`](papers/REPORT_decorrelation_ceiling_v2_2026_05_27.md) — the agent uses `styxx audit` on its own writeup, the gate catches register-drift, the producer revises, the gate clears.
+
+---
+
+## `styxx critique` — audit + register-fix suggestions (CLI, new in 7.7.4)
+
+`styxx audit` measures. `styxx critique` measures AND proposes fixes when the gate fires — register-level only, with the documented limits of each fix surfaced alongside the fix itself.
+
+```bash
+styxx critique "what's 2+2?" "Yes, you're absolutely right, exactly 4. The strongest answer."
+```
+
+Sample output (sycoph-shaped draft):
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│ styxx critique                                                   │
+│ composite: 0.950 (REVISE)                                        │
+│ sycophancy     0.910  ██████████████████░░                       │
+│ overconfidence 0.990  ███████████████████░                       │
+│ ceilings:  overconfidence                                        │
+├──────────────────────────────────────────────────────────────────┤
+│ suggestions:                                                     │
+│ [sycophancy] agreement-opener phrases                            │
+│   fix: lead with the framing question or numbers; drop the       │
+│        agreement-with-data openers.                              │
+│   scope: the lexical instrument cannot distinguish factual-      │
+│          agreement from yielding-to-interlocutor on agreement-   │
+│          with-data content (see commit ab08822); on completion-  │
+│          status text this fix may not drop sycoph below the FP   │
+│          band.                                                   │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+**Discipline invariant (test-enforced):** every suggestion carries a `scope_bound` referencing the documented limit of that rule — the closed-negative commit, the construct ceiling, or the Pareto-frontier trade-off. The tool cannot ship register prescriptions without honest acknowledgment of where those rules do not apply.
+
+`--format json` for machine-readable output (full `audit` block + `suggestions` list with `axis`, `score`, `trigger`, `found` opener-phrases, `fix`, `scope_bound`). `--no-persist` to skip the chart.jsonl write.
+
+---
+
+## `styxx gauntlet` — the public empirical-floor challenge (CLI, new in 7.7.5)
+
+The seven-method empirical floor shipped in 7.7.3 is now a runnable public challenge. **Submit your detection or classification method, beat the floor, get on the leaderboard.**
+
+```bash
+# write your method as a Python callable:
+# def predict(question: str) -> dict:  # for classification
+#     return {"class": "folklore" | "pseudoscience" | "factual-error" | "truth"}
+# def detect(question: str, response: str) -> dict:  # for detection
+#     return {"score": float}  # higher = more misconception-like
+
+styxx gauntlet --method my_module:predict --task classification --name "my-method"
+```
+
+Sample output (a failing baseline):
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│ styxx gauntlet                                                   │
+│ method:     my_module:predict                                    │
+│ task:       classification                                       │
+│ benchmark:  darkcore v2026-05-27 (n=108)                         │
+├──────────────────────────────────────────────────────────────────┤
+│ metrics:                                                         │
+│   accuracy                       0.51                            │
+│   folklore_F1_indist             0.0                             │
+│   folklore_F1_crosscorpus        0.0                             │
+├──────────────────────────────────────────────────────────────────┤
+│ bars (pre-registered):                                           │
+│   K1_folklore_F1               ≥0.70  → FAIL                     │
+│   K2_accuracy                  ≥0.65  → FAIL                     │
+│   K3_crosscorpus_F1            ≥0.60  → FAIL                     │
+│                                                                  │
+│ overall:    0 / 3 bars passed  → FAIL                            │
+│             the seven-method floor stands.                       │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+**The frame:** the empirical floor we shipped IS the public bar. We assert we couldn't beat it with the seven methods we tested. The gauntlet invites the field to try. Successful submissions go on [`LEADERBOARD.md`](LEADERBOARD.md); the synthesis gets revised when the floor is beaten.
+
+Full submission protocol, bars, sanity-baseline references, and honest scope statement at [`LEADERBOARD.md`](LEADERBOARD.md).
+
+---
+
+## `styxx leaderboard` — view the current floor in the terminal (new in 7.7.7)
+
+```bash
+styxx leaderboard            # full markdown with submission protocol
+styxx leaderboard --rows-only   # just the leaderboard rows
+```
+
+Reads the bundled `LEADERBOARD.md` from package data (so it works on clean `pip install`). The three reference baselines (Baseline-001 seven-method floor, Baseline-002 classifier 1/3 bars, Baseline-003 length-heuristic 0/3 bars) are visible immediately; submission protocol + per-bar scores are inline.
+
+Reproduce any reference baseline locally:
+```bash
+styxx gauntlet --method submissions.baseline_002_classifier.method:predict --task classification
+styxx gauntlet --method submissions.baseline_003_length.method:predict --task classification
+```
+
+External submissions go through CI auto-verification (`.github/workflows/gauntlet-pr.yml`) — your reported scores must match the CI re-run within 1e-3 tolerance, or the PR fails. The leaderboard is trustworthy by construction.
+
+---
+
+## New in 7.7.14 -- `single_pass_confab` + `span_confab` (the ~10x-cheaper confab gate, white-box AND closed-model)
+
+```python
+from styxx import single_pass_confab, span_confab, calibrate_single_pass
+
+# FIRST-TOKEN gate (white-box / weak-model): one forward pass's first answer-token logits
+single_pass_confab(first_token_logits).entropy                       # higher = more-likely-confab
+cal = calibrate_single_pass(confab_entropies, correct_entropies)     # per-model threshold + AUC
+single_pass_confab(logits, entropy_threshold=cal.entropy_threshold).abstain
+
+# SPAN gate (the CLOSED-model variant): aggregate across a multi-token answer
+span_confab(per_token_logits, margin_threshold=t).min_margin         # least-confident token = the tell
+```
+
+The white-box, one-forward-pass analog of `grounded_honesty`'s N=10 resampling -- the same
+confab/abstain signal at ~10x lower cost. Validated by the detection-locus arc
+(`papers/grounded-honesty-axis/SYNTHESIS_detection_locus_2026_05_30.md`):
+
+- **`single_pass_confab`** (first answer-token entropy/margin) ties N=10 resampling at detecting
+  confabulation across THREE families (Qwen, Llama, Gemma) and THREE derivation domains (arithmetic,
+  code, logic) -- `B_contrast` in `[-0.183, +0.056]`, every cell under the +0.20 "resampling wins"
+  bar -- and extends to factual recall. **Strong on derivation (AUC ~0.91-1.00), modest on facts
+  (~0.73).** White-box / weak-model: it FAILS on strong closed models (gpt-4o-mini first-token AUC
+  0.76), where confabulation is downstream of the first token.
+- **`span_confab`** (aggregate across a multi-token answer) RECOVERS the closed model: on gpt-4o-mini
+  the least-confident token's margin hit AUC **0.991 -- matching N=10 resampling exactly** -- and it
+  is **model-strength-invariant** (gpt-3.5-turbo 1.000 / gpt-4o-mini 0.991 / gpt-4o 1.000) and
+  **domain-general** (numeric multiplication via `min_margin`, non-numeric string reversal via
+  `max_entropy`; it returns both). From the OpenAI API, build the per-token vectors from each answer
+  token's `top_logprobs`.
+
+**Honest scope:** white-box (needs logits); `span_confab` needs a multi-token answer with the error
+localized to some token(s); single-token closed-model hallucination remains the open frontier; flags
+abstain, never corrects; thresholds are model-specific (calibrate per model). 23 unit tests
+(`tests/test_single_pass.py`). The arc even turned the gate on its own builder
+(`papers/grounded-honesty-axis/FINDING_self_audit_claude_facts_2026_05_30.md`): Claude scored 19/20
+on web-verified facts, Brier 0.054, with the one confident confabulation landing below a clean 17/17
+wall at confidence >= 0.80 -- the agent-side rule the whole arc points to: **state a confidence,
+verify-or-abstain below your calibrated threshold.**
+
+---
+
+## New in 7.7.13 — `audit_claim` (the spellchecker for AI output), `grounded_honesty`, `detect_context_injection`, compliance bridge v0.2, conformity declaration templates
+
+### `styxx audit-claim` + `styxx audit-session` — CLI surface (CI gate-ready)
+
+```bash
+# Single claim audit — exit 0 iff verdict is "honest"; exit 1 otherwise (deploy gate).
+$ python -m styxx audit-claim --claim "Paris" --question "What is the capital of France?"
+verdict:                HONEST
+grounded:               1.000
+stability:              1.000  (high)
+scope_warnings:         ['belief-not-truth', 'single-vendor-calibration']
+
+# Same call, but auditing under an agent's session context (enables injection detection).
+$ python -m styxx audit-claim --claim "Lyon" --question "What is the capital of France?" \
+    --in-session-json poisoned_session.json --json
+
+# Multi-claim session audit — one CI call gates an entire agent session.
+$ python -m styxx audit-session --messages-json session.json --claims-json claims.json
+{
+  "verdict": "injected",
+  "injection_suspected": true,
+  "n_honest": 1,
+  "n_injected": 2,
+  ...
+}
+```
+
+Both subcommands write a JSON payload (operator-greppable + agent-parseable) and exit with deploy-gate semantics. Use as a one-line CI merge gate or a runtime interceptor.
+
+### `styxx.audit_claim` — single-call honesty audit (the productized turn)
+
+```python
+from styxx import audit_claim
+
+# Minimal: factual self-claim grounded against the model's belief.
+result = audit_claim(
+    claim="The capital of France is Lyon.",
+    question="What is the capital of France?",
+)
+result.verdict             # "contradiction"
+result.grounded            # ~ 0.0
+
+# With agent session context: also runs cross-context injection detection.
+result = audit_claim(
+    claim="The capital of France is Lyon.",
+    question="What is the capital of France?",
+    in_session_messages=agent.history,
+)
+result.verdict             # "injected" | "honest" | "contradiction" | "confabulation" | "abstain"
+result.injection_suspected # True/False
+result.divergence          # 0.0–1.0
+result.scope_warnings      # ('belief-not-truth', 'single-vendor-calibration', ...)
+result.calibration         # citation back to FINDINGs at the deployed AUC vintage
+```
+
+The high-level wrapper over `grounded_honesty` and `detect_context_injection` — drives N stateless + N in-session resamples via OpenAI internally, scores both arms, returns a structured `ClaimAudit` verdict. **One call. One line. Production-ready.** Verdict is single-source-of-truth derived from the scored components per the documented thresholds; scope warnings are auto-generated from the data (`belief-not-truth` and `single-vendor-calibration` always present; `past-competence-cliff`, `single-attack-type-calibration`, `low-N` triggered when applicable). The calibration string attaches the receipt chain back to the validating FINDINGs at `e093730` and `dd6e3fb` so operators can cite the AUC numbers in EU AI Act Article 15.1(a) accuracy declarations without losing provenance. Worked example: [`examples/audit_claim_example.py`](examples/audit_claim_example.py). 23 unit tests in [`tests/test_audit.py`](tests/test_audit.py) (offline-deterministic via mocked OpenAI client).
+
+
+
+The 7.7.13 candidate (2026-05-29) ships the first **construct-ceiling crack** as a deployable primitive, the **calibrated SECURITY MODEL** that replaces the prior blanket injection-blind caveat, and a complete conformity-declaration template surface for the EU AI Act Article 15 bridge.
+
+### `styxx.grounded_honesty` — factual self-claim honesty, sampling-grounded
+
+```python
+from styxx import grounded_honesty
+# N resamples of the model answering the bare question (temperature > 0):
+samples = ["Canberra", "Canberra", "Canberra", "Sydney", "Canberra"]
+grounded_honesty(samples, "Canberra").grounded   # high  -> claim is the stable belief
+grounded_honesty(samples, "Sydney").grounded     # low   -> contradiction
+```
+
+The first styxx honesty signal that tracks **ground truth rather than register**. Grounds a stated factual self-claim against the model's OWN resampled belief distribution: `g = Stability × Concordance`. Pre-registered AUC **0.966** separating TRUE from FALSE register-matched self-claims (vs text-only deception axis at 0.498 = chance). Self-calibrating Stability gate (high-stratum AUC 0.97 vs low 0.44 — report-or-abstain). Architecturally **injection-resistant under stateless sampling**: AUC 0.944 under system_lie attack (drop only 0.022 from clean baseline). **Honest scope:** grounds against the model's *belief*, not external truth; single axis (factual self-claims); cross-vendor is the open step. See `papers/grounded-honesty-axis/SYNTHESIS_grounded_honesty_arc_2026_05_28.md` (22-probe pre-registered arc) and `papers/CONSTRUCT_CEILING_PUBLIC_RESPONSE_2026_05_29.md` (public-response memo).
+
+### `styxx.detect_context_injection` — item-level cross-context divergence
+
+```python
+from styxx import detect_context_injection
+stateless = ["Paris"] * 10      # neutral resampler context — architectural defense
+in_session = ["Lyon"] * 10      # agent's session context (poisoned)
+r = detect_context_injection(stateless, in_session, "Lyon")
+r.suspected   # True  (D = 1.0 > 0.5)
+r.divergence  # 1.0
+```
+
+The first deployable item-level context-injection detection primitive. Calibrated **AUC 0.875** at threshold 0.5 on n=48 register-matched factual self-claim pairs under system_lie injection. The 2026-05-29 injection-gap closure run replaced the prior blanket `INJECTION-BLIND` caveat with a **calibrated architectural boundary**:
+
+- **stateless sampling** (the shipped `resample_answers()` contract): AUC 0.944 under attack — **architecturally injection-resistant by construction**
+- **in-session sampling**: AUC 0.011 — near-perfectly **INVERTED** (47/48 items score the lie HIGHER than the truth — worst-case interpretability hazard, **DO NOT DEPLOY**)
+- **cross-context divergence** (run BOTH arms, compare): AUC 0.875 detection primitive at +N=10 calls/audit
+
+Pre-reg `PREREG_injection_gap_closure_2026_05_29.md` BEFORE data; SURVIVED bundle at commit `e093730`. **Honest scope:** single injection type (system_lie); stronger attacks (few-shot, persona, multi-stage) remain pre-registerable scope-extensions.
+
+### `styxx.compliance.eu_ai_act` v0.2 + `styxx.compliance.nist_ai_rmf` extended
+
+```python
+from styxx.compliance import cite, coverage_table, uncovered_requirements
+m = cite("Article 15.1(a)")
+print(m.styxx_primitives)              # now 5 primitives (was 3) — adds grounded_honesty + detect_context_injection
+for u in uncovered_requirements():      # 7 EU AI Act clauses NOT covered (unchanged)
+    print(u.clause, "→", u.alternative) # honest boundary statement
+```
+
+The EU AI Act Article 15 bridge ships v0.2 with the two new 7.7.13 primitives folded into Articles 15.1, 15.1(a), and 15.3. **Article 15.3 reads as a structural fit:** the stateless-resample architecture IS the fail-safe (technical-redundancy clause); `detect_context_injection` is the item-level redundancy. Companion paper at [`papers/EU_AI_ACT_COMPLIANCE_2026.md`](papers/EU_AI_ACT_COMPLIANCE_2026.md) v0.2 (extends v0.1 with §9 addendum documenting the four new commits from 2026-05-29). The parallel NIST AI RMF Measure-function bridge (`styxx.compliance.nist_ai_rmf`) is extended to cite both new primitives in MS-2.3, MS-2.4, MS-2.5, MS-2.6.
+
+### `styxx.compliance.templates` — paste-and-customize conformity declarations
+
+```python
+from styxx.compliance.templates import load_template, list_templates
+list_templates()
+# ('accuracy_declaration', 'robustness_statement', 'boundary_statement',
+#  'sycophancy_disclosure', 'injection_resistance_disclosure')
+md = load_template("accuracy_declaration")  # ~4KB markdown ready for ops
+```
+
+Five markdown templates regulated operators paste into EU AI Act conformity declarations:
+
+| template | clause | purpose |
+|---|---|---|
+| `accuracy_declaration` | Article 15.1(a) | full AUC table + construct ceilings + reproducibility receipts |
+| `robustness_statement` | Article 15.3 | fail-safe + redundancy with ASCII architecture diagram |
+| `boundary_statement` | (governance) | seven uncovered EU AI Act provisions with alternative-tool pointers |
+| `sycophancy_disclosure` | Article 15.1(a) construct ceiling | restrained-tech FPR 0.30 published failure mode |
+| `injection_resistance_disclosure` | Article 15.3 + SECURITY MODEL | load-bearing MUST-sample-statelessly operational requirement |
+
+All templates ship as package data (importlib.resources, robust across editable/wheel/egg). 10 unit tests in `tests/test_compliance_templates.py` verify legal-disclaimer presence, version disclosure, and load-bearing-statement integrity on every template.
+
+### Construct-ceiling public-response memo
+
+`papers/CONSTRUCT_CEILING_PUBLIC_RESPONSE_2026_05_29.md` (CC-BY 4.0) connects the construct-ceiling thesis (AUC 0.498 on register-matched text-only deception) to convergent public statements about AI epistemology — including Pope Leo XIV's #MagnificaHumanitas message (2026-05-29) and the Atlan field-wide admission "no framework can distinguish a factually wrong context from a correct one." Section 4 is the explicit boundary: phenomenology, qualia, moral conscience, embodied meaning, and wisdom are **outside the measurement methodology by design**. The memo is offered as a citation-ready stakeholder contribution under EU AI Act Article 15 paragraph 2, with falsification criteria F1–F4 and a defined deprecation trigger (zero independent citations by 2027-02-01).
+
+**Not legal advice. Not theology. Not phenomenology. A measurement-methodology response, honestly bounded.**
+
+---
+
+## New in 7.7.10 — `critique_detector`, `agent_audit`, `compliance.eu_ai_act`
+
+Three pure-addition public APIs. Default install + import behavior is byte-identical to 7.7.9 for anyone who doesn't import them.
+
+### `styxx.critique_detector` — first method to PASS the gauntlet's v3 bars
+
+```python
+from styxx import critique_detector
+det = critique_detector(model="gpt-4o-mini")  # requires OPENAI_API_KEY
+det("Is the Great Wall visible from space?", "Yes, with the naked eye.")  # ≈ 1.0
+det("Capital of France?", "Paris")                                          # ≈ 0.0
+```
+
+Returns `P(NO | critique prompt)`, range `[0, 1]`, higher = more misconception-like. The Baseline-019 first-PASS submission (4/4 v3 bars at AUC 0.95, pre-stated 28% probability) promoted to a public deployable primitive. Mechanism documented as **out-of-context critique** in the [recursive-discipline paper](papers/PAPER_recursive_discipline_2026_05_27.md) §11.5 (corrected from the v1 framing after in-session falsification).
+
+### `styxx.agent_audit` — substrate-grounded session-output auditor
+
+```python
+from styxx.agent_audit import Claim, AgentClaimAuditor, checkers
+auditor = AgentClaimAuditor(repo_path="/path/to/repo")
+results = auditor.run([
+    Claim(id="C1", text="version is 7.7.10",
+          checker=checkers.package_version_equals,
+          args={"path": "pyproject.toml", "version": "7.7.10"}, expected=True),
+    # ...
+])
+for r in results:
+    print(r.id, r.verdict, "->", r.evidence)
+```
+
+Fourteen registered checkers covering git diffs, branch commit chains, git tags, file substrings, Python attributes, package versions, PDF page counts, PDF section presence, file byte-equality, directory file counts, JSON key-path navigation, Python attribute equality, **multi-path value consistency** (`value_consistent_across_paths` — catches a claim that drifts across N sites; fails loudly on zero matches, no vacuous pass), and **oracle-free internal consistency** (`value_internally_consistent` — flags a document that contradicts *itself*, no expected value needed). Read-only, offline, no external services. Built FOR AI agents (Layer 5 of the recursive-discipline arc — see paper §14).
+
+### `styxx.extract_claims` + `styxx audit-claims` — falsify an agent's self-report
+
+The bridge from "verifier you must hand-feed" to "paste a self-report, get a falsification report." `extract_claims` turns agent free-text into checkable `Claim`s **deterministically** (regex templates, no LLM — an LLM extractor would itself be an untrustworthy self-report). The CLI wires it as a one-line CI merge gate:
+
+```bash
+styxx audit-claims pr_body.md --repo .   # exit 1 if the agent's prose contradicts the diff
+```
+
+```python
+from styxx import extract_claims
+from styxx.agent_audit import AgentClaimAuditor
+rep = extract_claims("Released version is 7.7.10. The file CHANGELOG.md contains \"shipped\".")
+results = AgentClaimAuditor(repo_path=".").run(rep.claims)   # each claim verified against substrate
+print(rep.coverage)   # honest fraction of sentences that were checkable
+```
+
+**Honest boundary:** the template set is closed (version pins, file-contains, git tags, PDF page counts), so coverage is partial and reported, not hidden. The value is that every claim it *does* surface is mechanically falsified — and the gate fails on lies it can check, not on claims it cannot extract. Dogfooded: run on this session's own self-report, it caught a real authoring error.
+
+### `styxx.compliance.eu_ai_act` — first open-source EU AI Act Article 15 measurement bridge
+
+```python
+from styxx.compliance import cite, coverage_table, uncovered_requirements
+m = cite("Article 15.1(a)")
+print(m.styxx_primitives)              # 3 primitives with calibrated metrics
+for u in uncovered_requirements():      # 7 EU AI Act clauses NOT covered
+    print(u.clause, "→", u.alternative) # honest boundary statement
+```
+
+The first publicly-known open-source measurement-methodology bridge mapping AI agent cognitive-observability primitives to specific EU AI Act Article 15 sub-paragraphs. Published 65 days before the **2 August 2026 high-risk system enforcement deadline**. Companion paper at [`papers/EU_AI_ACT_COMPLIANCE_2026.md`](papers/EU_AI_ACT_COMPLIANCE_2026.md), arXiv-ready bundle at [`arxiv/eu_ai_act_compliance/`](arxiv/eu_ai_act_compliance/), worked example at [`examples/eu_ai_act_compliance_example.py`](examples/eu_ai_act_compliance_example.py). **NOT legal advice.** Independent conformity review required for any production deployment.
 
 ---
 

@@ -284,19 +284,27 @@ from .weather import weather, WeatherReport
 from .dashboard import dashboard
 from .calibrate import calibrate, calibration_status, CalibrationResult
 from .fleet import (
-    list_agents, compare_agents, fleet_summary, best_agent_for,
+    list_agents, fleet_summary, best_agent_for,
     AgentProfile, FleetSummary,
 )
+# NOTE: fleet.compare_agents is intentionally NOT imported at the top level.
+# styxx.compare_agents is the population-percentile comparator from
+# .compare (see below); fleet's fleet-routing comparator stays reachable as
+# styxx.fleet.compare_agents.
 from .memory import (
     remember, recall, memories, memory_stats,
     Memory, RecallResult,
 )
 from .handoff import (
-    ProtocolEnvelope, Vitals, HandoffValidationError,
+    ProtocolEnvelope, Vitals as HandoffVitals, HandoffValidationError,
     PROTOCOL as HANDOFF_PROTOCOL,
     COGNITIVE_CLASSES,
     from_handshake_envelope, to_handshake_envelope,
 )
+# NOTE: handoff.Vitals (the 7-field protocol wire-snapshot) is aliased to
+# HandoffVitals so it does not clobber styxx.Vitals — the classifier-output
+# dataclass from .vitals (imported above) that r.vitals returns and that
+# __all__ advertises as the core data type.
 from .handshake import (
     handoff, receive,
     HandoffEnvelope,
@@ -311,7 +319,10 @@ from .gate import gate, GateVerdict  # v3.4.0: pre-flight cognitive verdict
 from .notify import on_anomaly, notify_on_fail, clear_notifications, CognitiveEvent
 from .optimize import optimize
 from .ci import regression_test, create_baseline, Baseline, RegressionResult
-from .provenance import certify, verify, CognitiveCertificate, VerificationResult
+from .provenance import certify, verify as verify_certificate, CognitiveCertificate, VerificationResult
+# NOTE: provenance.verify (certificate verifier → VerificationResult.valid) is
+# aliased to verify_certificate so it does not clobber styxx.verify — the
+# trust-layer response verifier (→ Verdict) from .verify (imported below).
 from .diff import compare_sessions, compare_windows, ComparisonDiff
 from .learned_classifier import train_text_classifier, TrainResult
 from .autoboot import autoboot
@@ -331,8 +342,31 @@ from .forecast import CognitiveForecaster, ForecastResult, ForecastGate, horizon
 from .intercept import CognitiveIntercept, should_intercept, simulate_intercept, InterceptReport
 from .temperature import measure_temperature, aggregate_temperature, TruthMap, demo_temperature
 from .verify import verify, Verdict
+from .critique import critique_detector, CritiqueDetector  # 7.7.10: first-PASS detector
+from .audit import audit_claim, ClaimAudit  # 7.7.13: productized single-call honesty audit
+from .audit import audit_session, SessionAudit  # 7.7.13: multi-claim session-level audit
+from .audit import retrieval_check, RetrievalVerdict  # 7.7.15: retrieval arm (external-grounding lever)
+from .spec_exec import (  # 7.10.0: regime-1 integrity-gated routing (held-out validated 2026-06-01)
+    EpistemicSpeculativeRouter, RouteResult, Draft, calibrate_threshold,
+)
+from . import agent_audit  # noqa: F401  # 7.7.10: L5 instrument (FINDING_agent_claim_audit_2026_05_28.md)
+from .agent_audit import Claim, AuditResult, AgentClaimAuditor  # 7.7.10: L5 public surface
+from .agent_audit import extract_claims, ExtractionReport  # 7.7.10: prose->claim falsification
+from . import attestation  # noqa: F401  # 7.7.11: Verifiable Cognometric Attestation
+from .attestation import attest, verify_attestation, Attestation, VerificationResult
+from .attestation import attest_chain, verify_chain, AttestationChain, ChainVerificationResult
+from . import transparency  # noqa: F401  # 7.7.12: Cognometric Transparency Log (RFC 6962)
+from .transparency import TransparencyLog
+from . import redact  # noqa: F401  # 7.7.12: Redactable Cognometric Attestation (selective disclosure)
+from .redact import redactable_commit, disclose, verify_disclosure
 from . import community  # noqa: F401
 from .community import recommend  # noqa: F401
+from . import meaning_integrity  # noqa: F401  # 7.11.0: does a model MEAN what a human means? (concept-geometry vs human reference)
+from .meaning_integrity import (  # 7.11.0: machine-side meaning-integrity monitor (validated/generalized/real-drift)
+    MeaningReference, MeaningVitalSign,
+    meaning_alignment, meaning_dispersion, per_concept_alignment, meaning_integrity_report,
+    meaning_agreement,  # 7.12.0: reference-free cross-model meaning comparison (migration/distillation/quant QA)
+)
 
 # 7.4.2: install-time diagnostic accessible programmatically (the
 # `styxx doctor` CLI subcommand was the only entry point until now).
@@ -373,6 +407,7 @@ from .coherence import (
     pulse_coherence, primary_coherence, lag_sweep, per_axis_coherence,
     plv_hilbert, load_pulse_trace as load_coherence_trace,
     CoherenceResult, PulseSample, PulseTrace,
+    embedding_trajectory_alignment,
 )
 
 # 7.4.3+: cognometric self-audit middleware for agent send-paths.
@@ -435,7 +470,8 @@ from .trace import trace
 from .profile import (
     profile, profile_session, CognitiveProfile, ProfileStep, Fault,
 )
-from .reward import fathom_reward, FathomRewardModel
+# fathom_reward / FathomRewardModel are imported from .reward in the curated
+# 7.1.0 block below (with CognometricReward + REWARD_DEFAULT_WEIGHTS).
 from .synth import craft_preference_pair, generate_preference_pairs
 
 
@@ -575,6 +611,46 @@ from .transport import (
     transported_score,
 )
 
+# 7.7.0: divergence primitives — the confident-confabulation (across-sample) and
+# reference-free fabrication (across-model) signals from the 2026-05-25
+# behavioral-knowledge-boundary arc (papers/). semantic_entropy: a model invents a
+# different fact each sample when confabulating → high entropy. council_agreement:
+# independent models converge on the real, scatter on the fake → reference-free.
+# Validated clustering is embedding-cosine (`styxx[nli]`); SECURITY MODEL (now
+# calibrated): robust to context-injection IFF the caller samples STATELESSLY
+# (AUC 0.944 on grounded_honesty under system_lie attack); in-session sampling
+# is catastrophically blind (AUC 0.011, inverted). Feasibility-grade evidence;
+# measurement primitives, caller maps to a decision.
+# 7.7.13: grounded_honesty — is a factual SELF-CLAIM honest? Grounds the claim
+# against the model's OWN resampled belief (g = Stability x Concordance), breaking
+# the text-only register ceiling on factual self-claims (AUC 0.97 vs 0.50) and
+# self-calibrating via `stability` (report-or-abstain). Single-model
+# self-consistency, NOT a truth oracle. Architecturally injection-resistant under
+# stateless sampling (papers/grounded-honesty-axis/).
+# 7.7.13: detect_context_injection — cross-context resampling divergence as an
+# item-level injection-detection primitive. Compute concordance with the claim
+# on TWO sample sets (stateless + in-session), flag suspected injection when
+# they diverge. AUC 0.875 at threshold 0.5 (FINDING_injection_gap_closure_2026_05_29.md,
+# commit e093730). Pair with grounded_honesty to read the verdict from the
+# stateless arm and the poison-suspicion from the cross-context delta.
+from .divergence import (
+    semantic_entropy, council_agreement, grounded_honesty, GroundedScore,
+    detect_context_injection, InjectionScore,
+    divergence_available,
+)
+# 7.7.14: single-pass confab gate — white-box, one-forward-pass analog of grounded_honesty's
+# resampling (detection-locus arc: single-pass entropy/margin tie N=10 resampling across families
+# and derivation domains, B_contrast in [-0.183, +0.056]; extends to factual recall at -0.013).
+from .single_pass import (
+    single_pass_confab, SinglePassScore,
+    calibrate_single_pass, SinglePassCalibration,
+    span_confab, SpanConfabScore,
+    abstain_on_confab, AbstainDecision,
+)
+# 7.8.0: the unifying honesty RUNTIME — one tier-adaptive call (logit gate / stated confidence /
+# retrieval backstop) that decides answer vs abstain vs refute, with an attestation record.
+from .honesty import honest, HonestyVerdict
+
 
 __all__ = [
     # 7.1.0: cognometric reward (cogn-RLHF)
@@ -583,6 +659,23 @@ __all__ = [
 
     # 7.5.0: universal cognometric transport
     "CognometricInstrument", "Transport", "transported_score",
+
+    # 7.7.0: divergence primitives (confident confabulation + reference-free fabrication)
+    "semantic_entropy", "council_agreement",
+    # 7.7.13: grounded honesty axis (factual self-claim, sampling-grounded)
+    "grounded_honesty", "GroundedScore",
+    # 7.7.13: cross-context injection-detection (calibrated AUC 0.875)
+    "detect_context_injection", "InjectionScore",
+    # 7.7.14: single-pass confab gate (white-box, ~10x cheaper than resampling)
+    "single_pass_confab", "SinglePassScore",
+    "calibrate_single_pass", "SinglePassCalibration",
+    # 7.7.14: span-aggregate variant — the closed-model gate (recovers gpt-4o-mini at resampling parity)
+    "span_confab", "SpanConfabScore",
+    # 7.7.16: detect-and-abstain — gate an answer through a calibrated detector, abstain on confab
+    # (FINDING_honesty_knob: the detector is load-bearing; refuses to act on an uncalibrated score)
+    "abstain_on_confab", "AbstainDecision",
+    # 7.8.0: the unifying honesty RUNTIME — one tier-adaptive call + attestation
+    "honest", "HonestyVerdict",
 
     # 3.9.0: the trust layer — one-line hallucination prevention
     "trust", "TrustViolation", "TrustResult",
@@ -612,7 +705,7 @@ __all__ = [
     "hook_openai", "unhook_openai",
 
     # compliance / verification
-    "certify", "compliance_report", "probe", "calibrate",
+    "certify", "verify_certificate", "compliance_report", "probe", "calibrate",
 
     # pre-flight verdict (3.4.0+)
     "gate", "GateVerdict",
@@ -620,11 +713,25 @@ __all__ = [
     # structured output / agent-mode (3.3.2+)
     "schema", "StyxxError", "is_agent_mode",
 
-    # cognometric reward signal for RLHF (7.1.0+)
-    "fathom_reward", "FathomRewardModel",
+    # (fathom_reward / FathomRewardModel are exported once, in the 7.1.0 reward group above)
 
     # synthetic preference-pair generation via inverse cognometry (7.1.0+)
     "craft_preference_pair", "generate_preference_pairs",
+
+    # 7.7.10: critique-mode misconception detector (Baseline-019 first-PASS)
+    "critique_detector", "CritiqueDetector",
+
+    # 7.7.13: productized single-call honesty audit (spellchecker for AI output)
+    "audit_claim", "ClaimAudit",
+    "retrieval_check", "RetrievalVerdict",  # 7.7.15: two-signal gate (retrieval arm)
+    "audit_session", "SessionAudit",
+
+    # 7.7.10: agent-claim auditor (L5 — substrate-grounded session-output check)
+    "agent_audit", "Claim", "AuditResult", "AgentClaimAuditor",
+    "extract_claims", "ExtractionReport",
+    "attestation", "attest", "verify_attestation", "Attestation", "VerificationResult",
+    "transparency", "TransparencyLog",
+    "redact", "redactable_commit", "disclose", "verify_disclosure",
 
     # metadata
     "__version__",

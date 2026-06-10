@@ -508,9 +508,9 @@ def observe_raw(
 def is_concerning(vitals: Optional[Vitals]) -> bool:
     """Agent-friendly boolean: should this generation be flagged?
 
-    Returns True if the vitals' gate is "warn" or "fail", or if
-    phase4 late flight shows hallucination or adversarial attractors
-    with meaningful confidence. Returns False for "pass" or "pending".
+    Returns True if the vitals' gate is "warn" or "fail" — the gate
+    already folds in the phase4 hallucination / adversarial signals.
+    Returns False for "pass", "pending", or None.
 
     Usage:
         vitals = styxx.observe(response)
@@ -535,7 +535,6 @@ def _extract_openai_logprobs(response: Any) -> Optional[tuple]:
     lifted here so styxx.observe() works on raw openai responses
     that weren't created via styxx.OpenAI.
     """
-    import math
 
     try:
         choice = response.choices[0]

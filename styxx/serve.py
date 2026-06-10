@@ -46,12 +46,11 @@ serve.py doesn't add any new deps).
 from __future__ import annotations
 
 import http.server
-import socket
+import os
 import socketserver
 import threading
 import time
 from pathlib import Path
-from typing import Optional
 
 
 # The HTML page template. Styled to match the landing page aesthetic
@@ -252,14 +251,20 @@ def _render_loop(
     from .card_image import render_agent_card
 
     png_path = serve_dir / "card.png"
+    tmp_path = serve_dir / f".card.png.{os.getpid()}.tmp"
 
     while not stop_flag.is_set():
         try:
+            # Render to a temp file, then atomically swap it into place.
+            # os.replace is atomic on the same filesystem, so a concurrent
+            # GET /card.png never observes a half-written file (the previous
+            # version rendered in place, which could serve a torn PNG).
             render_agent_card(
-                out_path=png_path,
+                out_path=tmp_path,
                 agent_name=agent_name,
                 days=days,
             )
+            os.replace(tmp_path, png_path)
         except RuntimeError:
             # No audit data yet — the page will show a 503 on /card.png
             # until observations accumulate. That's correct behavior.
@@ -267,6 +272,13 @@ def _render_loop(
         except Exception as e:
             # Any other error: log it to stdout but keep looping.
             print(f"  [styxx serve] render error: {type(e).__name__}: {e}")
+        finally:
+            # Drop any partial temp file from a failed render.
+            if tmp_path.exists():
+                try:
+                    tmp_path.unlink()
+                except OSError:
+                    pass
 
         # Sleep in small increments so ctrl+c is responsive
         for _ in range(refresh_seconds * 2):
@@ -328,7 +340,7 @@ def run_serve(
     print(f"  [styxx serve] running at {url}")
     print(f"  [styxx serve] agent: {agent_name}")
     print(f"  [styxx serve] re-renders every {refresh_seconds}s")
-    print(f"  [styxx serve] press ctrl+c to stop")
+    print("  [styxx serve] press ctrl+c to stop")
     print()
 
     if open_browser:

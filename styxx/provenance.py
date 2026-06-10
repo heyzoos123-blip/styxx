@@ -11,7 +11,7 @@ styxx.provenance — cognitive provenance certificates.
     output = {"text": response_text, "styxx_certificate": cert.as_dict()}
 
     # Verify later
-    result = styxx.verify(cert)
+    result = styxx.verify_certificate(cert)
     assert result.valid
 
 Every AI output should carry a signed attestation of the cognitive
@@ -321,9 +321,7 @@ def certify(
     )
 
     # Determine integrity level
-    if vitals is not None and gate == "pass" and trust > 0.7:
-        integrity = "verified"
-    elif vitals is not None and gate == "pass":
+    if vitals is not None and gate == "pass":
         integrity = "verified"
     elif vitals is not None and gate == "warn":
         integrity = "degraded"

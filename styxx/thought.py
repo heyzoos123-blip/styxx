@@ -57,7 +57,7 @@ import json
 import math
 import time
 import uuid
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
@@ -840,9 +840,7 @@ class Thought:
         trust = round(max(0.0, min(1.0, trust)), 4)
 
         # Integrity label
-        if gate == "pass" and trust > 0.7:
-            integrity = "verified"
-        elif gate == "pass":
+        if gate == "pass":
             integrity = "verified"
         elif gate == "warn":
             integrity = "degraded"
@@ -1084,8 +1082,6 @@ def write_thought(
     if client is None:
         raise ValueError("write_thought requires a styxx-instrumented client")
 
-    target_cat = thought.primary_category or "reasoning"
-    target_conf = thought.primary_confidence
 
     history: List[Dict[str, Any]] = []
     best: Optional[Dict[str, Any]] = None

@@ -21,7 +21,7 @@ from __future__ import annotations
 import time
 import urllib.parse
 import urllib.request
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 WIKI_SUMMARY_URL = "https://en.wikipedia.org/api/rest_v1/page/summary/{title}"
 
@@ -125,7 +125,7 @@ def verify_entities_batch(entities: List[str],
                            skip_common: bool = True) -> Dict[str, Dict]:
     """Verify a batch of entities. Returns entity → result dict."""
     common_words = {
-        "God", "Earth", "Moon", "Sun", "USA", "UK", "EU", "USA",
+        "God", "Earth", "Moon", "Sun", "USA", "UK", "EU",
         "Paris", "London", "Tokyo", "Berlin", "NYC",
     }
     results = {}

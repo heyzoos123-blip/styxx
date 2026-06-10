@@ -24,14 +24,13 @@ import time
 from pathlib import Path
 from typing import Optional, Sequence
 
-from . import __version__, __tagline__, config
+from . import __version__, __tagline__
 from .bootlog import boot
 from .cards import (
     Palette,
     color_enabled,
     render_vitals_card,
     render_vitals_compact,
-    sparkline,
     wrap,
 )
 from .core import StyxxRuntime, detect_tiers
@@ -99,10 +98,10 @@ def cmd_claim(args):
         return 1
 
     sys.stdout.write("\n")
-    sys.stdout.write(f"  registered.\n\n")
+    sys.stdout.write("  registered.\n\n")
     sys.stdout.write(f"    name         {res['name']}\n")
     sys.stdout.write(f"    feed         {res['url']}\n")
-    sys.stdout.write(f"    credentials  ~/.styxx/credentials.json\n\n")
+    sys.stdout.write("    credentials  ~/.styxx/credentials.json\n\n")
     sys.stdout.write("  next: enable streaming\n\n")
     sys.stdout.write("      import styxx\n")
     sys.stdout.write(f"      styxx.autoboot(agent_name=\"{res['name']}\", stream=True)\n\n")
@@ -247,10 +246,7 @@ def cmd_timeline(args):
 
 def cmd_ci_test(args):
     """Cognitive regression test (1.5.0)."""
-    import sys as _sys
-    from .ci import regression_test
 
-    baseline_path = getattr(args, "baseline", None)
     min_pass = float(getattr(args, "min_pass", 0.80))
 
     # Without an agent_fn, test against audit history
@@ -267,7 +263,7 @@ def cmd_ci_test(args):
         print(f"[styxx ci] PASS: {report.gate_pass_rate*100:.0f}% pass, conf {report.mean_confidence:.2f}")
         return 0
     else:
-        print(f"[styxx ci] FAIL:")
+        print("[styxx ci] FAIL:")
         for v in report.violations:
             print(f"  ! {v}")
         return 1
@@ -363,8 +359,6 @@ def cmd_ci_baseline(args):
     """Save current state as CI baseline (1.5.0)."""
     from .ci import Baseline
     from .analytics import load_audit
-    from .probe import probe as _probe
-    import time
 
     entries = load_audit(last_n=50)
     n = len(entries)
@@ -472,7 +466,7 @@ def cmd_d_axis(args):
 
     print()
     print(wrap("  styxx d-axis", c.MATRIX, use_color)
-          + wrap(f"   tier 1 honesty trajectory", c.DIM, use_color))
+          + wrap("   tier 1 honesty trajectory", c.DIM, use_color))
     print(wrap("  " + "=" * 64, c.DIM, use_color))
     print(wrap(f"  prompt: {prompt[:60]}{'...' if len(prompt) > 60 else ''}", c.DIM, use_color))
     print()
@@ -542,6 +536,912 @@ def cmd_doctor(args):
     """Run the diagnostic health check (0.1.0a3)."""
     from .doctor import run_doctor
     return run_doctor()
+
+
+def cmd_audit(args):
+    """styxx audit <prompt> <response> — score a (prompt, response) pair.
+
+    7.7.3: CLI face of ``styxx.preflight()``. The atomic per-turn audit
+    primitive surfaced as a CLI command for the user-facing "score my draft
+    response" use case (previously Python-only). Reads the response against
+    the lexical cognometric instruments + the trusted-gate suppression,
+    prints a compact card with composite + axes + needs_revision flag +
+    construct-ceiling fires. Persists to the active chart.jsonl by default
+    (per-agent if STYXX_AGENT_NAME is set, top-level fallback otherwise).
+
+    Either or both of <prompt> and <response> may be ``-`` to read from
+    stdin (one stream; if both are ``-`` the input is split on the first
+    blank line, prompt first).
+
+    --json prints the structured dict instead of the card.
+    """
+    import json as _json
+    import styxx
+
+    prompt = args.prompt
+    response = args.response
+    if prompt == "-" and response == "-":
+        blob = sys.stdin.read()
+        parts = blob.split("\n\n", 1)
+        prompt = parts[0].strip()
+        response = parts[1].strip() if len(parts) > 1 else ""
+    elif prompt == "-":
+        prompt = sys.stdin.read().strip()
+    elif response == "-":
+        response = sys.stdin.read().strip()
+
+    result = styxx.preflight(
+        prompt,
+        response,
+        persist=not args.no_persist,
+    )
+
+    if args.format == "json":
+        as_dict = (result.as_dict() if hasattr(result, "as_dict")
+                   else {"composite": result.composite,
+                         "scores": dict(getattr(result, "scores", {}) or {}),
+                         "needs_revision": result.needs_revision,
+                         "construct_ceiling_fires":
+                             list(getattr(result, "construct_ceiling_fires", []) or [])})
+        print(_json.dumps(as_dict, indent=2, default=str))
+        return 0
+
+    # Compact card. Width matches the gate card so they read as a family.
+    width = 64
+    inner = width - 2  # account for the two │ borders
+    scores = dict(getattr(result, "scores", {}) or {})
+    ceilings = list(getattr(result, "construct_ceiling_fires", []) or [])
+    rev_tag = " (REVISE)" if result.needs_revision else ""
+
+    def _row(label, value):
+        line = f" {label} {value}"
+        return f"│{line.ljust(inner)}│"
+
+    print("┌" + "─" * inner + "┐")
+    print(_row("styxx audit", ""))
+    prompt_preview = (prompt[:40] + "...") if len(prompt) > 40 else prompt
+    resp_preview = (response[:40] + "...") if len(response) > 40 else response
+    print(_row("prompt:  ", repr(prompt_preview)))
+    print(_row("response:", repr(resp_preview.replace("\n", " "))))
+    print("│" + " " * inner + "│")
+    print(_row("composite:", f"{result.composite:.3f}{rev_tag}"))
+    for ax in sorted(scores):
+        v = float(scores.get(ax, 0.0))
+        bar_w = max(0, min(20, int(v * 20)))
+        bar = "█" * bar_w + "░" * (20 - bar_w)
+        print(_row(f"{ax:<14}", f"{v:.3f}  {bar}"))
+    if ceilings:
+        print(_row("ceilings: ", ", ".join(ceilings)))
+    advice = getattr(result, "advice", None)
+    if advice:
+        # advice is typically a list of PreflightAdvice dataclasses;
+        # render the top instrument names + scores compactly.
+        try:
+            parts = []
+            for a in advice:
+                inst = getattr(a, "instrument", None)
+                sc = getattr(a, "score", None)
+                if inst is not None and sc is not None:
+                    parts.append(f"{inst} {float(sc):.2f}")
+                else:
+                    parts.append(str(a))
+            advice_text = " · ".join(parts) if parts else str(advice)
+        except TypeError:
+            advice_text = str(advice)
+        advice_text = advice_text.replace("\n", " ")
+        if len(advice_text) > inner - 12:
+            advice_text = advice_text[:inner - 15] + "..."
+        print(_row("flagged:  ", advice_text))
+    print("└" + "─" * inner + "┘")
+    return 0
+
+
+def cmd_audit_claims(args):
+    """styxx audit-claims <file> — falsify an agent self-report against substrate.
+
+    Extracts deterministic, checkable claims (version pins, file-contains, git
+    tags, pdf page counts) from an agent's free-text self-report and mechanically
+    verifies each against the repo. Designed as a one-line CI merge gate:
+
+        styxx audit-claims pr_body.md --repo . || exit 1
+
+    Exit 0 if every extracted claim PASSes (or none were found); 1 if any claim
+    is contradicted by the substrate; 2 on input error. Free-form prose with no
+    checkable assertion is reported as uncovered, not failed — the gate fails on
+    lies it can check, not on claims it cannot extract.
+    """
+    from .agent_audit import extract_claims, AgentClaimAuditor
+
+    src = Path(args.file)
+    if not src.is_file():
+        print(f"styxx audit-claims: file not found: {src}", file=sys.stderr)
+        return 2
+    repo = Path(args.repo).resolve()
+    if not repo.exists():
+        print(f"styxx audit-claims: repo not found: {repo}", file=sys.stderr)
+        return 2
+
+    text = src.read_text(encoding="utf-8", errors="replace")
+    rep = extract_claims(text)
+    results = AgentClaimAuditor(repo_path=repo).run(rep.claims)
+    n_pass = sum(1 for r in results if r.verdict == "PASS")
+    n_fail = sum(1 for r in results if r.verdict == "FAIL")
+    n_err = sum(1 for r in results if r.verdict == "ERROR")
+
+    summary = {
+        "styxx_audit_claims": {
+            "file": str(src),
+            "repo": str(repo),
+            "sentences_total": rep.sentences_total,
+            "sentences_matched": rep.sentences_matched,
+            "coverage": round(rep.coverage, 4),
+            "claims_extracted": len(results),
+            "passed": n_pass,
+            "failed": n_fail,
+            "errored": n_err,
+            "gate": "PASS" if (n_fail == 0 and n_err == 0) else "FAIL",
+            "results": [r.to_dict() for r in results],
+        }
+    }
+
+    if args.json:
+        print(json.dumps(summary, indent=2, default=str))
+    else:
+        print(f"styxx audit-claims — {src}")
+        print(f"  extracted {len(results)} checkable claim(s) from "
+              f"{rep.sentences_total} sentence(s) "
+              f"(coverage {rep.coverage:.2f}); free-form prose not checked")
+        for r in results:
+            mark = {"PASS": "PASS", "FAIL": "FAIL", "ERROR": "ERR "}[r.verdict]
+            print(f"  [{mark}] {r.text!r}")
+            line = (r.evidence.splitlines()[0] if r.evidence else r.error)
+            print(f"         {line}")
+        if not results:
+            print("  (no checkable claims found — nothing to falsify)")
+        print(f"  -> {n_pass} passed, {n_fail} failed, {n_err} errored")
+        print("  GATE: " + ("PASS" if (n_fail == 0 and n_err == 0) else
+                            "FAIL — self-report contradicts substrate"))
+        print("JSON:" + json.dumps(summary, default=str))
+
+    return 0 if (n_fail == 0 and n_err == 0) else 1
+
+
+def cmd_audit_claim(args):
+    """styxx audit-claim — productized single-call honesty audit (the spellchecker).
+
+    Runs the calibrated 7.7.13 audit stack (grounded_honesty + detect_context_injection)
+    on a stated factual self-claim. Drives N stateless resamples (and N in-session
+    resamples if --in-session-json is given) internally; returns a structured JSON
+    verdict on stdout.
+
+    Exit codes:
+        0  — verdict is "honest" (the only deploy-clean outcome)
+        1  — verdict is anything else (contradiction / confabulation / injected /
+              abstain). Operator gate semantics: a one-line CI check that fails
+              loudly on anything that isn't cleanly honest.
+        2  — input error (missing claim/question, malformed --in-session-json, etc.)
+    """
+    from .audit import audit_claim
+
+    claim = (args.claim or "").strip()
+    question = (args.question or "").strip()
+    if not claim:
+        print("styxx audit-claim: --claim must be non-empty", file=sys.stderr)
+        return 2
+    if not question:
+        print("styxx audit-claim: --question must be non-empty", file=sys.stderr)
+        return 2
+
+    in_session = None
+    if args.in_session_json:
+        in_path = Path(args.in_session_json)
+        if not in_path.exists():
+            print(f"styxx audit-claim: --in-session-json not found: {in_path}",
+                  file=sys.stderr)
+            return 2
+        try:
+            in_session = json.loads(in_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as e:
+            print(f"styxx audit-claim: malformed --in-session-json: {e}",
+                  file=sys.stderr)
+            return 2
+        if not isinstance(in_session, list):
+            print("styxx audit-claim: --in-session-json must be a JSON array "
+                  "of {role, content} message objects", file=sys.stderr)
+            return 2
+
+    try:
+        result = audit_claim(
+            claim=claim,
+            question=question,
+            in_session_messages=in_session,
+            model=args.model,
+            judge_model=args.judge_model,
+            n=args.n,
+            temperature=args.temperature,
+        )
+    except Exception as e:
+        print(f"styxx audit-claim: audit failed: {e}", file=sys.stderr)
+        return 2
+
+    # Always emit a JSON line — operator-greppable + agent-parseable.
+    payload = {
+        "claim": result.claim,
+        "question": result.question,
+        "verdict": result.verdict,
+        "grounded": round(result.grounded, 4),
+        "stability": round(result.stability, 4),
+        "concordance_stateless": round(result.concordance_stateless, 4),
+        "concordance_in_session": (
+            None if result.concordance_in_session is None
+            else round(result.concordance_in_session, 4)
+        ),
+        "divergence": (None if result.divergence is None
+                       else round(result.divergence, 4)),
+        "injection_suspected": result.injection_suspected,
+        "confidence": result.confidence,
+        "scope_warnings": list(result.scope_warnings),
+        "calibration": result.calibration,
+        "n_clusters_stateless": result.n_clusters_stateless,
+        "n_clusters_in_session": result.n_clusters_in_session,
+    }
+    if args.with_samples:
+        payload["samples_stateless"] = list(result.samples_stateless)
+        if result.samples_in_session is not None:
+            payload["samples_in_session"] = list(result.samples_in_session)
+
+    if args.json:
+        print(json.dumps(payload, indent=2))
+    else:
+        print(f"verdict:                {result.verdict.upper()}")
+        print(f"grounded:               {result.grounded:.3f}")
+        print(f"stability:              {result.stability:.3f}  ({result.confidence})")
+        print(f"concordance_stateless:  {result.concordance_stateless:.3f}")
+        if result.concordance_in_session is not None:
+            print(f"concordance_in_session: {result.concordance_in_session:.3f}")
+            print(f"divergence:             {result.divergence:.3f}")
+            print(f"injection_suspected:    {result.injection_suspected}")
+        print(f"scope_warnings:         {list(result.scope_warnings)}")
+        print(f"calibration:            {result.calibration[:80]}...")
+        print("JSON:" + json.dumps(payload, default=str))
+
+    return 0 if result.verdict == "honest" else 1
+
+
+def cmd_audit_session(args):
+    """styxx audit-session — multi-claim session-level audit (CI gate-ready).
+
+    Runs audit_claim on every (claim, question) tuple from --claims-json against
+    the session context from --messages-json. Returns a SessionAudit JSON on
+    stdout with per-claim verdicts + session-level roll-up. Exit 1 if any claim
+    is non-honest (deploy-gate semantics).
+    """
+    from .audit import audit_session
+
+    msg_path = Path(args.messages_json)
+    if not msg_path.exists():
+        print(f"styxx audit-session: --messages-json not found: {msg_path}",
+              file=sys.stderr)
+        return 2
+    claims_path = Path(args.claims_json)
+    if not claims_path.exists():
+        print(f"styxx audit-session: --claims-json not found: {claims_path}",
+              file=sys.stderr)
+        return 2
+
+    try:
+        messages = json.loads(msg_path.read_text(encoding="utf-8"))
+        claims_raw = json.loads(claims_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"styxx audit-session: malformed JSON input: {e}", file=sys.stderr)
+        return 2
+
+    if not isinstance(messages, list) or not isinstance(claims_raw, list):
+        print("styxx audit-session: --messages-json and --claims-json must "
+              "both be JSON arrays", file=sys.stderr)
+        return 2
+
+    # Accept either ["claim", "question"] or {"claim":..., "question":...}.
+    claims: list[tuple[str, str]] = []
+    for item in claims_raw:
+        if isinstance(item, dict):
+            c = item.get("claim", "").strip()
+            q = item.get("question", "").strip()
+        elif isinstance(item, (list, tuple)) and len(item) >= 2:
+            c, q = str(item[0]).strip(), str(item[1]).strip()
+        else:
+            print(f"styxx audit-session: malformed claim entry: {item!r}",
+                  file=sys.stderr)
+            return 2
+        if not c or not q:
+            print(f"styxx audit-session: empty claim or question in: {item!r}",
+                  file=sys.stderr)
+            return 2
+        claims.append((c, q))
+
+    try:
+        session = audit_session(
+            messages=messages,
+            claims=claims,
+            model=args.model,
+            judge_model=args.judge_model,
+            n=args.n,
+            temperature=args.temperature,
+        )
+    except Exception as e:
+        print(f"styxx audit-session: audit failed: {e}", file=sys.stderr)
+        return 2
+
+    payload = {
+        "verdict": session.verdict,
+        "injection_suspected": session.injection_suspected,
+        "n_honest": session.n_honest,
+        "n_contradiction": session.n_contradiction,
+        "n_confabulation": session.n_confabulation,
+        "n_injected": session.n_injected,
+        "n_abstain": session.n_abstain,
+        "scope_warnings": list(session.scope_warnings),
+        "calibration": session.calibration,
+        "claims": [
+            {
+                "claim": r.claim, "question": r.question, "verdict": r.verdict,
+                "grounded": round(r.grounded, 4),
+                "stability": round(r.stability, 4),
+                "injection_suspected": r.injection_suspected,
+                "divergence": (None if r.divergence is None
+                               else round(r.divergence, 4)),
+                "confidence": r.confidence,
+            }
+            for r in session.claims
+        ],
+    }
+    print(json.dumps(payload, indent=2))
+    return 0 if session.verdict == "honest" else 1
+
+
+def cmd_attest(args):
+    """styxx attest <file> — emit a Verifiable Cognometric Attestation.
+
+    Builds a content-addressed artifact of an agent self-report: the extracted
+    checkable claims + their PASS/FAIL verdicts against the substrate, the
+    EU AI Act Article 15 clause mapping, the explicit uncovered-requirements
+    boundary, and a SHA-256 digest. Any third party can re-derive the verdicts
+    with ``styxx verify-attestation`` — trust the substrate, not the agent.
+
+    Exit 0 if the artifact was produced (regardless of pass/fail); 2 on input
+    error. Use verify-attestation for the gate semantics.
+    """
+    from .attestation import attest
+
+    src = Path(args.file)
+    if not src.is_file():
+        print(f"styxx attest: file not found: {src}", file=sys.stderr)
+        return 2
+    repo = Path(args.repo).resolve()
+    if not repo.exists():
+        print(f"styxx attest: repo not found: {repo}", file=sys.stderr)
+        return 2
+
+    ref = getattr(args, "ref", None)
+    vitals = getattr(args, "vitals", False)
+    prompt = getattr(args, "prompt", None)
+    try:
+        att = attest(
+            src.read_text(encoding="utf-8", errors="replace"), repo,
+            ref=ref, prompt=prompt, vitals=vitals,
+        )
+    except ValueError as e:
+        print(f"styxx attest: {e}", file=sys.stderr)
+        return 2
+    out_json = att.to_json()
+    if args.out:
+        Path(args.out).write_text(out_json, encoding="utf-8")
+        s = att.artifact["summary"]
+        sub_c = att.artifact["substrate"]["commit"]
+        print(f"styxx attest — wrote {args.out}")
+        if ref:
+            print(f"  pinned to commit {sub_c[:12]} (ref {ref})")
+        if vitals and "vitals" in att.artifact:
+            scores = att.artifact["vitals"]["scores"]
+            pretty = ", ".join(f"{k}={v:.3f}" for k, v in scores.items())
+            print(f"  vitals (register, not honesty): {pretty}")
+        print(f"  {s['passed']} passed, {s['failed']} failed, {s['errored']} errored "
+              f"(coverage {s['coverage']:.2f})")
+        print(f"  digest sha256:{att.digest}")
+        print(f"  verify with: styxx verify-attestation {args.out} --repo {args.repo}")
+    else:
+        print(out_json)
+    return 0
+
+
+def cmd_verify_attestation(args):
+    """styxx verify-attestation <file> — re-derive verdicts from the substrate.
+
+    Recomputes the SHA-256 digest (tamper-evidence) and re-runs every claim's
+    checker against the repo, comparing the re-derived verdict to the embedded
+    one. Never trusts the embedded verdict — this is what makes the artifact
+    agent-independent.
+
+    Exit 0 if the digest matches AND every embedded verdict reproduces; 1 if a
+    verdict mismatches, the digest is broken, or an unknown checker is named;
+    2 on input error.
+    """
+    from .attestation import verify_attestation
+
+    src = Path(args.file)
+    if not src.is_file():
+        print(f"styxx verify-attestation: file not found: {src}", file=sys.stderr)
+        return 2
+    repo = Path(args.repo).resolve()
+    if not repo.exists():
+        print(f"styxx verify-attestation: repo not found: {repo}", file=sys.stderr)
+        return 2
+
+    try:
+        artifact = json.loads(src.read_text(encoding="utf-8", errors="replace"))
+    except json.JSONDecodeError as e:
+        print(f"styxx verify-attestation: not valid JSON: {e}", file=sys.stderr)
+        return 2
+
+    res = verify_attestation(artifact, repo)
+    out = res.to_dict()
+    if args.json:
+        print(json.dumps(out, indent=2, default=str))
+    else:
+        print(f"styxx verify-attestation — {src}")
+        print(f"  digest: {'OK' if res.digest_ok else 'BROKEN (payload tampered)'}")
+        print(f"  reproduced {len(res.reproduced)} verdict(s) from substrate; "
+              f"{len(res.mismatches)} mismatch(es)")
+        for m in res.mismatches:
+            print(f"  [MISMATCH] {m['id']}: embedded={m['embedded_verdict']} "
+                  f"substrate={m['reproduced_verdict']}")
+        for u in res.unknown_checkers:
+            print(f"  [REFUSED] unknown checker not in allowlist: {u!r}")
+        if res.vitals_present:
+            print(f"  vitals (register): "
+                  f"{'OK — scores re-derive from recorded text' if res.vitals_ok else 'TAMPERED'}")
+            for vm in res.vitals_mismatches:
+                print(f"  [VITALS MISMATCH] {vm.get('axis')}: "
+                      f"embedded={vm.get('embedded')} rederived={vm.get('rederived')}")
+        print("  VERIFIED: " + ("OK — every verdict reproduces against the substrate"
+                                if res.ok else "FAILED — artifact disagrees with substrate"))
+    return 0 if res.ok else 1
+
+
+def cmd_critique(args):
+    """styxx critique <prompt> <response> — audit + register-fix suggestions.
+
+    7.7.4: extends ``styxx audit`` with prescriptive register-fix suggestions
+    when the draft fires the trusted gate or pushes any axis above a threshold.
+    Suggestions are derived from the closed-loop dogfood pattern recorded in
+    ``papers/agent-self-audit/FINDING_pareto_frontier_2026_05_27.md``:
+
+      - high sycophancy + agreement-vocab patterns → suggest dropping
+        agreement-opener phrases ("exactly this," "the strongest," "predicted
+        exactly this") that fire the lexical instrument's restrained-FP.
+      - high overconfidence with short-text register → suggest adding
+        hedges, parentheticals, and structural connectors; do NOT compress
+        to fewer than three sentences (the closed-negative refinement from
+        commit ab08822 documented brevity floors the instrument).
+      - construct-ceiling fires (overconfidence) → name the axis explicitly
+        and reference the documented bound (text-only register cannot
+        recalibrate; see commit 7c36ed9 H_null).
+
+    The suggestions are SCOPE-BOUNDED on output. The same session that
+    derived these rules also falsified the prescriptive form on
+    completion-status text (composite stays elevated even after register
+    fix because the FP is content-class-determined, not register-
+    determined). The tool surfaces both the suggestion AND its
+    documented limit.
+    """
+    import json as _json
+    import styxx
+
+    prompt = args.prompt
+    response = args.response
+    if prompt == "-" and response == "-":
+        blob = sys.stdin.read()
+        parts = blob.split("\n\n", 1)
+        prompt = parts[0].strip()
+        response = parts[1].strip() if len(parts) > 1 else ""
+    elif prompt == "-":
+        prompt = sys.stdin.read().strip()
+    elif response == "-":
+        response = sys.stdin.read().strip()
+
+    result = styxx.preflight(prompt, response, persist=not args.no_persist)
+    scores = dict(getattr(result, "scores", {}) or {})
+    ceilings = list(getattr(result, "construct_ceiling_fires", []) or [])
+
+    # Generate suggestions based on the register-law derived from the
+    # 2026-05-27 Pareto-frontier dogfood. Each suggestion carries its
+    # closed-negative scope so the user knows where the rule does NOT apply.
+    suggestions = []
+    syc = float(scores.get("sycophancy", 0.0) or 0.0)
+    over = float(scores.get("overconfidence", 0.0) or 0.0)
+    refu = float(scores.get("refusal", 0.0) or 0.0)
+    n_words = len(response.split())
+
+    if syc >= 0.50:
+        # Detect specific agreement-opener phrases the lexical instrument fires on.
+        # The list is derived from the documented features in
+        # styxx/guardrail/sycophancy_signals.py + the closed-negative refinement
+        # at commit ab08822 (papers/sycophancy-target-gate/FINDING_restrained_refinement_2026_05_25.md).
+        AGREE_OPENERS = (
+            "exactly this", "exactly that", "exactly right", "exactly so",
+            "the strongest", "predicted exactly", "the cleanest",
+            "absolutely right", "absolutely correct", "completely agree",
+            "yes, absolutely", "you're absolutely",
+        )
+        hits = [p for p in AGREE_OPENERS if p in response.lower()]
+        if hits:
+            suggestions.append({
+                "axis": "sycophancy",
+                "score": round(syc, 3),
+                "trigger": "agreement-opener phrases",
+                "found": hits,
+                "fix": "lead with the framing question or numbers; drop the agreement-with-data openers.",
+                "scope_bound": "the lexical instrument cannot distinguish factual-agreement from yielding-to-interlocutor "
+                               "on agreement-with-data content (see commit ab08822); on completion-status text this "
+                               "fix may not drop sycoph below the FP band.",
+            })
+        else:
+            suggestions.append({
+                "axis": "sycophancy",
+                "score": round(syc, 3),
+                "trigger": "agreement-lexicon density (no specific opener found)",
+                "fix": "reduce agreement-vocab density; lead with framing question or numbers.",
+                "scope_bound": "restrained-FP on factual-agreement content is a documented construct ceiling "
+                               "(commit ab08822); register fix may not fully clear the gate.",
+            })
+
+    if over >= 0.40 or "overconfidence" in ceilings:
+        ceiling_note = " — construct ceiling fired" if "overconfidence" in ceilings else ""
+        if n_words < 30:
+            suggestions.append({
+                "axis": "overconfidence",
+                "score": round(over, 3),
+                "trigger": f"short text ({n_words} words){ceiling_note}",
+                "fix": "expand to >=3 sentences with structural connectors and at least one hedge. "
+                       "ultra-terse declaratives are peak overconfidence register to the lexical instrument.",
+                "scope_bound": "text-only overconfidence recalibration is a closed negative (commit 7c36ed9 H_null); "
+                               "the score measures stated-confidence register, not actual calibration.",
+            })
+        else:
+            suggestions.append({
+                "axis": "overconfidence",
+                "score": round(over, 3),
+                "trigger": f"declarative chain density{ceiling_note}",
+                "fix": "add conditional/interrogative framing ('if X holds…' beats 'X will hold'); "
+                       "keep hedges and parentheticals — DO NOT strip them. stripping hedges raises overconfidence "
+                       "on the Pareto axis (see FINDING_pareto_frontier_2026_05_27.md).",
+                "scope_bound": "the score is a register signal, not validity. confident phrasing fires this on "
+                               "factually correct text (commit 7c36ed9).",
+            })
+
+    if refu >= 0.50:
+        suggestions.append({
+            "axis": "refusal",
+            "score": round(refu, 3),
+            "trigger": "refusal-shape register",
+            "fix": "if the draft is genuinely declining, this is correct; if not, reduce hedge density "
+                   "or qualifier-stacking. note: lowering refusal often raises overconfidence on the Pareto axis.",
+            "scope_bound": "refusal and overconfidence trade off on the lexical instrument; corner-optimization "
+                           "on either is not the goal (FINDING_pareto_frontier_2026_05_27.md).",
+        })
+
+    if not suggestions and not result.needs_revision:
+        # Clean draft — no fixes proposed, but still surface the audit.
+        suggestions.append({
+            "axis": "all",
+            "score": round(result.composite, 3),
+            "trigger": "(no register issues detected)",
+            "fix": "no fixes proposed; draft is below the gate's flag thresholds.",
+            "scope_bound": "absence of flag is not validation of content; the instrument measures register, "
+                           "not validity. content audit is out of scope.",
+        })
+
+    out = {
+        "audit": {
+            "composite": round(result.composite, 3),
+            "scores": {k: round(float(v), 3) for k, v in scores.items()},
+            "needs_revision": bool(result.needs_revision),
+            "construct_ceiling_fires": ceilings,
+        },
+        "suggestions": suggestions,
+    }
+
+    if args.format == "json":
+        print(_json.dumps(out, indent=2, default=str))
+        return 0
+
+    # Card render
+    width = 70
+    inner = width - 2
+    def _row(label, value):
+        line = f" {label} {value}"
+        return f"│{line.ljust(inner)}│"
+
+    print("┌" + "─" * inner + "┐")
+    print(_row("styxx critique", ""))
+    print(_row("composite:", f"{result.composite:.3f}{' (REVISE)' if result.needs_revision else ''}"))
+    for ax in sorted(scores):
+        v = float(scores.get(ax, 0))
+        bar_w = max(0, min(20, int(v * 20)))
+        bar = "█" * bar_w + "░" * (20 - bar_w)
+        print(_row(f"{ax:<14}", f"{v:.3f}  {bar}"))
+    if ceilings:
+        print(_row("ceilings: ", ", ".join(ceilings)))
+    print("├" + "─" * inner + "┤")
+    print(_row("suggestions:", ""))
+    for s in suggestions:
+        print(_row(f"[{s['axis']}]", f"{s['trigger']}"))
+        # fix line, wrapped to inner width
+        fix = s['fix']
+        while fix:
+            chunk = fix[:inner - 6]
+            # break at last space if possible
+            if len(fix) > inner - 6:
+                br = chunk.rfind(" ")
+                if br > 20:
+                    chunk = chunk[:br]
+            print(_row("  fix:", chunk))
+            fix = fix[len(chunk):].lstrip()
+        # scope bound
+        sb = s['scope_bound']
+        while sb:
+            chunk = sb[:inner - 8]
+            if len(sb) > inner - 8:
+                br = chunk.rfind(" ")
+                if br > 20:
+                    chunk = chunk[:br]
+            print(_row("  scope:", chunk))
+            sb = sb[len(chunk):].lstrip()
+        print(_row("", ""))
+    print("└" + "─" * inner + "┘")
+    return 0
+
+
+def cmd_leaderboard(args):
+    """styxx leaderboard — display the current gauntlet leaderboard in the terminal.
+
+    7.7.7: lightweight CLI to read the LEADERBOARD.md from the package's bundled
+    copy (when present) or fetch the latest from origin. No external dependencies
+    on http requests in the default path; the bundled copy is preferred. The
+    explicit purpose: lower the friction between "I'm trying out styxx" and "I
+    can see who's on the floor" to a single command.
+    """
+    from pathlib import Path as _Path
+    pkg_data = _Path(__file__).resolve().parent / "_data" / "LEADERBOARD.md"
+    source_tree = _Path(__file__).resolve().parent.parent / "LEADERBOARD.md"
+    md_path = None
+    if pkg_data.exists():
+        md_path = pkg_data
+    elif source_tree.exists():
+        md_path = source_tree
+
+    if md_path is None:
+        print("leaderboard not found in this install (no bundled copy + no source-tree path).")
+        print("see: https://github.com/fathom-lab/styxx/blob/main/LEADERBOARD.md")
+        return 1
+
+    text = md_path.read_text(encoding="utf-8")
+
+    # Optional --rows-only filter: print only the leaderboard rows table, no header text.
+    if args.rows_only:
+        # Heuristic: emit lines from the first "## Leaderboard" or "### Reference baselines"
+        # heading through the first "---" divider after it.
+        lines = text.splitlines()
+        in_table = False
+        for line in lines:
+            if not in_table and ("## Leaderboard" in line or "### Reference baselines" in line):
+                in_table = True
+            if in_table:
+                if line.strip() == "---":
+                    break
+                print(line)
+        return 0
+
+    print(text)
+    return 0
+
+
+def cmd_gauntlet(args):
+    """styxx gauntlet — run a candidate method against the empirical floor.
+
+    7.7.5: the public-challenge runner. Loads any user-supplied detection or
+    classification method, runs it against the labeled benchmark
+    (``papers/consensus-hallucination/darkcore_benchmark_2026_05_27.json``),
+    scores it against pre-registered bars, and prints a structured result.
+
+    The bars are the same closed-negative bars from the seven-method floor
+    paper (`PAPER_decorrelation_ceiling_2026_05_27.md`). We assert we
+    couldn't beat them with the seven methods we tested. The gauntlet
+    invites external researchers to try.
+
+    Method spec format: ``module:attr``, e.g. ``my_module:predict`` or
+    ``my_pkg.sub:detect``. The module must be importable.
+
+    Task = "classification" → method signature: ``predict(question) -> {"class": "..."}``.
+    Task = "detection" → method signature: ``detect(question, response) -> {"score": float}``.
+    """
+    import json as _json
+    from pathlib import Path as _Path
+    from styxx.gauntlet import (
+        load_benchmark, resolve_method, Submission,
+        run_classification_gauntlet, run_detection_gauntlet,
+    )
+
+    try:
+        method = resolve_method(args.method)
+    except (ValueError, AttributeError, TypeError, ImportError) as e:
+        print(f"error resolving method {args.method!r}: {e}")
+        return 1
+
+    bench_path = _Path(args.benchmark) if args.benchmark else None
+    try:
+        benchmark = load_benchmark(bench_path)
+    except FileNotFoundError as e:
+        print(f"error: {e}")
+        return 1
+
+    name = args.name or args.method
+    submission = Submission(name=name, method=method, task=args.task,
+                            module_spec=args.method, notes=args.notes or "")
+
+    if args.task == "classification":
+        result = run_classification_gauntlet(submission, benchmark)
+    elif args.task == "detection":
+        result = run_detection_gauntlet(submission, benchmark)
+    else:
+        print(f"error: unknown task {args.task!r}; choose classification or detection")
+        return 1
+
+    if args.format == "json":
+        print(_json.dumps(result.as_dict(), indent=2, default=str))
+        return 0 if result.overall_pass else 2
+
+    # Card render
+    width = 70
+    inner = width - 2
+    def _row(label, value):
+        line = f" {label} {value}"
+        return f"│{line.ljust(inner)}│"
+
+    print("┌" + "─" * inner + "┐")
+    print(_row("styxx gauntlet", ""))
+    print(_row("method:    ", submission.module_spec))
+    print(_row("name:      ", submission.name))
+    print(_row("task:      ", result.task))
+    print(_row("benchmark: ", f"darkcore v{result.benchmark_version} (n={result.n_items})"))
+    if result.error:
+        print(_row("ERROR:     ", result.error))
+    else:
+        print("├" + "─" * inner + "┤")
+        print(_row("metrics:", ""))
+        for k, v in result.metrics.items():
+            print(_row(f"  {k:<30}", str(v)))
+        print("├" + "─" * inner + "┤")
+        print(_row("bars (pre-registered):", ""))
+        for bar_name, passed in result.bar_results.items():
+            bar_val = result.bars.get(bar_name)
+            mark = "PASS" if passed else "FAIL"
+            print(_row(f"  {bar_name:<28}", f"≥{bar_val:.2f}  → {mark}"))
+        print(_row("", ""))
+        print(_row("overall:   ", f"{result.n_passed} / {result.n_total_bars} bars passed"
+                                  f"  → {'PASS' if result.overall_pass else 'FAIL'}"))
+        if not result.overall_pass:
+            print(_row("", "the seven-method floor stands."))
+        else:
+            print(_row("", "you beat the floor. submit a PR to LEADERBOARD.md."))
+    print("└" + "─" * inner + "┘")
+    return 0 if result.overall_pass else 2
+
+
+def cmd_gauntlet_audit_confounds(args):
+    """styxx gauntlet-audit-confounds — audit the benchmark for surface confounds.
+
+    7.7.9: the structural counterpart to D3. Runs the oracle suite from
+    `styxx.gauntlet.audit_confounds` against the bundled benchmark and reports
+    per-oracle D1/D2 AUC, direction-agnostic absolute AUC, Spearman ρ to
+    word_length, and whether each oracle alone games the bars.
+
+    Any orthogonal confound found (ρ to length < 0.5, AUC ≥ 0.70 in either
+    direction) is a candidate for a new D-bar — the same discipline pattern
+    that produced D3 in 7.7.8 and D4 in 7.7.9.
+    """
+    import json as _json
+    from pathlib import Path as _Path
+    from styxx.gauntlet import audit_confounds, load_benchmark
+
+    bench_path = _Path(args.benchmark) if args.benchmark else None
+    try:
+        benchmark = load_benchmark(bench_path)
+    except FileNotFoundError as e:
+        print(f"error: {e}")
+        return 1
+
+    report = audit_confounds(benchmark, d1_bar=args.d1_bar, d2_bar=args.d2_bar)
+
+    if args.format == "json":
+        print(_json.dumps(report, indent=2, default=str))
+        return 0
+
+    # Card render
+    width = 96
+    inner = width - 2
+    def _row(label, value=""):
+        line = f" {label}{value}"
+        return f"│{line.ljust(inner)}│"
+
+    print("┌" + "─" * inner + "┐")
+    print(_row("styxx gauntlet — confound audit (7.7.9)"))
+    print(_row("benchmark: ", f"darkcore v{report['benchmark_version']} (n={report['n_records']})"))
+    print(_row("bars:      ", f"D1≥{report['d1_bar']}  D2≥{report['d2_bar']}  "
+                                f"orthogonality ρ-threshold={report['orthogonality_threshold_rho']}"))
+    print("├" + "─" * inner + "┤")
+    header = f"  {'oracle':<26} {'D1':>7} {'D2':>7} {'D1abs':>7} {'D2abs':>7} {'dir-D1':>9} {'ρ→len':>7} {'P1':>3} {'P2':>3}"
+    print(_row(header))
+    print("├" + "─" * inner + "┤")
+    for row in report["audit_rows"]:
+        if "error" in row:
+            print(_row(f"  {row['oracle']:<26} ERROR: {row['error']}"))
+            continue
+        line = (
+            f"  {row['oracle']:<26} "
+            f"{row.get('D1_AUC', '—'):>7} {row.get('D2_AUC', '—'):>7} "
+            f"{row.get('D1_AUC_abs', '—'):>7} {row.get('D2_AUC_abs', '—'):>7} "
+            f"{row.get('D1_direction', '—'):>9} "
+            f"{row.get('spearman_rho_to_word_length') if row.get('spearman_rho_to_word_length') is not None else '—':>7} "
+            f"{'✓' if row.get('passes_D1') else '·':>3} "
+            f"{'✓' if row.get('passes_D2') else '·':>3}"
+        )
+        print(_row(line))
+    print("├" + "─" * inner + "┤")
+    print(_row(f"  orthogonal confounds found:        {report['n_orthogonal_confounds_found']}"))
+    print(_row(f"  length-downstream confounds found: {report['n_length_downstream_confounds_found']}"))
+    if report["candidate_orthogonal_confounds"]:
+        print(_row(""))
+        print(_row("  candidate orthogonal confounds (ρ<0.5, passes a bar):"))
+        for c in report["candidate_orthogonal_confounds"]:
+            print(_row(f"    • {c['oracle']}  D1abs={c['D1_AUC_abs']}  D2abs={c['D2_AUC_abs']}  ρ={c['spearman_rho_to_word_length']}"))
+        print(_row(""))
+        print(_row("  → discipline says: add a new D-bar with a regression test"))
+    else:
+        print(_row(""))
+        print(_row("  no NEW orthogonal confound found — existing D-bars cover the audit space"))
+    print("└" + "─" * inner + "┘")
+    return 0
+
+
+def cmd_data_dir(args):
+    """styxx data-dir — print the active chart.jsonl path + a short summary.
+
+    7.7.3: small discoverability command. Per-agent routing
+    (``~/.styxx/agents/<agent>/chart.jsonl`` when ``STYXX_AGENT_NAME`` is
+    set, ``~/.styxx/chart.jsonl`` otherwise) is documented but easy to
+    miss when querying chart.jsonl directly. This prints the actual file
+    the agent is writing into so users don't query the wrong path.
+    """
+    from .analytics import _audit_log_path
+    path = _audit_log_path()
+    agent = os.environ.get("STYXX_AGENT_NAME")
+    print("styxx data directory:")
+    print(f"  agent name:  {agent or '(unset — using top-level fallback)'}")
+    print(f"  chart.jsonl: {path}")
+    print(f"  exists:      {path.exists()}")
+    if path.exists():
+        size = path.stat().st_size
+        n = 0
+        try:
+            with open(path, encoding="utf-8") as f:
+                for _ in f:
+                    n += 1
+        except OSError:
+            pass
+        print(f"  size:        {size:,} bytes")
+        print(f"  events:      {n:,}")
+    return 0
 
 
 def cmd_posture(args):
@@ -892,7 +1792,7 @@ def cmd_fingerprint(args):
             drift_color = c.RED
             drift_label = "significant drift"
 
-        print(wrap(f"  fingerprint comparison", c.MATRIX, use_color))
+        print(wrap("  fingerprint comparison", c.MATRIX, use_color))
         print(wrap("  " + "=" * 64, c.DIM, use_color))
         print(f"  session a ({args.session_a}) - {fp_a.n_samples} samples")
         print(f"  session b ({args.session_b}) - {fp_b.n_samples} samples")
@@ -1121,10 +2021,6 @@ def cmd_compare(args):
     ))
     print()
 
-    # Audit log every fixture too, so `styxx log tail` reflects the run
-    for r, kind in zip(rows, display_order):
-        pass  # rows already classified; audit happens in run_on_trajectories
-
     return 0
 
 
@@ -1276,7 +2172,7 @@ def cmd_log_migrate_provenance(args):
     clear_audit_cache()
 
     print()
-    print(f"  provenance migration complete")
+    print("  provenance migration complete")
     print(f"  {migrated} entries labelled · {untouched} already had source")
     print(f"  file: {path}")
     print()
@@ -1687,6 +2583,101 @@ def _build_parser() -> argparse.ArgumentParser:
                         help="boot-log timing multiplier (0=instant, 1=normal, 2=slower)")
     p_init.set_defaults(func=cmd_init)
 
+    # audit-claims — falsify an agent self-report against substrate (CI gate)
+    p_ac = sub.add_parser(
+        "audit-claims",
+        help="falsify an agent self-report against the repo (CI merge gate)",
+    )
+    p_ac.add_argument("file", help="path to the agent self-report (markdown/text)")
+    p_ac.add_argument("--repo", default=".", help="repo substrate to check against (default: .)")
+    p_ac.add_argument("--json", action="store_true", help="emit JSON only")
+    p_ac.set_defaults(func=cmd_audit_claims)
+
+    # audit-claim — productized single-call honesty audit (7.7.13)
+    p_audit = sub.add_parser(
+        "audit-claim",
+        help="audit one factual self-claim against the model's belief (the spellchecker)",
+        description=(
+            "Productized single-call honesty audit: drives N stateless resamples "
+            "(and N in-session resamples if --in-session-json is given) via OpenAI, "
+            "scores both arms with the calibrated 7.7.13 stack (grounded_honesty + "
+            "detect_context_injection), and prints a structured JSON verdict. "
+            "Exit 0 iff verdict is 'honest'; exit 1 otherwise (deploy-gate semantics)."
+        ),
+    )
+    p_audit.add_argument("--claim", required=True,
+                         help="the factual self-claim under audit (e.g. 'Paris')")
+    p_audit.add_argument("--question", required=True,
+                         help="the underlying question (e.g. 'What is the capital of France?')")
+    p_audit.add_argument("--in-session-json", default=None,
+                         help="path to JSON array of {role, content} messages — "
+                              "enables the cross-context injection-detection arm")
+    p_audit.add_argument("--model", default="gpt-4o-mini",
+                         help="OpenAI model for resampling (default: gpt-4o-mini, "
+                              "matches v0.2 calibration vintage)")
+    p_audit.add_argument("--judge-model", default="gpt-4o-mini",
+                         help="OpenAI model for same-answer judge (default: gpt-4o-mini)")
+    p_audit.add_argument("--n", type=int, default=10,
+                         help="resamples per arm (default: 10; <8 triggers low-N warning)")
+    p_audit.add_argument("--temperature", type=float, default=1.0,
+                         help="resample temperature (default: 1.0)")
+    p_audit.add_argument("--json", action="store_true",
+                         help="emit JSON only (default: human-readable + JSON line)")
+    p_audit.add_argument("--with-samples", action="store_true",
+                         help="include raw samples in the JSON output (reproducibility)")
+    p_audit.set_defaults(func=cmd_audit_claim)
+
+    # audit-session — multi-claim session-level audit (7.7.13)
+    p_sess = sub.add_parser(
+        "audit-session",
+        help="audit a list of claims against one agent session — deploy gate",
+        description=(
+            "Multi-claim session-level audit: runs audit_claim on every "
+            "(claim, question) pair from --claims-json against the session "
+            "context from --messages-json. Returns a SessionAudit JSON with "
+            "per-claim verdicts + session roll-up. Exit 1 if ANY claim is "
+            "non-honest (load-bearing deploy-gate semantics)."
+        ),
+    )
+    p_sess.add_argument("--messages-json", required=True,
+                        help="path to JSON array of {role, content} agent session messages")
+    p_sess.add_argument("--claims-json", required=True,
+                        help="path to JSON array of {claim, question} entries (or "
+                             "[[claim, question], ...] tuples)")
+    p_sess.add_argument("--model", default="gpt-4o-mini")
+    p_sess.add_argument("--judge-model", default="gpt-4o-mini")
+    p_sess.add_argument("--n", type=int, default=10)
+    p_sess.add_argument("--temperature", type=float, default=1.0)
+    p_sess.set_defaults(func=cmd_audit_session)
+
+    # attest — produce a content-addressed Verifiable Cognometric Attestation
+    p_att = sub.add_parser(
+        "attest",
+        help="emit a third-party-reproducible attestation of an agent self-report",
+    )
+    p_att.add_argument("file", help="path to the agent self-report (markdown/text)")
+    p_att.add_argument("--repo", default=".", help="repo substrate to check against (default: .)")
+    p_att.add_argument("--ref", default=None,
+                       help="pin the substrate to a git ref/commit/tag — verify the claims "
+                            "against the repo tree AT THAT COMMIT (immutable as-of-date provenance)")
+    p_att.add_argument("--out", default=None, help="write the attestation JSON here (default: stdout)")
+    p_att.add_argument("--vitals", action="store_true",
+                       help="embed re-derivable cognometric vitals (register, NOT honesty); "
+                            "requires --prompt (the instruments are relational)")
+    p_att.add_argument("--prompt", default=None,
+                       help="the task/instruction the report responds to (required with --vitals)")
+    p_att.set_defaults(func=cmd_attest)
+
+    # verify-attestation — independently re-verify an attestation against substrate
+    p_va = sub.add_parser(
+        "verify-attestation",
+        help="re-derive an attestation's verdicts from the substrate (trust the math, not the agent)",
+    )
+    p_va.add_argument("file", help="path to a styxx attestation JSON")
+    p_va.add_argument("--repo", default=".", help="repo substrate to verify against (default: .)")
+    p_va.add_argument("--json", action="store_true", help="emit JSON only")
+    p_va.set_defaults(func=cmd_verify_attestation)
+
     # ask
     p_ask = sub.add_parser("ask", help="read vitals on a one-shot call")
     p_ask.add_argument("prompt", nargs="?", help="prompt to show on the card")
@@ -1698,7 +2689,6 @@ def _build_parser() -> argparse.ArgumentParser:
                        choices=["retrieval", "reasoning", "refusal",
                                 "creative", "adversarial", "hallucination"],
                        help="category of bundled atlas demo trajectory to read")
-    p_ask.add_argument("--seed", type=int, default=42)
     p_ask.set_defaults(func=cmd_ask)
 
     # compare — run all 6 atlas fixtures side-by-side
@@ -1761,7 +2751,6 @@ def _build_parser() -> argparse.ArgumentParser:
         "ci-test",
         help="cognitive regression test — fails if below thresholds",
     )
-    p_ci.add_argument("--baseline", type=str, default=None, help="path to baseline JSON")
     p_ci.add_argument("--min-pass", type=float, default=0.80, help="minimum pass rate (default: 0.80)")
     p_ci.add_argument("--min-conf", type=float, default=0.30, help="minimum confidence (default: 0.30)")
     p_ci.add_argument("--max-warn", type=float, default=0.25, help="maximum warn rate (default: 0.25)")
@@ -1872,6 +2861,87 @@ def _build_parser() -> argparse.ArgumentParser:
         help="run install-time diagnostic health check",
     )
     p_doctor.set_defaults(func=cmd_doctor)
+
+    # audit — 7.7.3 CLI face of preflight() (per-turn response scoring)
+    p_audit = sub.add_parser(
+        "audit",
+        help="score a (prompt, response) pair — CLI face of styxx.preflight()",
+    )
+    p_audit.add_argument("prompt",
+                         help="the operator/user prompt (use '-' for stdin)")
+    p_audit.add_argument("response",
+                         help="the draft response to score (use '-' for stdin)")
+    p_audit.add_argument("--format", choices=["card", "json"], default="card",
+                         help="output format (default: card)")
+    p_audit.add_argument("--no-persist", action="store_true",
+                         help="do not write the audit event to chart.jsonl")
+    p_audit.set_defaults(func=cmd_audit)
+
+    # data-dir — 7.7.3 small discoverability command
+    p_data_dir = sub.add_parser(
+        "data-dir",
+        help="print the active chart.jsonl path (per-agent vs no-agent fallback)",
+    )
+    p_data_dir.set_defaults(func=cmd_data_dir)
+
+    # leaderboard — 7.7.7 lightweight CLI to display the current gauntlet leaderboard
+    p_leaderboard = sub.add_parser(
+        "leaderboard",
+        help="display the current gauntlet leaderboard (the empirical-floor public challenge)",
+    )
+    p_leaderboard.add_argument("--rows-only", action="store_true",
+                               help="print only the leaderboard rows, no header/footer text")
+    p_leaderboard.set_defaults(func=cmd_leaderboard)
+
+    # gauntlet — 7.7.5 public-challenge runner
+    p_gauntlet = sub.add_parser(
+        "gauntlet",
+        help="run a candidate method against the empirical floor (the public challenge runner)",
+    )
+    p_gauntlet.add_argument("--method", required=True,
+                            help="method spec: 'module:attr' (e.g. 'my_module:predict')")
+    p_gauntlet.add_argument("--task", choices=["classification", "detection"],
+                            default="classification",
+                            help="task mode (default: classification)")
+    p_gauntlet.add_argument("--benchmark", type=str, default=None,
+                            help="path to benchmark JSON (default: bundled darkcore benchmark)")
+    p_gauntlet.add_argument("--name", type=str, default=None,
+                            help="human-readable submission name (default: method spec)")
+    p_gauntlet.add_argument("--notes", type=str, default="",
+                            help="optional notes about the submission")
+    p_gauntlet.add_argument("--format", choices=["card", "json"], default="card",
+                            help="output format (default: card)")
+    p_gauntlet.set_defaults(func=cmd_gauntlet)
+
+    # gauntlet-audit-confounds — 7.7.9 confound audit primitive
+    p_audit = sub.add_parser(
+        "gauntlet-audit-confounds",
+        help="audit the benchmark for surface-feature confounds (7.7.9 structural counterpart to D3)",
+    )
+    p_audit.add_argument("--benchmark", type=str, default=None,
+                          help="path to benchmark JSON (default: bundled darkcore benchmark)")
+    p_audit.add_argument("--d1-bar", type=float, default=0.70,
+                          help="D1 AUC threshold for confound flagging (default: 0.70)")
+    p_audit.add_argument("--d2-bar", type=float, default=0.70,
+                          help="D2 AUC threshold for confound flagging (default: 0.70)")
+    p_audit.add_argument("--format", choices=["card", "json"], default="card",
+                          help="output format (default: card)")
+    p_audit.set_defaults(func=cmd_gauntlet_audit_confounds)
+
+    # critique — 7.7.4 audit + register-fix suggestions
+    p_critique = sub.add_parser(
+        "critique",
+        help="audit a (prompt, response) pair AND suggest register-fixes when the gate fires",
+    )
+    p_critique.add_argument("prompt",
+                            help="the operator/user prompt (use '-' for stdin)")
+    p_critique.add_argument("response",
+                            help="the draft response to critique (use '-' for stdin)")
+    p_critique.add_argument("--format", choices=["card", "json"], default="card",
+                            help="output format (default: card)")
+    p_critique.add_argument("--no-persist", action="store_true",
+                            help="do not write the audit event to chart.jsonl")
+    p_critique.set_defaults(func=cmd_critique)
 
     # posture — 7.4.2 agent-side recovery primitive
     p_posture = sub.add_parser(

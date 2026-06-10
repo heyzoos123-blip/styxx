@@ -59,10 +59,8 @@ Calibration & limitations
 """
 from __future__ import annotations
 
-import math
-import re
-from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Any, Dict, Iterator, List, Optional
 
 from .residual_probe.intervene import InterveneProbe
 from .residual_probe.probe import ProbeNotAvailable
@@ -261,7 +259,7 @@ def stream_with_risk(
         ).to(device)
     else:
         input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
-    prefill_len = input_ids.shape[1]
+    input_ids.shape[1]
 
     try:
         current = input_ids
@@ -342,7 +340,6 @@ def detect_hallucination(
             f"got {on_detect!r}"
         )
 
-    from .steer import steer  # for retry_with_suppression
 
     probe = _resolve_probe(model, probe_task)
     probe_layer = probe.layer
@@ -374,7 +371,9 @@ def detect_hallucination(
             risks.append(reading.risk)
             if reading.risk > max_risk:
                 max_risk = reading.risk
-            if reading.will_flag:
+            # _streamed yields will_flag=False by design ("caller decides
+            # threshold"); apply the threshold here so flag/halt/retry fire.
+            if reading.risk > threshold:
                 flagged.append(i)
                 if on_detect == "halt_and_flag":
                     halt_reason = (
