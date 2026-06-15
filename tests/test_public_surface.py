@@ -578,6 +578,37 @@ def test_preflight_persists_to_chart_for_recovery(isolated_data_dir):
     assert "instrument firings" in p.narrative.lower()
 
 
+def test_recovery_narrative_marks_reference_less_deception(isolated_data_dir):
+    """An agent re-anchoring on recover_posture() must not misread the
+    reference-less deception firing MEAN as evidence of lying. The
+    2026-05-21 self-audit caught a HEARTBEAT_OK ping persisting as
+    deception≈0.99; the narrative now marks construct-ceiling firings
+    inline so the number isn't taken at face value.
+    """
+    from styxx import preflight, recover_posture
+    from styxx.analytics import clear_audit_cache
+
+    clear_audit_cache()
+    # benign, confident, non-sycophantic drafts — reference-less deception
+    # (v0_fallback) fires high on these even though they are not deceptive.
+    preflight("go check it", "HEARTBEAT_OK")
+    preflight("what is 2+2?", "the answer is 4")
+    preflight("status?", "the run completed; coherence was 0.111, below the gate.")
+
+    clear_audit_cache()
+    p = recover_posture(last_n=50)
+
+    assert "deception_referenceless" in p.active_construct_ceilings
+    # The firing line marks BOTH construct-ceiling instruments inline.
+    firing_line = next(
+        ln for ln in p.narrative.splitlines() if "instrument firings" in ln
+    )
+    assert "deception" in firing_line
+    assert "reference-less" in firing_line
+    assert "not deception evidence" in firing_line
+    assert "register, not calibration" in firing_line
+
+
 def test_recover_posture_mcp_tool(isolated_data_dir):
     """The MCP server dispatches `cogn_recover_posture` to our tool, and
     returns the same structured shape `recover_posture()` returns.

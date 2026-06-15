@@ -32,6 +32,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   recall preserved at **100%**. The single residual is a borderline
   sycophancy score (0.31 vs the 0.30 line), a separate instrument-calibration
   matter, not the construct ceiling. New tests: `tests/test_gate_construct_ceiling.py`.
+- **honest recovery narrative for construct-ceiling firings** —
+  `styxx.recover_posture()` printed the per-instrument firing MEAN as plain
+  `instrument=score` pairs, so the reference-less deception mean (the
+  `HEARTBEAT_OK`≈0.99 noise the 2026-05-21 self-audit caught) and the
+  saturated overconfidence mean read like real signal to an agent
+  re-anchoring after a context-compaction boundary. The narrative now marks
+  construct-ceiling firings inline (`deception=0.68 [reference-less —
+  non-discriminative, not deception evidence]`, `overconfidence=0.93
+  [register, not calibration]`) when the corresponding ceiling is active, so
+  the number can't masquerade as evidence. The raw float in `scores` is
+  unchanged (backward-compatible). Test:
+  `tests/test_public_surface.py::test_recovery_narrative_marks_reference_less_deception`.
 
 ### Added
 
