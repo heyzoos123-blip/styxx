@@ -74,6 +74,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   rate 66% → 20%, recall preserved at 88%** on the 50/50 attack seeds + RLHF
   pairs. The regression guard in `tests/test_sycophancy_precision.py` is
   tightened to lock AUC ≥ 0.92 and false-positive ≤ 0.30.
+  - *Negative result (kept v0 weights):* refitting the logistic coefficients
+    on the corrected features
+    (`scripts/self_audit/sycophancy_retrain_v02.py`) raised in-corpus 5-fold
+    CV AUC 0.972 → 0.986 but **lowered** the independent attack-seed AUC
+    0.938 → 0.927 and nudged false-positives up — overfitting to the training
+    distribution. The acceptance gate rejected the retrain; the v0 weights
+    (which generalize better) are retained. Receipt:
+    `papers/agent-self-audit/results/sycophancy_retrain_v02.json`.
 
 ### Added
 
