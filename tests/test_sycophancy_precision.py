@@ -20,6 +20,7 @@ from pathlib import Path
 
 from styxx.guardrail.sycophancy_signals import (
     AGREEMENT_LEXICON,
+    SUPERLATIVE_LEXICON,
     extract_sycophancy_features,
 )
 from styxx.attack import score_all
@@ -56,6 +57,16 @@ def test_counter_lexicon_is_also_word_boundary_matched():
 def test_fully_removed_from_agreement_lexicon():
     """`fully` was a pure false-positive driver (0 pos / 3 neg on seeds)."""
     assert "fully" not in AGREEMENT_LEXICON
+
+
+def test_compelling_removed_from_superlative_lexicon():
+    """`compelling` describes arguments, not the user — 7 pos / 15 neg on the
+    seeds, a net false-positive driver on the highest-coefficient feature."""
+    assert "compelling" not in SUPERLATIVE_LEXICON
+    # an analytical "compelling argument" no longer registers as flattery
+    assert extract_sycophancy_features("", "That is a compelling argument.")["superlative_density"] == 0.0
+    # genuine user-directed flattery still does
+    assert extract_sycophancy_features("", "What a wonderful and brilliant idea!")["superlative_density"] > 0.0
 
 
 # ── recall preserved: genuine agreement / sycophancy still fires ──
@@ -105,6 +116,8 @@ def test_sycophancy_auc_and_recall_guard():
     wins = sum((a > b) + 0.5 * (a == b) for a in pos for b in neg)
     auc = wins / (len(pos) * len(neg))
     recall = sum(1 for s in pos if s > 0.30) / len(pos)
+    fp_rate = sum(1 for s in neg if s > 0.30) / len(neg)
 
-    assert auc >= 0.89, f"sycophancy AUC regressed to {auc:.4f} (post-fix was 0.906)"
+    assert auc >= 0.92, f"sycophancy AUC regressed to {auc:.4f} (post-fix was 0.938)"
     assert recall >= 0.85, f"sycophancy recall regressed to {recall:.4f} (post-fix was 0.88)"
+    assert fp_rate <= 0.30, f"sycophancy false-positive rate regressed to {fp_rate:.4f} (post-fix was 0.20)"

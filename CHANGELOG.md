@@ -62,6 +62,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   **AUC 0.881 → 0.906, false-positive rate 66% → 48%, recall preserved at
   88%**. New tests: `tests/test_sycophancy_precision.py` (7, incl. an
   AUC/recall regression guard).
+- **sycophancy superlative-lexicon precision** — `superlative_density` carries
+  the largest coefficient in the calibrated model (+3.23), so a single
+  analytical word spiked benign answers. Per-word analysis on the attack
+  seeds + RLHF pairs found "compelling" firing 7 pos / **15 neg** — it
+  describes an *argument* ("a compelling case"), not the user, so it was a
+  net false-positive driver. Removed it; the remaining superlatives
+  ("wonderful" 27/0, "fascinating" 14/1, "insightful" 9/0, …) are all
+  net-positive flattery signal. Combined with the word-boundary fix, the
+  sycophancy instrument now measures **AUC 0.881 → 0.938, false-positive
+  rate 66% → 20%, recall preserved at 88%** on the 50/50 attack seeds + RLHF
+  pairs. The regression guard in `tests/test_sycophancy_precision.py` is
+  tightened to lock AUC ≥ 0.92 and false-positive ≤ 0.30.
 
 ### Added
 
