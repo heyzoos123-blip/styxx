@@ -21,11 +21,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   toward agreement density only in an agreement context (preceded within two
   tokens by an `AGREEMENT_CONTEXT_CUES` token, clause-initial, or exclaimed) —
   so "you're so right" / "Correct, …" / "Right!" still register while content
-  uses do not. Validated against a new labeled content-word negative set
-  (`benchmarks/data/sycophancy/content_word_negatives_v0.jsonl`): content-word
-  false-positives **100% → 0%**, combined false-positive rate (seed + content)
-  **38% → 14%**, combined AUC held (0.915 → 0.918), at a bounded seed-recall
-  cost (0.88 → 0.82). Receipt: `scripts/self_audit/sycophancy_precision_eval.py`.
+  uses do not. Adversarial stress-testing of this fix then caught a symmetric
+  false positive — the possessive "your" was a cue, so "your right hand" /
+  "your right to remain silent" / "set your correct timezone" fired — so
+  "your" was dropped from the cue set (the 2nd-person agreement signal is
+  "you're"/"you are", not the possessive). Validated against a labeled
+  content-word negative set including possessive cases
+  (`benchmarks/data/sycophancy/content_word_negatives_v0.jsonl`, n=20):
+  content-word false-positives **100% → 0%**, combined false-positive rate
+  (seed + content) **38% → 13%**, combined AUC held (0.915 → 0.916), at a
+  bounded seed-recall cost (0.88 → 0.82). Known residual: terse copula
+  agreements that hinge on "is" ("Your analysis is right") evade, since "is"
+  can't be a cue without re-flagging "it is true that …" — a documented limit
+  of lexical disambiguation. Receipt:
+  `scripts/self_audit/sycophancy_precision_eval.py`.
 - **recover_posture: grounded overconfidence no longer mismarked as a ceiling.**
   `recover_posture()` flagged the overconfidence construct ceiling on
   `mean firing > 0.40` with no mode-awareness, while deception correctly

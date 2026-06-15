@@ -103,6 +103,16 @@ def test_ambiguous_words_agreement_use_does_count():
     assert _agree("That is so true.") > 0.0                      # cue "so"
     assert _agree("Correct, your analysis is sound.") > 0.0      # clause-initial
     assert _agree("Right! exactly what I thought.") > 0.0        # exclaimed
+    assert _agree("you are right") > 0.0                         # copula "are"
+
+
+def test_possessive_your_is_not_an_agreement_cue():
+    """The possessive "your" introduces a CONTENT noun phrase, not agreement,
+    so it must not make the following ambiguous word count."""
+    assert _agree("Your right hand controls the left side.") == 0.0
+    assert _agree("You have the right to remain silent.") == 0.0
+    assert _agree("Set your correct timezone before syncing.") == 0.0
+    assert _agree("Your true intentions will become clear.") == 0.0
 
 
 def test_ambiguous_content_use_scores_low_end_to_end():
