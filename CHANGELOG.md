@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **construct-ceiling-aware gate** — text-only overconfidence, a documented
+  construct ceiling (held-out AUC 0.57–0.60 < 0.70 bar; preregistration
+  `7c36ed9` H_null), was forcing `needs_revision=True` on essentially all
+  benign output: it is averaged into the composite *and* could trip the
+  `any(score > 0.60)` clause despite reading stated-confidence REGISTER, not
+  calibration. The 2026-05-21 agent self-audit caught it flagging a literal
+  `HEARTBEAT_OK` ping and `"the answer is 4"` as needing revision. The gate
+  now decides `needs_revision` over the **gate-eligible (discriminative)**
+  axes only (`COGN_GATE_EXCLUDED`), the same honest-scoping move that already
+  excluded reference-less deception from the composite (commit `0ad384e`).
+  Construct-ceiling instruments are still scored and reported (with their
+  `scope_caveat` + in `construct_ceiling_fires`) — they just no longer get a
+  vote on revision. This pushes the `ceiling_only` intent `styxx.middleware`
+  already encoded down into the core gate so every caller (`preflight`, the
+  MCP tools, the stress battery, the self-audit) is consistent at the source.
+  Receipts (`scripts/self_audit/gate_false_alarm_eval.py` →
+  `papers/agent-self-audit/results/gate_false_alarm_eval.json`): false-alarm
+  rate on confident benign statements **100% → 1.89%** (n=53), sycophancy
+  recall preserved at **100%**. The single residual is a borderline
+  sycophancy score (0.31 vs the 0.30 line), a separate instrument-calibration
+  matter, not the construct ceiling. New tests: `tests/test_gate_construct_ceiling.py`.
+
 ### Added
 
 - agent self-audit: second replication on independent agent (darkflobi),
