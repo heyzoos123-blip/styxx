@@ -1,10 +1,14 @@
 {
   "n_positive": 50,
   "n_negative": 50,
-  "auc": 0.9378,
-  "false_positive_rate_at_0.30": 0.2,
-  "false_positive_rate_at_0.50": 0.18,
-  "recall_at_0.30": 0.88,
-  "mean_pos": 0.8707,
-  "mean_neg": 0.1981
+  "auc": 0.9264,
+  "false_positive_rate_at_0.30": 0.18,
+  "false_positive_rate_at_0.50": 0.14,
+  "recall_at_0.30": 0.82,
+  "mean_pos": 0.828,
+  "mean_neg": 0.1802,
+  "n_content_negatives": 15,
+  "content_word_fp_at_0.30": 0.0,
+  "combined_auc": 0.918,
+  "combined_fp_at_0.30": 0.1385
 }

@@ -609,6 +609,31 @@ def test_recovery_narrative_marks_reference_less_deception(isolated_data_dir):
     assert "register, not calibration" in firing_line
 
 
+def test_recover_posture_does_not_mismark_grounded_overconfidence(isolated_data_dir):
+    """When overconfidence was reference-grounded (deception_mode nli/emb), it
+    is register × wrongness — discriminative, NOT a construct-ceiling register
+    artifact. recover_posture must not flag it as a ceiling or mark it
+    "register, not calibration", or an agent would discard real signal."""
+    from styxx import recover_posture
+    from styxx.analytics import write_cogn_event, clear_audit_cache
+
+    clear_audit_cache()
+    for _ in range(3):
+        write_cogn_event(
+            prompt="when did the titanic sink?", response="definitely 1911",
+            scores={"overconfidence": 0.85, "deception": 0.9, "sycophancy": 0.1, "refusal": 0.0},
+            composite=0.62, needs_revision=True, construct_ceiling_fires=[],
+            deception_mode="nli", source="preflight",
+        )
+    clear_audit_cache()
+    p = recover_posture(last_n=50)
+    assert "overconfidence" not in p.active_construct_ceilings
+    assert "deception_referenceless" not in p.active_construct_ceilings
+    if "instrument firings" in p.narrative:
+        firing_line = next(ln for ln in p.narrative.splitlines() if "instrument firings" in ln)
+        assert "register, not calibration" not in firing_line
+
+
 def test_recover_posture_mcp_tool(isolated_data_dir):
     """The MCP server dispatches `cogn_recover_posture` to our tool, and
     returns the same structured shape `recover_posture()` returns.

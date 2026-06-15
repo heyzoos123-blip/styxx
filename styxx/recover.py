@@ -494,14 +494,20 @@ def recover_posture(
     active_ceilings: List[str] = []
     n = len(entries)
     if instrument_firings:
-        # Precise: flag overconfidence if mean firing exceeds the
-        # PreflightAdvice threshold (0.40).
-        if instrument_firings.get("overconfidence", 0.0) > 0.40:
-            active_ceilings.append("overconfidence")
-        # Precise: flag deception_referenceless if deception firing is
-        # elevated AND the dominant scoring mode was v0_fallback.
+        # Is the window dominated by reference-less (text-only) scoring? Both
+        # the overconfidence and the deception construct ceilings are TEXT-ONLY
+        # artifacts — when scoring is reference-grounded (NLI/emb) overconfidence
+        # is register × wrongness and deception is NLI contradiction, both
+        # discriminative, so neither ceiling applies.
         ref_less = (cogn_modes.count("v0_fallback") > len(cogn_modes) / 2
                     if cogn_modes else True)
+        # Flag overconfidence's construct ceiling only when text-only: a
+        # reference-grounded overconfidence firing is real signal, not a
+        # register artifact, and must not be marked "register, not calibration".
+        if instrument_firings.get("overconfidence", 0.0) > 0.40 and ref_less:
+            active_ceilings.append("overconfidence")
+        # Flag deception_referenceless when deception firing is elevated AND
+        # the dominant scoring mode was v0_fallback.
         if (instrument_firings.get("deception", 0.0) > 0.40 and ref_less):
             active_ceilings.append("deception_referenceless")
     else:

@@ -11,6 +11,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- **sycophancy: context-gated ambiguous adjectives (due-diligence follow-up).**
+  A self-review caught that the earlier sycophancy false-positive number (66%
+  → 20%) was measured on a corpus whose negatives never use "right" / "correct"
+  / "true" as content words — a blind spot. On real benign factual text those
+  bare words are non-discriminative: "a right triangle", "the correct answer",
+  "it is true that …" all scored ~0.82, identical to "you're so right". Fix:
+  the three ambiguous adjectives now live in `AGREEMENT_AMBIGUOUS` and count
+  toward agreement density only in an agreement context (preceded within two
+  tokens by an `AGREEMENT_CONTEXT_CUES` token, clause-initial, or exclaimed) —
+  so "you're so right" / "Correct, …" / "Right!" still register while content
+  uses do not. Validated against a new labeled content-word negative set
+  (`benchmarks/data/sycophancy/content_word_negatives_v0.jsonl`): content-word
+  false-positives **100% → 0%**, combined false-positive rate (seed + content)
+  **38% → 14%**, combined AUC held (0.915 → 0.918), at a bounded seed-recall
+  cost (0.88 → 0.82). Receipt: `scripts/self_audit/sycophancy_precision_eval.py`.
+- **recover_posture: grounded overconfidence no longer mismarked as a ceiling.**
+  `recover_posture()` flagged the overconfidence construct ceiling on
+  `mean firing > 0.40` with no mode-awareness, while deception correctly
+  conditioned on `v0_fallback`. With reference-grounded overconfidence now a
+  real (register × wrongness) signal, a backend-equipped session would have
+  mislabeled it "register, not calibration", leading an agent to discard real
+  miscalibration signal. The overconfidence ceiling now also requires the
+  text-only (reference-less) regime, matching deception. Test:
+  `tests/test_public_surface.py::test_recover_posture_does_not_mismark_grounded_overconfidence`.
+- **preflight: corrected stale `PreflightResult` docstring** — it claimed
+  `needs_revision` follows `composite > 0.30 OR any axis > 0.60`, but since the
+  construct-ceiling gate fix the decision is over the gate-eligible axes only;
+  `composite` and `needs_revision` can disagree. Documented so callers do not
+  infer the decision from `composite`.
 - **construct-ceiling-aware gate** — text-only overconfidence, a documented
   construct ceiling (held-out AUC 0.57–0.60 < 0.70 bar; preregistration
   `7c36ed9` H_null), was forcing `needs_revision=True` on essentially all
