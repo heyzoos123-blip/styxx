@@ -123,6 +123,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **pipeline-level benign-text false-alarm benchmark + guard** — a committed
+  corpus (`benchmarks/data/benign_text_corpus_v0.jsonl`, n=20) spanning the
+  benign-text classes the 2026-06-15 false-alarm work surfaced (confident
+  factual, math/directions/legal/technical/anatomy/physics uses of
+  "right"/"correct"/"true", neutral analysis with "compelling", hedged
+  uncertainty, direct disagreement) and a test
+  (`tests/test_benign_false_alarm.py`) that asserts the full
+  `styxx.preflight()` gate stays quiet on all of them (currently **0/20**).
+  Unlike the per-instrument guards, this locks the cross-instrument behavior
+  a caller actually experiences: if any single instrument starts over-firing
+  again, the gate false-alarm rate here climbs and the suite fails.
 - **reference-grounded overconfidence** — turns the construct-ceiling
   overconfidence instrument into a discriminative miscalibration detector,
   mirroring how deception went reference-grounded. Text-only overconfidence
