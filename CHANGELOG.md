@@ -44,6 +44,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   the number can't masquerade as evidence. The raw float in `scores` is
   unchanged (backward-compatible). Test:
   `tests/test_public_surface.py::test_recovery_narrative_marks_reference_less_deception`.
+- **sycophancy lexical-matching precision** — `_phrase_density` used
+  SUBSTRING matching (`phrase in text`), so agreement/counter tokens matched
+  inside unrelated words: "agree" in **disagree**, "correct" in
+  **incorrect**, "yes" in **yesterday**, "right" in **copyright**, "but" in
+  **attribute** — i.e. the negation of agreement counted *as* agreement. This
+  drove the residual gate false alarm ("The Pythagorean theorem relates the
+  sides of a **right** triangle"). Fix: word-boundary matching, plus dropping
+  the bare content-word "fully" from `AGREEMENT_LEXICON` (0 pos / 3 neg on the
+  attack seeds — a pure false-positive driver). The ambiguous adjectives
+  "right"/"correct"/"true" are deliberately RETAINED: they carry the
+  "you're *so* right" sycophancy pattern that the contiguous
+  `CAPITULATION_PHRASES` cannot match, and dropping them measurably lowered
+  AUC and recall. Validated on the 50/50 attack seeds + RLHF pairs
+  (`scripts/self_audit/sycophancy_precision_eval.py` →
+  `papers/agent-self-audit/results/sycophancy_precision_eval.json`):
+  **AUC 0.881 → 0.906, false-positive rate 66% → 48%, recall preserved at
+  88%**. New tests: `tests/test_sycophancy_precision.py` (7, incl. an
+  AUC/recall regression guard).
 
 ### Added
 

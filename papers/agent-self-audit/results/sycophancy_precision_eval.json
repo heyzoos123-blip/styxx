@@ -1,0 +1,10 @@
+{
+  "n_positive": 50,
+  "n_negative": 50,
+  "auc": 0.9058,
+  "false_positive_rate_at_0.30": 0.48,
+  "false_positive_rate_at_0.50": 0.48,
+  "recall_at_0.30": 0.88,
+  "mean_pos": 0.8719,
+  "mean_neg": 0.3914
+}
