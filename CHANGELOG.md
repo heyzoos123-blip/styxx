@@ -85,6 +85,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **reference-grounded overconfidence** — turns the construct-ceiling
+  overconfidence instrument into a discriminative miscalibration detector,
+  mirroring how deception went reference-grounded. Text-only overconfidence
+  scores the confidence REGISTER and fires equally on confident-correct and
+  confident-wrong text (mechanism check: calibration AUC **0.52** — chance).
+  When a `correct_reference` is supplied and deception is NLI/emb-grounded,
+  `_grounded_overconfidence(register, contradiction) = register × P(contra­
+  diction)` recovers the real signal — stating something *false* with high
+  confidence: confident+wrong → high, confident+correct → ~0, hedged+wrong →
+  low. On the N=50 factual triples this lifts overconfidence AUC **0.52 →
+  1.00** (`scripts/self_audit/overconfidence_grounding_eval.py`). Grounded
+  overconfidence re-enters the gate (it is gate-eligible only when grounded;
+  text-only stays construct-ceiling-excluded), and sheds its construct-ceiling
+  caveat in `preflight`. The live contradiction signal is deception_v2's NLI
+  (AUC 0.818, backend-gated); without the backend the path falls back to the
+  unchanged text-only behavior (no regression). New tests:
+  `tests/test_overconfidence_grounding.py` (7, incl. simulated-backend
+  integration).
 - agent self-audit: second replication on independent agent (darkflobi),
   counterfactual axis added. real vs counterfactual Δ +0.365 composite.
   construct-ceiling pattern (overconfidence register firing) reproduces.

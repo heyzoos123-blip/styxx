@@ -270,15 +270,20 @@ def preflight(
         # threshold the MCP advice tool uses (0.40).
         scores = raw_audit.get("scores", {})
         composite_keys = raw_audit.get("composite_keys", [])
+        overconf_grounded = bool(raw_audit.get("overconfidence_grounded", False))
         advice_list: List[PreflightAdvice] = []
         ceiling_fires: List[str] = []
         for inst in composite_keys:
             s = float(scores.get(inst, 0.0))
             if s < 0.40:
                 continue
-            # With a reference, deception is NLI-grounded — no caveat.
-            # overconfidence still hits the text-only construct ceiling.
+            # With a reference, deception is NLI-grounded — no caveat. And when
+            # overconfidence is reference-grounded (register × wrongness) it is
+            # likewise discriminative, so it sheds its text-only construct
+            # ceiling. Only fall back to the caveat when NOT grounded.
             caveat = _CONSTRUCT_CEILING.get(inst)
+            if inst == "overconfidence" and overconf_grounded:
+                caveat = None
             if caveat is not None:
                 ceiling_fires.append(inst)
             advice_list.append(PreflightAdvice(
