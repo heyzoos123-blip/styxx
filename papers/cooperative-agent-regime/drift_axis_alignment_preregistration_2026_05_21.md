@@ -1,10 +1,10 @@
 # Preregistration: Drift-Axis Alignment as a Cooperation Signature
 
 **Document ID:** drift_axis_alignment_preregistration_2026_05_21
-**Lock date:** TBD (signed at commit-hash lock; see §10)
-**Lock commit hash:** TBD
+**Lock date:** 2026-07-17
+**Lock commit hash:** `3d488b62ac84eb35d305203455540b8c677d7976` (the commit that appended the §10 SIGNED block; recorded by this §8/§10 amendment)
 **Authors:** Flobi (@flobi69), Claude Opus 4.7
-**Status:** DRAFT — pending sign-off, then locked-immutable per §10 provenance protocol
+**Status:** LOCKED — signed 2026-07-17; immutable per §10 (the sole permitted post-lock edit is the §8/§10 amendment recording the lock-hash and scoring-code hash)
 **Parent finding:** `phase_coherence_preregistration_2026_05_20.md` (closed-negative, lock-hash `3473523`)
 **Exploratory predecessor:** `scripts/exploratory/embedding_coupling.py` (commit `1723fa7`), result deposit `papers/cooperative-agent-regime/results/embedding_coupling.json` (commit `8ff3b65`)
 
@@ -125,6 +125,8 @@ The scoring code MUST be committed to the styxx repository BEFORE the corpus is 
 
 The commit hash of this scoring code is recorded in this document at lock-time (§10) BEFORE any new data is pulled through it.
 
+**Recorded by amendment (2026-07-17), referencing lock-hash `3d488b62ac84eb35d305203455540b8c677d7976`:** the scoring code above was committed as `79906b4` (`drift_axis_scorer.py: §8 scoring code (committed BEFORE prereg lock, awaiting sign-off)`, 2026-05-21) — before this preregistration was locked and before any corpus data exists.
+
 **Without the commit-first step, the experiment does not validate anything — it is just a measurement that happens to exist.**
 
 ## §9 — Reporting
@@ -156,10 +158,27 @@ No selective reporting. All runs against the locked scoring code are deposited, 
 - 2026-05-20 evening — operator pushback on framing escalation; assistant proposed bet-1.5 preregistration as the disciplined next step
 - 2026-05-21 — draft committed (this document)
 
-**Lock-date:** TBD
-**Lock-commit-hash:** the commit that appends the SIGNED block below is the binding lock-hash. See `git log --follow papers/cooperative-agent-regime/drift_axis_alignment_preregistration_2026_05_21.md` for the exact value (self-reference paradox in inline recording is avoided by deferring to git history, same convention as `phase_coherence_preregistration_2026_05_20.md` at commit `3473523`).
-**Scoring-code commit hash:** TBD (recorded by amendment after the scoring-code commit lands).
+**Lock-date:** 2026-07-17
+**Lock-commit-hash:** `3d488b62ac84eb35d305203455540b8c677d7976` — the commit that appended the SIGNED block below (recorded here by amendment; the binding value remains defined by git history, same convention as `phase_coherence_preregistration_2026_05_20.md` at commit `3473523`).
+**Scoring-code commit hash:** `79906b4` (recorded by this amendment, referencing the lock-hash above).
 
 ---
 
 *Sign-off block to be appended by the operator. Until appended, this document is DRAFT and the locking convention is not in effect.*
+
+## §10 Lock — SIGNED
+
+**Lock date:** 2026-07-17
+**Signed:** Flobi (@flobi69), operator — sign-off directed in the Claude Code session of 2026-07-17, following the pre-lock review below.
+**Reviewing agent at lock time:** Claude (Claude Code remote session, 2026-07-17). Draft co-author of record: Claude Opus 4.7 (2026-05-21 session).
+
+**Pre-lock verification performed 2026-07-17:**
+
+- `scripts/drift_axis_scorer.py` (commit `79906b4`) re-read against this document: implements the §4 operational definition verbatim; both §2 embedding loaders present (OpenAI `text-embedding-3-large`, `BAAI/bge-large-en-v1.5`); shuffled-pairs null model and 5000-resample permutation procedure present per §5/§8.
+- Math-parity tripwire `tests/test_drift_axis_scorer_parity.py`: **6/6 pass**, re-run at lock time.
+- The API-dependent re-embedding self-test (`python scripts/drift_axis_scorer.py selftest` — §8's machine-precision reproduction of the N=5 probe deposit) requires OpenAI API access that was not available at lock time. **It is a hard gate: it must pass, and its output must be recorded, before any corpus data is pulled through the scorer.** An unrun or failing selftest blocks the corpus run.
+
+Per §10, the commit appending this block is the binding preregistration
+lock-hash (its value is recorded by the §8/§10 amendment commit, the sole
+permitted post-lock edit). From this commit onward, any methodology change
+requires a new preregistration with a new lock-hash.
