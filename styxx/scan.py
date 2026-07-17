@@ -47,6 +47,13 @@ WHITE   = "\033[38;2;240;235;238m"
 GRAY    = "\033[38;2;90;80;85m"
 YELLOW  = "\033[38;2;240;220;80m"
 
+# Glyph constants. Defined as names (not inline escapes) so they can be used
+# inside f-string replacement fields without tripping the "f-string
+# expression part cannot include a backslash" SyntaxError on Python < 3.12
+# (the project supports 3.9–3.12).
+_DELTA = "Δ"  # Δ  greek capital delta
+_DOT   = "●"  # ●  black circle
+
 NO_COLOR = not sys.stdout.isatty()
 
 def c(text: str, color: str) -> str:
@@ -246,7 +253,7 @@ def render_scan_card(
         cd_val = f"{result.c_delta:+.6f}"
         cd_color = RED if result.c_delta < C_DELTA_HALLUC_THRESHOLD else GREEN
         cd_label = "WHAT concepts lock together"
-        lines.append(c("  \u2502", RED) + f"  {c('C', BOLD + PINK)}{c('\u0394', PINK)} {c('coherence', PINK)}   {c(cd_val, cd_color + BOLD)}  {c(cd_label, GRAY)}" + " " * max(0, w - 49 - len(cd_val)) + c("\u2502", RED))
+        lines.append(c("  \u2502", RED) + f"  {c('C', BOLD + PINK)}{c(_DELTA, PINK)} {c('coherence', PINK)}   {c(cd_val, cd_color + BOLD)}  {c(cd_label, GRAY)}" + " " * max(0, w - 49 - len(cd_val)) + c("\u2502", RED))
     if result.coherence is not None:
         cg_val = f"{result.coherence:.6f}"
         lines.append(c("  \u2502", RED) + f"  {c(' ', GRAY)}  {c('global C', GRAY)}     {c(cg_val, WHITE)}" + " " * max(0, w - 25 - len(cg_val)) + c("\u2502", RED))
@@ -270,7 +277,7 @@ def render_scan_card(
     # Verdict
     gate = verdict["gate"]
     gate_color = GREEN if gate == "PASS" else (ORANGE if gate == "WARN" else RED)
-    lines.append(c("  \u2502", RED) + f"  {c('\u25cf', gate_color)} {c(gate, gate_color + BOLD)}  {c(verdict['verdicts'][0] if verdict['verdicts'] else '', WHITE)}" + " " * max(0, w - 12 - len(verdict['verdicts'][0] if verdict['verdicts'] else '')) + c("\u2502", RED))
+    lines.append(c("  \u2502", RED) + f"  {c(_DOT, gate_color)} {c(gate, gate_color + BOLD)}  {c(verdict['verdicts'][0] if verdict['verdicts'] else '', WHITE)}" + " " * max(0, w - 12 - len(verdict['verdicts'][0] if verdict['verdicts'] else '')) + c("\u2502", RED))
 
     for v in verdict["verdicts"][1:]:
         lines.append(c("  \u2502", RED) + f"  {c(' ', GRAY)}       {c(v, GRAY)}" + " " * max(0, w - 12 - len(v)) + c("\u2502", RED))
@@ -332,7 +339,7 @@ def render_comparison(
     lines.append(row)
 
     # C_delta row
-    row = f"  {c('C\u0394 coherence', PINK):<30}  "
+    row = f"  {c('C' + _DELTA + ' coherence', PINK):<30}  "
     for r in results:
         v = f"{r.c_delta:+.6f}" if r.c_delta is not None else "n/a"
         cd_color = RED if (r.c_delta or 0) < C_DELTA_HALLUC_THRESHOLD else GREEN
@@ -396,7 +403,7 @@ def render_bridge(
     lines.append(f"    {c('K depth:', GRAY)}  {c(f'{tier2_result.weighted_depth:.3f}', WHITE + BOLD)}")
     if tier2_result.c_delta is not None:
         cd_color = RED if tier2_result.c_delta < C_DELTA_HALLUC_THRESHOLD else GREEN
-        lines.append(f"    {c('C\u0394:', GRAY)}      {c(f'{tier2_result.c_delta:+.6f}', cd_color + BOLD)}")
+        lines.append(f"    {c('C' + _DELTA + ':', GRAY)}      {c(f'{tier2_result.c_delta:+.6f}', cd_color + BOLD)}")
     if tier2_result.s_early is not None:
         lines.append(f"    {c('S:', GRAY)}       {c(f'{tier2_result.s_early:.6f}', WHITE + BOLD)}")
 

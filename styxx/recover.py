@@ -278,8 +278,31 @@ def _build_narrative(s: "PostureSummary") -> str:
     # Per-instrument firing history (v2 — only present when preflight
     # events are in the window)
     if s.instrument_firings:
+        # Construct-ceiling instruments are reported but their firing MEAN is
+        # not clean cognometric signal: text-only overconfidence reads
+        # register not calibration, and reference-less deception is
+        # non-discriminative noise (the 2026-05-21 self-audit caught a
+        # HEARTBEAT_OK ping persisting as deception≈0.99). An agent
+        # re-anchoring on this narrative must not read those numbers as
+        # evidence, so we mark them inline rather than letting a high mean
+        # masquerade as a real firing.
+        _active = set(s.active_construct_ceilings)
+        _markers = {
+            "overconfidence": ("overconfidence" in _active,
+                               "register, not calibration"),
+            "deception": ("deception_referenceless" in _active,
+                          "reference-less — non-discriminative, not deception evidence"),
+        }
+
+        def _firing_label(inst: str, score: float) -> str:
+            label = f"{inst}={score:.2f}"
+            flagged, why = _markers.get(inst, (False, ""))
+            if flagged:
+                label += f" [{why}]"
+            return label
+
         firings_str = ", ".join(
-            f"{inst}={score:.2f}"
+            _firing_label(inst, score)
             for inst, score in sorted(
                 s.instrument_firings.items(),
                 key=lambda kv: -kv[1],
@@ -471,14 +494,20 @@ def recover_posture(
     active_ceilings: List[str] = []
     n = len(entries)
     if instrument_firings:
-        # Precise: flag overconfidence if mean firing exceeds the
-        # PreflightAdvice threshold (0.40).
-        if instrument_firings.get("overconfidence", 0.0) > 0.40:
-            active_ceilings.append("overconfidence")
-        # Precise: flag deception_referenceless if deception firing is
-        # elevated AND the dominant scoring mode was v0_fallback.
+        # Is the window dominated by reference-less (text-only) scoring? Both
+        # the overconfidence and the deception construct ceilings are TEXT-ONLY
+        # artifacts — when scoring is reference-grounded (NLI/emb) overconfidence
+        # is register × wrongness and deception is NLI contradiction, both
+        # discriminative, so neither ceiling applies.
         ref_less = (cogn_modes.count("v0_fallback") > len(cogn_modes) / 2
                     if cogn_modes else True)
+        # Flag overconfidence's construct ceiling only when text-only: a
+        # reference-grounded overconfidence firing is real signal, not a
+        # register artifact, and must not be marked "register, not calibration".
+        if instrument_firings.get("overconfidence", 0.0) > 0.40 and ref_less:
+            active_ceilings.append("overconfidence")
+        # Flag deception_referenceless when deception firing is elevated AND
+        # the dominant scoring mode was v0_fallback.
         if (instrument_firings.get("deception", 0.0) > 0.40 and ref_less):
             active_ceilings.append("deception_referenceless")
     else:

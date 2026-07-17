@@ -9,8 +9,149 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **sycophancy: context-gated ambiguous adjectives (due-diligence follow-up).**
+  A self-review caught that the earlier sycophancy false-positive number (66%
+  → 20%) was measured on a corpus whose negatives never use "right" / "correct"
+  / "true" as content words — a blind spot. On real benign factual text those
+  bare words are non-discriminative: "a right triangle", "the correct answer",
+  "it is true that …" all scored ~0.82, identical to "you're so right". Fix:
+  the three ambiguous adjectives now live in `AGREEMENT_AMBIGUOUS` and count
+  toward agreement density only in an agreement context (preceded within two
+  tokens by an `AGREEMENT_CONTEXT_CUES` token, clause-initial, or exclaimed) —
+  so "you're so right" / "Correct, …" / "Right!" still register while content
+  uses do not. Adversarial stress-testing of this fix then caught a symmetric
+  false positive — the possessive "your" was a cue, so "your right hand" /
+  "your right to remain silent" / "set your correct timezone" fired — so
+  "your" was dropped from the cue set (the 2nd-person agreement signal is
+  "you're"/"you are", not the possessive). Validated against a labeled
+  content-word negative set including possessive cases
+  (`benchmarks/data/sycophancy/content_word_negatives_v0.jsonl`, n=20):
+  content-word false-positives **100% → 0%**, combined false-positive rate
+  (seed + content) **38% → 13%**, combined AUC held (0.915 → 0.916), at a
+  bounded seed-recall cost (0.88 → 0.82). Known residual: terse copula
+  agreements that hinge on "is" ("Your analysis is right") evade, since "is"
+  can't be a cue without re-flagging "it is true that …" — a documented limit
+  of lexical disambiguation. Receipt:
+  `scripts/self_audit/sycophancy_precision_eval.py`.
+- **recover_posture: grounded overconfidence no longer mismarked as a ceiling.**
+  `recover_posture()` flagged the overconfidence construct ceiling on
+  `mean firing > 0.40` with no mode-awareness, while deception correctly
+  conditioned on `v0_fallback`. With reference-grounded overconfidence now a
+  real (register × wrongness) signal, a backend-equipped session would have
+  mislabeled it "register, not calibration", leading an agent to discard real
+  miscalibration signal. The overconfidence ceiling now also requires the
+  text-only (reference-less) regime, matching deception. Test:
+  `tests/test_public_surface.py::test_recover_posture_does_not_mismark_grounded_overconfidence`.
+- **preflight: corrected stale `PreflightResult` docstring** — it claimed
+  `needs_revision` follows `composite > 0.30 OR any axis > 0.60`, but since the
+  construct-ceiling gate fix the decision is over the gate-eligible axes only;
+  `composite` and `needs_revision` can disagree. Documented so callers do not
+  infer the decision from `composite`.
+- **construct-ceiling-aware gate** — text-only overconfidence, a documented
+  construct ceiling (held-out AUC 0.57–0.60 < 0.70 bar; preregistration
+  `7c36ed9` H_null), was forcing `needs_revision=True` on essentially all
+  benign output: it is averaged into the composite *and* could trip the
+  `any(score > 0.60)` clause despite reading stated-confidence REGISTER, not
+  calibration. The 2026-05-21 agent self-audit caught it flagging a literal
+  `HEARTBEAT_OK` ping and `"the answer is 4"` as needing revision. The gate
+  now decides `needs_revision` over the **gate-eligible (discriminative)**
+  axes only (`COGN_GATE_EXCLUDED`), the same honest-scoping move that already
+  excluded reference-less deception from the composite (commit `0ad384e`).
+  Construct-ceiling instruments are still scored and reported (with their
+  `scope_caveat` + in `construct_ceiling_fires`) — they just no longer get a
+  vote on revision. This pushes the `ceiling_only` intent `styxx.middleware`
+  already encoded down into the core gate so every caller (`preflight`, the
+  MCP tools, the stress battery, the self-audit) is consistent at the source.
+  Receipts (`scripts/self_audit/gate_false_alarm_eval.py` →
+  `papers/agent-self-audit/results/gate_false_alarm_eval.json`): false-alarm
+  rate on confident benign statements **100% → 1.89%** (n=53), sycophancy
+  recall preserved at **100%**. The single residual is a borderline
+  sycophancy score (0.31 vs the 0.30 line), a separate instrument-calibration
+  matter, not the construct ceiling. New tests: `tests/test_gate_construct_ceiling.py`.
+- **honest recovery narrative for construct-ceiling firings** —
+  `styxx.recover_posture()` printed the per-instrument firing MEAN as plain
+  `instrument=score` pairs, so the reference-less deception mean (the
+  `HEARTBEAT_OK`≈0.99 noise the 2026-05-21 self-audit caught) and the
+  saturated overconfidence mean read like real signal to an agent
+  re-anchoring after a context-compaction boundary. The narrative now marks
+  construct-ceiling firings inline (`deception=0.68 [reference-less —
+  non-discriminative, not deception evidence]`, `overconfidence=0.93
+  [register, not calibration]`) when the corresponding ceiling is active, so
+  the number can't masquerade as evidence. The raw float in `scores` is
+  unchanged (backward-compatible). Test:
+  `tests/test_public_surface.py::test_recovery_narrative_marks_reference_less_deception`.
+- **sycophancy lexical-matching precision** — `_phrase_density` used
+  SUBSTRING matching (`phrase in text`), so agreement/counter tokens matched
+  inside unrelated words: "agree" in **disagree**, "correct" in
+  **incorrect**, "yes" in **yesterday**, "right" in **copyright**, "but" in
+  **attribute** — i.e. the negation of agreement counted *as* agreement. This
+  drove the residual gate false alarm ("The Pythagorean theorem relates the
+  sides of a **right** triangle"). Fix: word-boundary matching, plus dropping
+  the bare content-word "fully" from `AGREEMENT_LEXICON` (0 pos / 3 neg on the
+  attack seeds — a pure false-positive driver). The ambiguous adjectives
+  "right"/"correct"/"true" are deliberately RETAINED: they carry the
+  "you're *so* right" sycophancy pattern that the contiguous
+  `CAPITULATION_PHRASES` cannot match, and dropping them measurably lowered
+  AUC and recall. Validated on the 50/50 attack seeds + RLHF pairs
+  (`scripts/self_audit/sycophancy_precision_eval.py` →
+  `papers/agent-self-audit/results/sycophancy_precision_eval.json`):
+  **AUC 0.881 → 0.906, false-positive rate 66% → 48%, recall preserved at
+  88%**. New tests: `tests/test_sycophancy_precision.py` (7, incl. an
+  AUC/recall regression guard).
+- **sycophancy superlative-lexicon precision** — `superlative_density` carries
+  the largest coefficient in the calibrated model (+3.23), so a single
+  analytical word spiked benign answers. Per-word analysis on the attack
+  seeds + RLHF pairs found "compelling" firing 7 pos / **15 neg** — it
+  describes an *argument* ("a compelling case"), not the user, so it was a
+  net false-positive driver. Removed it; the remaining superlatives
+  ("wonderful" 27/0, "fascinating" 14/1, "insightful" 9/0, …) are all
+  net-positive flattery signal. Combined with the word-boundary fix, the
+  sycophancy instrument now measures **AUC 0.881 → 0.938, false-positive
+  rate 66% → 20%, recall preserved at 88%** on the 50/50 attack seeds + RLHF
+  pairs. The regression guard in `tests/test_sycophancy_precision.py` is
+  tightened to lock AUC ≥ 0.92 and false-positive ≤ 0.30.
+  - *Negative result (kept v0 weights):* refitting the logistic coefficients
+    on the corrected features
+    (`scripts/self_audit/sycophancy_retrain_v02.py`) raised in-corpus 5-fold
+    CV AUC 0.972 → 0.986 but **lowered** the independent attack-seed AUC
+    0.938 → 0.927 and nudged false-positives up — overfitting to the training
+    distribution. The acceptance gate rejected the retrain; the v0 weights
+    (which generalize better) are retained. Receipt:
+    `papers/agent-self-audit/results/sycophancy_retrain_v02.json`.
+
 ### Added
 
+- **pipeline-level benign-text false-alarm benchmark + guard** — a committed
+  corpus (`benchmarks/data/benign_text_corpus_v0.jsonl`, n=20) spanning the
+  benign-text classes the 2026-06-15 false-alarm work surfaced (confident
+  factual, math/directions/legal/technical/anatomy/physics uses of
+  "right"/"correct"/"true", neutral analysis with "compelling", hedged
+  uncertainty, direct disagreement) and a test
+  (`tests/test_benign_false_alarm.py`) that asserts the full
+  `styxx.preflight()` gate stays quiet on all of them (currently **0/20**).
+  Unlike the per-instrument guards, this locks the cross-instrument behavior
+  a caller actually experiences: if any single instrument starts over-firing
+  again, the gate false-alarm rate here climbs and the suite fails.
+- **reference-grounded overconfidence** — turns the construct-ceiling
+  overconfidence instrument into a discriminative miscalibration detector,
+  mirroring how deception went reference-grounded. Text-only overconfidence
+  scores the confidence REGISTER and fires equally on confident-correct and
+  confident-wrong text (mechanism check: calibration AUC **0.52** — chance).
+  When a `correct_reference` is supplied and deception is NLI/emb-grounded,
+  `_grounded_overconfidence(register, contradiction) = register × P(contra­
+  diction)` recovers the real signal — stating something *false* with high
+  confidence: confident+wrong → high, confident+correct → ~0, hedged+wrong →
+  low. On the N=50 factual triples this lifts overconfidence AUC **0.52 →
+  1.00** (`scripts/self_audit/overconfidence_grounding_eval.py`). Grounded
+  overconfidence re-enters the gate (it is gate-eligible only when grounded;
+  text-only stays construct-ceiling-excluded), and sheds its construct-ceiling
+  caveat in `preflight`. The live contradiction signal is deception_v2's NLI
+  (AUC 0.818, backend-gated); without the backend the path falls back to the
+  unchanged text-only behavior (no regression). New tests:
+  `tests/test_overconfidence_grounding.py` (7, incl. simulated-backend
+  integration).
 - agent self-audit: second replication on independent agent (darkflobi),
   counterfactual axis added. real vs counterfactual Δ +0.365 composite.
   construct-ceiling pattern (overconfidence register firing) reproduces.

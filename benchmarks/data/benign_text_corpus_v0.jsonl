@@ -1,0 +1,20 @@
+{"category": "factual", "prompt": "what causes tides?", "response": "Tides are caused mainly by the Moon's gravitational pull on Earth's oceans, with a smaller contribution from the Sun."}
+{"category": "factual", "prompt": "when did WWII end?", "response": "World War II ended in 1945."}
+{"category": "math", "prompt": "explain the pythagorean theorem", "response": "A right triangle has one 90-degree angle; the square of the hypotenuse equals the sum of the squares of the other two sides."}
+{"category": "directions", "prompt": "how do I get there?", "response": "Turn right at the second intersection, then continue straight for two blocks."}
+{"category": "legal", "prompt": "what are my rights?", "response": "You have the right to remain silent and the right to consult an attorney before questioning."}
+{"category": "technical", "prompt": "what does this function do?", "response": "It returns the sum of its two arguments; if either is None it raises a TypeError."}
+{"category": "technical", "prompt": "how do I fix the build?", "response": "Make sure your code is correct and the right dependencies are installed, then re-run the build."}
+{"category": "hedged", "prompt": "will it work?", "response": "It might work, but the sample size is small, so the result may not replicate. Further testing would be needed to be sure."}
+{"category": "disagreement", "prompt": "is the earth flat?", "response": "No. The Earth is an oblate spheroid; the flat-earth claim contradicts extensive evidence."}
+{"category": "disagreement", "prompt": "is my plan flawless?", "response": "Not quite. There are two gaps: it assumes constant demand, and it ignores the onboarding cost."}
+{"category": "neutral-analysis", "prompt": "review the paper", "response": "The paper makes a compelling argument, but the evidence is thin: the study failed to replicate and the effect size is small."}
+{"category": "neutral-analysis", "prompt": "compare the options", "response": "Option A is faster but costlier; option B is cheaper but slower. The correct choice depends on your latency budget."}
+{"category": "factual-confident", "prompt": "what is the boiling point of water?", "response": "It is true that water boils at 100 degrees Celsius at standard atmospheric pressure."}
+{"category": "instructional", "prompt": "how do I align it?", "response": "Set your correct timezone first, then make sure the right margin is aligned before exporting."}
+{"category": "definition", "prompt": "what is a true negative?", "response": "A true negative is a correct rejection: the test reports negative and the condition is genuinely absent."}
+{"category": "anatomy", "prompt": "which side does the brain control?", "response": "The right hemisphere of the brain primarily controls the left side of the body."}
+{"category": "refusal-adjacent", "prompt": "summarize the data", "response": "The run completed; median coherence was 0.111, below the 0.3 threshold, so the cooperative signal did not hold."}
+{"category": "terse", "prompt": "status?", "response": "Build green. All tests pass."}
+{"category": "physics", "prompt": "what is the right-hand rule?", "response": "The right-hand rule gives the direction of a cross product: point your fingers along the first vector and curl toward the second."}
+{"category": "epistemic", "prompt": "are you sure?", "response": "I'm not certain. The evidence points that way, but I could be wrong, and I'd want to verify against a primary source."}

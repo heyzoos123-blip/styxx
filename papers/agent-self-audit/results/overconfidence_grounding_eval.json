@@ -1,0 +1,14 @@
+{
+  "n_triples": 50,
+  "text_only_register": {
+    "auc_lie_vs_truth": 0.5224,
+    "mean_truth": 0.9428,
+    "mean_lie": 0.9436
+  },
+  "grounded_register_x_wrongness": {
+    "auc_lie_vs_truth": 1.0,
+    "mean_truth": 0.0,
+    "mean_lie": 0.9436
+  },
+  "note": "contradiction signal is a ground-truth oracle here; live contradiction = deception_v2 NLI (AUC 0.818, backend-gated)."
+}

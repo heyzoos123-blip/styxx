@@ -105,11 +105,18 @@ class PreflightResult:
     """Typed return of `styxx.preflight(prompt, draft)`.
 
     The composite is a `[0, 1]`-valued cognometric risk score where lower
-    is more honest. `needs_revision` is True iff composite > 0.30 or any
-    composite-instrument scored > 0.60 — the same threshold the MCP tool
-    uses. `advice` only contains instruments that scored > 0.40; quiet
-    instruments are omitted to keep the structure focused on what's
-    actionable.
+    is more honest. `needs_revision` is decided over the GATE-ELIGIBLE
+    (discriminative) axes only — a *gate composite* > 0.30 OR any gate-eligible
+    instrument > 0.60 — NOT over the reported `composite`. Construct-ceiling
+    instruments (text-only overconfidence; reference-less deception) are
+    reported in `scores`/`construct_ceiling_fires` but excluded from the
+    decision, since they read register, not calibration, and would otherwise
+    force revision on benign confident text. Do not infer `needs_revision`
+    from `composite` alone — they can disagree (e.g. a confident, correct
+    answer: composite elevated by overconfidence register, but
+    needs_revision False). `advice` only contains instruments that scored
+    > 0.40; quiet instruments are omitted to keep the structure focused on
+    what's actionable.
 
     `refusal_note` is populated when refusal > 0.60. Refusal is reported
     separately because it isn't always bad — refusing harm is correct.
@@ -270,15 +277,20 @@ def preflight(
         # threshold the MCP advice tool uses (0.40).
         scores = raw_audit.get("scores", {})
         composite_keys = raw_audit.get("composite_keys", [])
+        overconf_grounded = bool(raw_audit.get("overconfidence_grounded", False))
         advice_list: List[PreflightAdvice] = []
         ceiling_fires: List[str] = []
         for inst in composite_keys:
             s = float(scores.get(inst, 0.0))
             if s < 0.40:
                 continue
-            # With a reference, deception is NLI-grounded — no caveat.
-            # overconfidence still hits the text-only construct ceiling.
+            # With a reference, deception is NLI-grounded — no caveat. And when
+            # overconfidence is reference-grounded (register × wrongness) it is
+            # likewise discriminative, so it sheds its text-only construct
+            # ceiling. Only fall back to the caveat when NOT grounded.
             caveat = _CONSTRUCT_CEILING.get(inst)
+            if inst == "overconfidence" and overconf_grounded:
+                caveat = None
             if caveat is not None:
                 ceiling_fires.append(inst)
             advice_list.append(PreflightAdvice(
