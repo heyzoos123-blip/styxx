@@ -45,8 +45,12 @@ PHASE_ORDER = ["phase1_preflight", "phase2_early", "phase3_mid", "phase4_late"]
 # sha256 of the shipped centroid file. Pinned for reproducibility.
 # If this ever mismatches the actual file, styxx refuses to import —
 # it means the calibration data has been tampered with or corrupted.
+# Erratum (7.4.1): the pin shipped as 502313c2… while the file in the same
+# release commit hashed to eda49b87… — the pin never matched any shipped
+# file. eda49b87… is the file distributed in both the Python and JS
+# packages since 7.4.1 and is hereby confirmed canonical.
 EXPECTED_CENTROIDS_SHA256 = (
-    "502313c2e7c160df205f24d5457bb57b8a5e1846ff4afe898db0f20d491d0beb"
+    "eda49b875fa7fe68a7307b2b77fea976ca6cce7719a783e13f5cf67a538b30f5"
 )
 
 

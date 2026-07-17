@@ -129,7 +129,9 @@ The atlas v0.3 centroids are computed from cognitive trajectories captured on **
 | Gemma | gemma-2-2b, gemma-2-2b-it, gemma-3-1b-pt, gemma-3-1b-it |
 | Llama | Llama-3.2-1B, Llama-3.2-1B-Instruct, Llama-3.2-3B, Llama-3.2-3B-Instruct |
 
-Each model was probed with a curated prompt set spanning all six cognitive categories, the resulting per-token signals were captured, and category-wise centroids were fitted in z-score-normalized feature space. The resulting centroid table is sha-pinned (`502313c2e7c160df205f24d5457bb57b8a5e1846ff4afe898db0f20d491d0beb`) and shipped as part of the styxx package; tampering with the file causes the package to refuse to load.
+Each model was probed with a curated prompt set spanning all six cognitive categories, the resulting per-token signals were captured, and category-wise centroids were fitted in z-score-normalized feature space. The resulting centroid table is sha-pinned (`eda49b875fa7fe68a7307b2b77fea976ca6cce7719a783e13f5cf67a538b30f5`) and shipped as part of the styxx package; tampering with the file causes the package to refuse to load.
+
+> **Erratum (2026-07-17).** This paragraph originally cited the pin as `502313c2e7c160df205f24d5457bb57b8a5e1846ff4afe898db0f20d491d0beb`. That hash was a packaging mistake in the 7.4.1 release: the pin and the centroid file entered the repository in the same commit already mismatched, and no file hashing to `502313c2…` has ever existed in the repository or in either published package. The file actually shipped in both the Python and JS packages since 7.4.1 hashes to `eda49b87…`, which is now the confirmed canonical pin (see `styxx/vitals.py`).
 
 Honest cross-model leave-one-out (LOO) accuracy at tier 0, with chance level at $1/6 \approx 0.167$:
 
