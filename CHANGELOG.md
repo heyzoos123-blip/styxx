@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **centroid SHA-pin mismatch (7.4.1 packaging erratum).**
+  `EXPECTED_CENTROIDS_SHA256` in `styxx/vitals.py` pinned `502313c2…`
+  while the shipped `styxx/centroids/atlas_v0.3.json` hashes to
+  `eda49b87…` — both entered in the same 7.4.1 release commit
+  (`390752f`) already inconsistent, so the tamper guard failed on every
+  clean install and cascaded `ValueError` through every centroid-loading
+  code path (87 test failures without `STYXX_SKIP_SHA=1`). No file
+  hashing to `502313c2…` has ever existed in the repository or in either
+  published package; the Python and JS packages both ship the identical
+  `eda49b87…` file. Resolution: `eda49b87…` confirmed canonical — the
+  pin is updated to match, and `papers/cognitive-metrology-v1.md`
+  carries an inline erratum correcting the cited hash. This was a
+  packaging mistake, not tampering: the calibration data itself is
+  unchanged from what 7.4.1 distributed.
+
 ### Added
 
 - agent self-audit: second replication on independent agent (darkflobi),
