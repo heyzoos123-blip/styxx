@@ -2,7 +2,7 @@
 
 **Document ID:** drift_axis_alignment_preregistration_2026_05_21
 **Lock date:** 2026-07-17
-**Lock commit hash:** TBD (recorded by §8/§10 amendment; binding value is the commit that appends the §10 SIGNED block — see git history)
+**Lock commit hash:** `3d488b62ac84eb35d305203455540b8c677d7976` (the commit that appended the §10 SIGNED block; recorded by this §8/§10 amendment)
 **Authors:** Flobi (@flobi69), Claude Opus 4.7
 **Status:** LOCKED — signed 2026-07-17; immutable per §10 (the sole permitted post-lock edit is the §8/§10 amendment recording the lock-hash and scoring-code hash)
 **Parent finding:** `phase_coherence_preregistration_2026_05_20.md` (closed-negative, lock-hash `3473523`)
@@ -125,6 +125,8 @@ The scoring code MUST be committed to the styxx repository BEFORE the corpus is 
 
 The commit hash of this scoring code is recorded in this document at lock-time (§10) BEFORE any new data is pulled through it.
 
+**Recorded by amendment (2026-07-17), referencing lock-hash `3d488b62ac84eb35d305203455540b8c677d7976`:** the scoring code above was committed as `79906b4` (`drift_axis_scorer.py: §8 scoring code (committed BEFORE prereg lock, awaiting sign-off)`, 2026-05-21) — before this preregistration was locked and before any corpus data exists.
+
 **Without the commit-first step, the experiment does not validate anything — it is just a measurement that happens to exist.**
 
 ## §9 — Reporting
@@ -156,9 +158,9 @@ No selective reporting. All runs against the locked scoring code are deposited, 
 - 2026-05-20 evening — operator pushback on framing escalation; assistant proposed bet-1.5 preregistration as the disciplined next step
 - 2026-05-21 — draft committed (this document)
 
-**Lock-date:** TBD
-**Lock-commit-hash:** the commit that appends the SIGNED block below is the binding lock-hash. See `git log --follow papers/cooperative-agent-regime/drift_axis_alignment_preregistration_2026_05_21.md` for the exact value (self-reference paradox in inline recording is avoided by deferring to git history, same convention as `phase_coherence_preregistration_2026_05_20.md` at commit `3473523`).
-**Scoring-code commit hash:** TBD (recorded by amendment after the scoring-code commit lands).
+**Lock-date:** 2026-07-17
+**Lock-commit-hash:** `3d488b62ac84eb35d305203455540b8c677d7976` — the commit that appended the SIGNED block below (recorded here by amendment; the binding value remains defined by git history, same convention as `phase_coherence_preregistration_2026_05_20.md` at commit `3473523`).
+**Scoring-code commit hash:** `79906b4` (recorded by this amendment, referencing the lock-hash above).
 
 ---
 
