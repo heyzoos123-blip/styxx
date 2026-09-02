@@ -225,6 +225,7 @@ about whether they should be counted as one idea or two.
 | 0.5468 | SAE attribution depth → correctness AUROC | `depth-truth/results/verdict.json` |
 | +0.3122 | permuted-MNIST phase-clamp ablation | `frequency-resonance/pmnist_ablation_result.json` |
 | 0.1078 | permuted-MNIST: fraction of the clamp's loss a rotation-free bank with doubled timescales recovers (PARTIAL) | `frequency-resonance/pmnist_untied_result.json` |
+| 0.0 | copy task: order gap minus item gap under the phase clamp (both 3.33 — the clamp loses the items, not their slots) | `rhythm-rescue/items_vs_slots_result.json` |
 | 0.1441 / 0.8322 | structure-only cross-family transmission: unsupervised, versus the oracle cell with the true alignment supplied | `mind-instrument/FINDING_gavagai_scale_2026_06_10.md` |
 | 0/201, 18/22 | model-card claims bound by vendor / re-bound by a third party | `oath-economy/census_v1_results.json`, `rebind_result.json` |
 | 0/15, 13/13 | gold vs ladder anchor coverage on a real judge panel | `anchored-validity/PAPER_gold_anchors_license_nothing_2026_07_21.md` |

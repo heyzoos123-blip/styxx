@@ -46,6 +46,8 @@ rotation, and the numbers say so at the resolution of a capacity grid.
 
 > **Forward-pointer, added 2026-09-02.** The same contrast on permuted MNIST scored `PARTIAL__diversity_recovers_some`: rotation carries about nine tenths of the gap, diversity at most a tenth, inside two-seed noise — see `../frequency-resonance/RESULT_pmnist_untied_2026_09_02.md`.
 
+> **Forward-pointer, added 2026-09-02 (later).** Scored by items retained rather than by order, the clamp's loss is the same 3.33 items: `ITEMS_LOST_TOO__capacity_not_slots` — see `RESULT_items_vs_slots_2026_09_02.md`. Rotation buys memory here, not order.
+
 ---
 
 *The knob turned two things; the second turned out to be nothing. The rhythm was the rhythm.*

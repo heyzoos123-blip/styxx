@@ -1,5 +1,7 @@
 # RESULT — Phase-clamp ablation: oscillation is a capacity-extending MECHANISM, not a hard requirement
 
+> **Forward-pointer, added 2026-09-02.** Two controls on this knob: untied real magnitudes recover 0.0 of the gap (`RESULT_untied_magnitudes_2026_09_02.md`), and scored by items retained the clamp loses the same 3.33 items (`RESULT_items_vs_slots_2026_09_02.md`) — the rotation is memory before it is order.
+
 > **Forward-pointer, added 2026-09-02.** The knob this document turns also ties each mode's two real channels to one magnitude; a preregistered control with the magnitudes untied recovered none of the capacity, so the gap below is rotation's — see `RESULT_untied_magnitudes_2026_09_02.md`. The text below is unchanged.
 
 **Date:** 2026-06-03 · **Reading: ADVANTAGE** (oscillation helps substantially but is not

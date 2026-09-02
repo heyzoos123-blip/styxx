@@ -1,0 +1,111 @@
+{
+ "spec": "sworn/0.1",
+ "commit": "7d047c4da55cfcdbdd22418f79acad80ed013b35",
+ "document": {
+  "name": "RESULT_items_vs_slots_2026_09_02.md",
+  "sha256": "119d7d1d00a60a3dfcc4353b375717b52c09c96b57d7506216ff556c6e6cb3d6"
+ },
+ "text": "# RESULT — items or slots: the clamp loses the items too. Rotation buys memory here, not order — 2026-09-02\n\nFathom Lab · 2026-09-02 · rhythm-rescue · Preregistration: `PREREG_items_vs_slots_2026_09_02.md`\n(frozen at c51d8bdf). Receipt: `items_vs_slots_result.json` at `7d047c4da55c`. **Verdict, as scored\nunder the frozen gates:** `ITEMS_LOST_TOO__capacity_not_slots`.\n\n## The numbers\n\nThe parent's three arms, trained on the parent's copy task with nothing changed, scored twice on\nthe same predictions. By ORDER — the parent's score — capacities landed exactly on the committed\nanchors: FREE 6.0, CLAMPED\n2.6667, REAL2\n2.6667; anchor deviation\n0.0, the first-failure rule agreed with the parent's\nrule on every arm and seed (0 mismatches), and the frozen\nbag baseline re-derived within 0.0007. By ITEMS —\nmultiset overlap, chance-corrected per K to the order bar's level — the capacities were the same\nnumbers: FREE 6.0, CLAMPED\n2.6667, REAL2\n2.6667. Seed by seed, FREE held six items on both\nscores three times; CLAMPED held three, three and two on both; REAL2 held three, three and two on\nboth. The order gap is 3.3333 and the item gap is\n3.3333; their difference, the interaction the order-code\nhypothesis predicted would be about three items, is 0.0.\n\n## The reading\n\nThe candidate this preregistration tested — phase as a slot code, so that a clamped bank keeps\nwhat it was shown and loses only where — is refuted on this task at this scale. At K = 6 the\nclamped bank's shuffled-recall score is 0.7309\nagainst FREE's 0.9243 on seed 0: it is not holding\nthe six symbols in the wrong order; it is holding fewer of them. Read with the arc's two other\nreceipts — untied real magnitudes recover 0.0 of the clamp's loss on this toy and about a tenth\nof it on permuted MNIST — the rotation is load-bearing for holding information at all, not for\nordering it, and the \"order code\" was the author's guess, now the third reading today that the\nreceipts overruled. What rotation *is* doing remains open; two candidates the reviews raised and\nthis design did not test are interference (rotation keeps items in different phases from\ncolliding on a shared magnitude) and effective dimensionality of the state.\n\n## Plumbing, disclosed\n\nEvaluation draws were seeded per (K, seed) so all three arms scored identical 2048-trial sets,\nremoving the parent's confound of scoring on whatever the training RNG left. The chance-corrected\nitem thresholds were proposed by a referee and re-derived by the author before freezing; the\nrunner re-derives them again as a gate. Nine gates, eleven outcomes, every gate combination\nmapped once, checked by enumeration before the run. Nine trainings on this CPU in under ten\nminutes.\n\n## What this does not say\n\nThat rotation buys nothing about order anywhere: a task where items are held and slots lost may\nexist and was not chosen, by design. That the result holds beyond D = 256, K <= 20, three seeds,\nand a linear recurrent bank. That REAL2's equality with CLAMPED on items\n(0.0) is a measurement of diversity on\ncontent: it is reported, and it gates nothing.\n\n---\n\n*Asked whether the clamped bank remembers what and forgets where, the receipt said it forgets\nwhat. The rhythm is memory before it is order.*\n",
+ "spans": [
+  {
+   "start": 339,
+   "end": 375,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/verdict",
+   "kind": "quote"
+  },
+  {
+   "start": 606,
+   "end": 609,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/free/kcap_order_mean",
+   "kind": "numeric"
+  },
+  {
+   "start": 619,
+   "end": 625,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/clamped/kcap_order_mean",
+   "kind": "numeric"
+  },
+  {
+   "start": 633,
+   "end": 639,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/real2/kcap_order_mean",
+   "kind": "numeric"
+  },
+  {
+   "start": 658,
+   "end": 661,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/anchor_max_abs_dev",
+   "kind": "numeric"
+  },
+  {
+   "start": 739,
+   "end": 740,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/rule_mismatch",
+   "kind": "numeric"
+  },
+  {
+   "start": 800,
+   "end": 806,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/baseline_max_abs_dev",
+   "kind": "numeric"
+  },
+  {
+   "start": 934,
+   "end": 937,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/free/kcap_items_mean",
+   "kind": "numeric"
+  },
+  {
+   "start": 947,
+   "end": 953,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/clamped/kcap_items_mean",
+   "kind": "numeric"
+  },
+  {
+   "start": 961,
+   "end": 967,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/real2/kcap_items_mean",
+   "kind": "numeric"
+  },
+  {
+   "start": 1132,
+   "end": 1138,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/gap_order",
+   "kind": "numeric"
+  },
+  {
+   "start": 1159,
+   "end": 1165,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/gap_items",
+   "kind": "numeric"
+  },
+  {
+   "start": 1268,
+   "end": 1271,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/interaction",
+   "kind": "numeric"
+  },
+  {
+   "start": 1522,
+   "end": 1528,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/clamped/seeds/0/items/6",
+   "kind": "numeric"
+  },
+  {
+   "start": 1544,
+   "end": 1550,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/free/seeds/0/items/6",
+   "kind": "numeric"
+  },
+  {
+   "start": 3026,
+   "end": 3029,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/real2_items_minus_clamped_items",
+   "kind": "numeric"
+  }
+ ],
+ "manifest": {
+  "spec": "sworn/manifest/0.1",
+  "receipts": {}
+ }
+}

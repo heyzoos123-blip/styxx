@@ -168,6 +168,18 @@ the lab's own 207 documents the flag moves 0 of 8,583 tokens; on the rebuilt ext
 exactly the 13 accusations the panel called non-claims, taking the external false-accusation rate from
 0.2596 to 0.2323. The RESULT recommends the flip; the flip is the release cycle's.
 
+**Items or slots, preregistered and run: ITEMS_LOST_TOO__capacity_not_slots.** A draft order-code
+contrast (ORDERED against a SORTED twin) went to three referees, who all said amend; the judge was
+rate-limited, the author consolidated, and abandoned SORTED on the confounds objection (a multiset
+target is integrator-solvable and information-poor). The gaming referee's zero-task-selection control
+became the test: `PREREG_items_vs_slots_2026_09_02.md` scores the parent's ORDERED arms twice, by
+order and by items retained (multiset overlap, chance-corrected per K against a bag baseline the
+author re-derived), first-failure capacity, seeded evaluation draws, nine gates and eleven outcomes
+checked exhaustive by enumeration. Anchors at 0.0 on all three arms. Item capacity equals order
+capacity on every arm and seed (6/6/6, 3/3/2, 3/3/2): the clamped bank loses the items, not their
+slots. The order-code candidate is refuted at this scale; rotation buys memory here, not order. Sworn
+RESULT; forward-pointers on the parent and the untied control.
+
 **The flagship confound, run: PARTIAL__diversity_recovers_some.** `PREREG_pmnist_untied_2026_09_02.md`
 ran on this CPU through `run_pmnist_untied_fast.py` — an exact chunked scan red-teamed against the
 sequential reference under 1e-4 by orders of magnitude, and six sharded jobs; no arm, seed, step or

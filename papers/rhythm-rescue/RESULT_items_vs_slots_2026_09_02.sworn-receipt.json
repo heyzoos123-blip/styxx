@@ -2,86 +2,32 @@
  "schema": "styxx.sworn.verdict-receipt/v0",
  "format": "sworn/0.1",
  "document": {
-  "name": "RESULT_untied_magnitudes_2026_09_02.md",
-  "inline_sha256": "583bdf98129b66970115c0ea4eaad02271f226c8f06096971f2891d6d89f3ca4",
-  "canonical_sha256": "10d0812b2e005ddd913b527b8089960b84837841c3e47b6a85bb0ce4d44684a8"
+  "name": "RESULT_items_vs_slots_2026_09_02.md",
+  "inline_sha256": "2a4b86f32bf66d04ec371a7817a79524389f3dd5d6b3debe900d0c44feb65700",
+  "canonical_sha256": "119d7d1d00a60a3dfcc4353b375717b52c09c96b57d7506216ff556c6e6cb3d6"
  },
  "commit": "7d047c4da55cfcdbdd22418f79acad80ed013b35",
  "manifest_digest": null,
  "spans": [
   {
-   "at": 485,
-   "start": 485,
-   "end": 552,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/verdict",
+   "at": 339,
+   "start": 339,
+   "end": 375,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/verdict",
    "kind": "quote",
    "verdict": "HELD",
    "reason": null,
    "detail": {
-    "needle_bytes": 39,
-    "haystack_bytes": 39
+    "needle_bytes": 34,
+    "haystack_bytes": 34
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
   },
   {
-   "at": 950,
-   "start": 859,
-   "end": 876,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/arms/real2/params",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "168524",
-    "printed": "168524",
-    "receipt": "168524",
-    "receipt_rounded": "168524",
-    "fractional_digits": 0,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
-  },
-  {
-   "at": 1079,
-   "start": 885,
-   "end": 898,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/arms/free/params",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "168524",
-    "printed": "168524",
-    "receipt": "168524",
-    "receipt_rounded": "168524",
-    "fractional_digits": 0,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
-  },
-  {
-   "at": 1340,
-   "start": 1044,
-   "end": 1103,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/metrics/anchor_max_abs_dev",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "0.0",
-    "printed": "0.0",
-    "receipt": "0.0",
-    "receipt_rounded": "0.0",
-    "fractional_digits": 1,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
-  },
-  {
-   "at": 1513,
-   "start": 1105,
-   "end": 1149,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/arms/free/kcap_mean",
+   "at": 697,
+   "start": 606,
+   "end": 609,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/free/kcap_order_mean",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
@@ -93,67 +39,49 @@
     "fractional_digits": 1,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
   },
   {
-   "at": 1667,
-   "start": 1154,
-   "end": 1174,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/arms/clamped/kcap_mean",
+   "at": 821,
+   "start": 619,
+   "end": 625,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/clamped/kcap_order_mean",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
    "detail": {
     "printed_token": "2.6667",
     "printed": "2.6667",
-    "receipt": "2.6666666666666665",
+    "receipt": "2.6667",
     "receipt_rounded": "2.6667",
     "fractional_digits": 4,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
   },
   {
-   "at": 1861,
-   "start": 1240,
-   "end": 1264,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/metrics/gap_free_minus_clamped",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "3.3333",
-    "printed": "3.3333",
-    "receipt": "3.3333",
-    "receipt_rounded": "3.3333",
-    "fractional_digits": 4,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
-  },
-  {
-   "at": 2024,
-   "start": 1287,
-   "end": 1330,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/arms/real2/kcap_mean",
+   "at": 949,
+   "start": 633,
+   "end": 639,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/real2/kcap_order_mean",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
    "detail": {
     "printed_token": "2.6667",
     "printed": "2.6667",
-    "receipt": "2.6666666666666665",
+    "receipt": "2.6667",
     "receipt_rounded": "2.6667",
     "fractional_digits": 4,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
   },
   {
-   "at": 2178,
-   "start": 1335,
-   "end": 1352,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/metrics/real2_minus_clamped",
+   "at": 1086,
+   "start": 658,
+   "end": 661,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/anchor_max_abs_dev",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
@@ -165,13 +93,103 @@
     "fractional_digits": 1,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
   },
   {
-   "at": 2314,
-   "start": 1358,
-   "end": 1375,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/metrics/free_minus_real2",
+   "at": 1279,
+   "start": 739,
+   "end": 740,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/rule_mismatch",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0",
+    "printed": "0",
+    "receipt": "0",
+    "receipt_rounded": "0",
+    "fractional_digits": 0,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
+  },
+  {
+   "at": 1447,
+   "start": 800,
+   "end": 806,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/baseline_max_abs_dev",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.0007",
+    "printed": "0.0007",
+    "receipt": "0.0007",
+    "receipt_rounded": "0.0007",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
+  },
+  {
+   "at": 1695,
+   "start": 934,
+   "end": 937,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/free/kcap_items_mean",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "6.0",
+    "printed": "6.0",
+    "receipt": "6.0",
+    "receipt_rounded": "6.0",
+    "fractional_digits": 1,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
+  },
+  {
+   "at": 1819,
+   "start": 947,
+   "end": 953,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/clamped/kcap_items_mean",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "2.6667",
+    "printed": "2.6667",
+    "receipt": "2.6667",
+    "receipt_rounded": "2.6667",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
+  },
+  {
+   "at": 1947,
+   "start": 961,
+   "end": 967,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/real2/kcap_items_mean",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "2.6667",
+    "printed": "2.6667",
+    "receipt": "2.6667",
+    "receipt_rounded": "2.6667",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
+  },
+  {
+   "at": 2230,
+   "start": 1132,
+   "end": 1138,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/gap_order",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
@@ -183,13 +201,31 @@
     "fractional_digits": 4,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
   },
   {
-   "at": 2443,
-   "start": 1377,
-   "end": 1406,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/metrics/recovery_fraction",
+   "at": 2360,
+   "start": 1159,
+   "end": 1165,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/gap_items",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "3.3333",
+    "printed": "3.3333",
+    "receipt": "3.3333",
+    "receipt_rounded": "3.3333",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
+  },
+  {
+   "at": 2572,
+   "start": 1268,
+   "end": 1271,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/interaction",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
@@ -201,40 +237,78 @@
     "fractional_digits": 1,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
+  },
+  {
+   "at": 2931,
+   "start": 1522,
+   "end": 1528,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/clamped/seeds/0/items/6",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.7309",
+    "printed": "0.7309",
+    "receipt": "0.7309",
+    "receipt_rounded": "0.7309",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
+  },
+  {
+   "at": 3067,
+   "start": 1544,
+   "end": 1550,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/arms/free/seeds/0/items/6",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.9243",
+    "printed": "0.9243",
+    "receipt": "0.9243",
+    "receipt_rounded": "0.9243",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
+  },
+  {
+   "at": 4660,
+   "start": 3026,
+   "end": 3029,
+   "receipt": "path:papers/rhythm-rescue/items_vs_slots_result.json#/metrics/real2_items_minus_clamped_items",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.0",
+    "printed": "0.0",
+    "receipt": "0.0",
+    "receipt_rounded": "0.0",
+    "fractional_digits": 1,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "d04abc322007c98dd63d48190ddca202681de22fcf97be0907ae40981d422065"
   }
  ],
  "counts": {
-  "HELD": 11,
+  "HELD": 16,
   "FAILED": 0,
   "UNRESOLVED": 0,
   "MALFORMED": 0,
   "WITHHELD": 0
  },
- "sworn_total": 11,
+ "sworn_total": 16,
  "unresolved": 0,
  "document_verdict": "SWORN-HELD",
  "document_malformed": null,
  "coverage": {
-  "estimate": 0.7857,
-  "unsworn_claims_estimate": 3,
-  "unsworn_claims": [
-   {
-    "start": 117,
-    "end": 217,
-    "text": "Fathom Lab · 2026-09-02 · Frozen by `PREREG_untied_magnitudes_2026_09_02.md`, committed before the"
-   },
-   {
-    "start": 2529,
-    "end": 2813,
-    "text": "> **Forward-pointer, added 2026-09-02.** The same contrast on permuted MNIST scored `PARTIAL__diversity_recovers_some`: rotation carries about nine tenths of the gap, diversity at most a tenth, inside"
-   },
-   {
-    "start": 2815,
-    "end": 3035,
-    "text": "> **Forward-pointer, added 2026-09-02 (later).** Scored by items retained rather than by order, the clamp's loss is the same 3.33 items: `ITEMS_LOST_TOO__capacity_not_slots` — see `RESULT_items_vs_slo"
-   }
-  ],
+  "estimate": 1.0,
+  "unsworn_claims_estimate": 0,
+  "unsworn_claims": [],
   "advisory": true,
   "ceiling_note": "advisory: the denominator is counted by styxx.claimdetect (STRUCT-1), measured at precision 0.4211 on n=38 with two known recall misses; false flags bias coverage low, misses bias it high; never a gate, never a measurement",
   "splitter": "diffgate:(?<=[.!?])\\s+|\\n+",
@@ -271,6 +345,6 @@
   }
  },
  "certifies": "the spans the author bound were checked against bytes the author did not write, at the commit or manifest the document names — NOT a claim that the document is correct, NOT a claim that the right sentences were bound, NOT a check that the tags were written at write time, and only as trustworthy as the harness that minted the manifest and the history that holds the commit",
- "digest": "66d9e4fd2383c1f0774970219091335c44339b4a2b5b1d31fb4a701bb3c9950f",
+ "digest": "f29b62103670e8f8cc347f7aa58ddad22f3ee9148f96bfcd35da2b302897800a",
  "timestamp": "2026-09-02T12:18:42Z"
 }
