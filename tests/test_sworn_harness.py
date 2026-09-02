@@ -88,7 +88,10 @@ def test_diff_and_commits_mint_harness_extracted_scalars(repo):
     val = lambda rid: base64.b64decode(m.receipts[rid]["bytes"])  # noqa: E731
     assert val(d["files_changed"]) == b"2" and val(d["insertions"]) == b"2" and val(d["deletions"]) == b"0"
     assert val(d["names"]) == b"a.txt\nb.txt\n"
-    assert val(d["patch"]).startswith(b"diff --git")
+    import hashlib
+    patch = subprocess.run(["git", "diff", base, head], cwd=str(cwd), capture_output=True, check=True).stdout
+    assert "bytes" not in m.receipts[d["patch"]], "the patch rides as a digest only"
+    assert m.receipts[d["patch"]]["sha256"] == hashlib.sha256(patch).hexdigest()
     assert val(c["count"]) == b"2"
     assert len(val(c["list"]).split()) == 2
     assert m.receipts[d["files_changed"]]["kind_of_source"] == "harness_note"

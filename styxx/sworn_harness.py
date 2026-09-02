@@ -12,8 +12,9 @@ made. It mints a ``sworn/manifest/0.1`` manifest whose receipts are:
 - for the commands this harness knows how to read, scalars the HARNESS extracted — pytest's
   passed/failed/skipped counts (``test_report``), ``git diff --shortstat``'s files, insertions
   and deletions and ``git rev-list --count``'s commit count (``harness_note``);
-- for a diff: the full patch bytes (``tool_stdout``, complete, for ``hash``) and the changed-file
-  list (``tool_stdout``, complete, for ``quote``/``absent``).
+- for a diff: the full patch as a digest-only receipt (``tool_stdout``, complete, for ``hash``;
+  the bytes re-derive from git at the two commits) and the changed-file list (``tool_stdout``,
+  complete, for ``quote``/``absent``).
 
 The gaming vector this design closes: extraction owned by the author. If the agent supplied the
 regex that pulls "3 files changed" out of the output, it could supply one that finds the number it
@@ -35,6 +36,7 @@ receipt; the verifier never reads it.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import subprocess
@@ -134,11 +136,16 @@ class Harness:
         n = max((int(k[1:]) for k in self.manifest.receipts), default=0) + 1
         return "r%d" % n
 
-    def _mint(self, data: bytes, kind: str, what: str) -> str:
+    def _mint(self, data: bytes, kind: str, what: str, digest_only: bool = False) -> str:
         assert kind in SOURCE_KINDS_EXTERNAL, kind          # this harness cannot mint author kinds
         rid = self._next_id()
-        self.manifest.add(rid, data, kind, complete=True)
-        self.legend["legend"][rid] = {"kind_of_source": kind, "what": what}
+        if digest_only:
+            # bytes the reader can re-derive (a patch between two commits) ride as a digest, so
+            # `hash` verifies and the manifest stays small; `quote`/`absent` need bytes and get none
+            self.manifest.add(rid, None, kind, complete=True, sha256=hashlib.sha256(data).hexdigest())
+        else:
+            self.manifest.add(rid, data, kind, complete=True)
+        self.legend["legend"][rid] = {"kind_of_source": kind, "what": what, "digest_only": digest_only}
         return rid
 
     def save(self) -> Path:
@@ -175,7 +182,9 @@ class Harness:
         patch = subprocess.run(["git", "diff", base, head], cwd=self.cwd, capture_output=True, check=False)
         names = subprocess.run(["git", "diff", "--name-only", base, head], cwd=self.cwd,
                                capture_output=True, check=False)
-        ids["patch"] = self._mint(patch.stdout, "tool_stdout", "git diff %s %s (full patch)" % (base, head))
+        ids["patch"] = self._mint(patch.stdout, "tool_stdout",
+                                  "git diff %s %s (full patch, digest only; re-derive with git)" % (base, head),
+                                  digest_only=True)
         ids["names"] = self._mint(names.stdout, "tool_stdout", "git diff --name-only %s %s" % (base, head))
         return ids
 
