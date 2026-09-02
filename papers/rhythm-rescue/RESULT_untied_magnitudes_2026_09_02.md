@@ -44,6 +44,8 @@ re-run with a REAL2 arm is the next preregistration. Nothing here is about real 
 checkpoints. The disclosed prior was uncertain and the bet was real; it came out on the side of
 rotation, and the numbers say so at the resolution of a capacity grid.
 
+> **Forward-pointer, added 2026-09-02.** The same contrast on permuted MNIST scored `PARTIAL__diversity_recovers_some`: rotation carries about nine tenths of the gap, diversity at most a tenth, inside two-seed noise — see `../frequency-resonance/RESULT_pmnist_untied_2026_09_02.md`.
+
 ---
 
 *The knob turned two things; the second turned out to be nothing. The rhythm was the rhythm.*

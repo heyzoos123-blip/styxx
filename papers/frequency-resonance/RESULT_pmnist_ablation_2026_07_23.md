@@ -1,5 +1,7 @@
 # RESULT — permuted-MNIST oscillation ablation: the gap WIDENS 7.6× — 2026-07-23
 
+> **Forward-pointer, added 2026-09-02.** The confound in this knob was tested here: a rotation-free bank with doubled timescales recovers 0.034 of the 0.317 gap, `PARTIAL__diversity_recovers_some` — see `RESULT_pmnist_untied_2026_09_02.md`.
+
 > **Forward-pointer, added 2026-09-02.** The phase clamp used here also ties each mode's real channels to one magnitude; on the ordered-copy task a preregistered untied control recovered none of the gap (rotation load-bearing beyond diversity), and the same control on this benchmark is the owed next preregistration — see `papers/rhythm-rescue/RESULT_untied_magnitudes_2026_09_02.md`. The text below is unchanged.
 
 Frozen by `PREREG_pmnist_ablation_2026_07_23.md`. Receipt: `pmnist_ablation_result.json`. Runner:

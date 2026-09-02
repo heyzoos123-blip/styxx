@@ -168,6 +168,16 @@ the lab's own 207 documents the flag moves 0 of 8,583 tokens; on the rebuilt ext
 exactly the 13 accusations the panel called non-claims, taking the external false-accusation rate from
 0.2596 to 0.2323. The RESULT recommends the flip; the flip is the release cycle's.
 
+**The flagship confound, run: PARTIAL__diversity_recovers_some.** `PREREG_pmnist_untied_2026_09_02.md`
+ran on this CPU through `run_pmnist_untied_fast.py` — an exact chunked scan red-teamed against the
+sequential reference under 1e-4 by orders of magnitude, and six sharded jobs; no arm, seed, step or
+gate changed, and the anchors gate read 0.0047. FREE 0.9242, CLAMPED 0.6069, REAL2 0.6411: the gap
+reproduces at 0.317, the untied real bank recovers 0.034 of it (fraction 0.108), one hundredth past
+the frozen bar for "bought nothing", inside a 0.108 clamped seed spread. Rotation carries about nine
+tenths of what the clamp loses on permuted MNIST; the residue is small and unresolved at two seeds.
+Sworn RESULT; forward-pointers on the ablation and the toy control. Met on the way: sworn/0.1's
+numeric grammar does not carry exponent notation, so the red-team deviations are cited, not sworn.
+
 **The confound in the phase clamp, preregistered.** `PREREG_untied_magnitudes_2026_09_02.md`: the
 clamp removes rotation and, in the same move, ties each complex mode's two real channels to one
 magnitude. REAL2 — a real bank with 2D independent magnitudes, exactly FREE's state and parameters —

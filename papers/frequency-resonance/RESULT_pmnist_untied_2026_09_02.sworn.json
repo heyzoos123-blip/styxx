@@ -1,0 +1,99 @@
+{
+ "spec": "sworn/0.1",
+ "commit": "9e005e8911f4fe2eff0fedd171911b2d8a9c7b5f",
+ "document": {
+  "name": "RESULT_pmnist_untied_2026_09_02.md",
+  "sha256": "714d226ea342461261c915aaf74427681744ef62b77506c54c23ce183bccd654"
+ },
+ "text": "# RESULT — the confound in the flagship knob, on permuted MNIST: rotation carries nine tenths of the gap, diversity a tenth, and two seeds cannot say more — 2026-09-02\n\nFathom Lab · 2026-09-02 · frequency-resonance · Preregistration:\n`PREREG_pmnist_untied_2026_09_02.md` (frozen at 201a20d2, amended before data at the same commit\nlineage). Receipt: `pmnist_untied_result.json` at `9e005e8911f4`. **Verdict, as scored under the frozen\ngates:** `PARTIAL__diversity_recovers_some`.\n\n## The numbers\n\nSix jobs, three arms by two seeds, on this CPU. FREE reached\n0.9242 against the committed GPU anchor of 0.9195; CLAMPED reached\n0.6069 against 0.6073; the anchor deviation was\n0.0047, inside the 0.03 the preregistration allowed\nfor device nondeterminism, so the plumbing gate held and the flagship gap reproduced at\n0.3173. The untied real bank, REAL2 — two\nindependent real magnitudes per mode, no rotation, parameter-matched — reached\n0.6411: 0.0342 above\nCLAMPED and 0.2831 below FREE, a recovery fraction of\n0.1078.\n\n## Why PARTIAL, and what it is worth\n\nThe table had three substantive rows. Recovery — REAL2 within 0.03 of FREE — is false by a\nwide margin: the untied bank is 0.28 below. Failure — REAL2 within 0.03 of CLAMPED — is false by\none hundredth of a point: 0.0342 against 0.03. PARTIAL is the row that remains, and it is the\nrow the receipt earns. Read with the seeds: CLAMPED landed at\n0.5528 and 0.6609, a\nspread of 0.108, three times the 0.034 that decided the row; REAL2 landed at\n0.6701 and 0.612. Two seeds\ncannot resolve a 0.03 difference under a 0.1 seed spread. What they can resolve is the shape:\nrotation carries about nine tenths of what the clamp loses on a 784-step permuted-MNIST scan,\nand timescale diversity carries at most a tenth. That agrees with the toy receipt\n(`../rhythm-rescue/RESULT_untied_magnitudes_2026_09_02.md`, recovery 0.0) in direction and\ndiffers in the residue, which this task has and the toy did not.\n\n## The plumbing, disclosed\n\nThe frozen runner was not fast enough for this machine: 24,000 optimizer steps through a\ndoubling scan in complex arithmetic. `run_pmnist_untied_fast.py` changed no arm, model, seed,\nstep count or gate; it swapped the scan for an exact chunked scan in real arithmetic and ran\neach job in its own process. The swap was red-teamed against the sequential reference before\nany job trained: the forward deviation, the gradient deviation, and the gradients into theta and\nnu — the parameters the clamp lives on — were each under the tolerance of\n0.0001,\nby two to four orders of magnitude; the four values sit in the receipt under `plumbing/scan_redteam`\nin exponent notation, which the sworn/0.1 numeric grammar does not carry, so they are cited and not\nsworn here. The\nanchors gate was the detector for anything the swap or the sharding might have moved, and it\nread 0.0047. Two jobs were killed by the container's memory limit mid-run and re-run from\nscratch under the same seeds; the receipt carries every job's wall time and thread count.\n\n## What this does not say\n\nThat diversity recovers \"some\" in a sense a reader should carry: 0.034 is inside this design's\nseed noise, and the honest sentence is that the residue is small and unresolved. That the\npermuted-MNIST task is anything but a toy at D = 64 and three blocks. That a three-seed or\nfive-seed re-run would land on the same row; the preregistration named two seeds and two seeds\nwere run. A re-run on the GPU with more seeds would settle the tenth; it would not move the nine.\n\n---\n\n*The clamp took a third of the accuracy. Twice the timescales, without the rotation, gave back a\nthirtieth. The rhythm is still the rhythm, and this task leaves a sliver the toy did not.*\n",
+ "spans": [
+  {
+   "start": 451,
+   "end": 485,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/verdict",
+   "kind": "quote"
+  },
+  {
+   "start": 565,
+   "end": 571,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/means/free",
+   "kind": "numeric"
+  },
+  {
+   "start": 632,
+   "end": 638,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/means/clamped",
+   "kind": "numeric"
+  },
+  {
+   "start": 680,
+   "end": 686,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/metrics/anchor_max_abs_dev",
+   "kind": "numeric"
+  },
+  {
+   "start": 820,
+   "end": 826,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/metrics/gap_free_minus_clamped",
+   "kind": "numeric"
+  },
+  {
+   "start": 945,
+   "end": 951,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/means/real2",
+   "kind": "numeric"
+  },
+  {
+   "start": 953,
+   "end": 959,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/metrics/real2_minus_clamped",
+   "kind": "numeric"
+  },
+  {
+   "start": 978,
+   "end": 984,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/metrics/free_minus_real2",
+   "kind": "numeric"
+  },
+  {
+   "start": 1020,
+   "end": 1026,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/metrics/recovery_fraction",
+   "kind": "numeric"
+  },
+  {
+   "start": 1419,
+   "end": 1425,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/test_acc/clamped/0",
+   "kind": "numeric"
+  },
+  {
+   "start": 1430,
+   "end": 1436,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/test_acc/clamped/1",
+   "kind": "numeric"
+  },
+  {
+   "start": 1517,
+   "end": 1523,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/test_acc/real2/0",
+   "kind": "numeric"
+  },
+  {
+   "start": 1528,
+   "end": 1533,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/test_acc/real2/1",
+   "kind": "numeric"
+  },
+  {
+   "start": 2544,
+   "end": 2550,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/plumbing/scan_redteam/tolerance",
+   "kind": "numeric"
+  }
+ ],
+ "manifest": {
+  "spec": "sworn/manifest/0.1",
+  "receipts": {}
+ }
+}

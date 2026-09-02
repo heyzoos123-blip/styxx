@@ -65,6 +65,9 @@ author decided, at write time, and the harness disposes.
   containing `>` (a transition table's `header->incidental`) cannot be sworn to; the sidecar
   refuses, correctly. v0.2 owes an escape, or a rule that receipt keys are URL-encoded. Met on
   2026-09-02 while swearing `RESULT_handedness_v4_INVALID`; the keys were renamed.
+- **Exponent notation.** A receipt leaf like `1.36e-05` cannot be sworn as `numeric` in v0.1; the
+  printed-decimal grammar is deliberate (no float, no search), and a scientific form is owed a
+  rule of its own. Met 2026-09-02 swearing the pMNIST RESULT; the values were cited, not sworn.
 - **Multi-line needles** for `quote` and `absent` over file lists; v0.1's needle is one inline
   code span, on purpose, and a file list wants more.
 - **Measurement.** `DESIGN_sworn_measurement_2026_09_01.md` names the seats this needs: bound

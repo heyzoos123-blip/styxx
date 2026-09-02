@@ -224,6 +224,7 @@ about whether they should be counted as one idea or two.
 | 0.530 | the same class of gate under native tool-calling | `pre-output-action-gate/RESULT_open_toolcall_confirm_2026_06_03.md` |
 | 0.5468 | SAE attribution depth → correctness AUROC | `depth-truth/results/verdict.json` |
 | +0.3122 | permuted-MNIST phase-clamp ablation | `frequency-resonance/pmnist_ablation_result.json` |
+| 0.1078 | permuted-MNIST: fraction of the clamp's loss a rotation-free bank with doubled timescales recovers (PARTIAL) | `frequency-resonance/pmnist_untied_result.json` |
 | 0.1441 / 0.8322 | structure-only cross-family transmission: unsupervised, versus the oracle cell with the true alignment supplied | `mind-instrument/FINDING_gavagai_scale_2026_06_10.md` |
 | 0/201, 18/22 | model-card claims bound by vendor / re-bound by a third party | `oath-economy/census_v1_results.json`, `rebind_result.json` |
 | 0/15, 13/13 | gold vs ladder anchor coverage on a real judge panel | `anchored-validity/PAPER_gold_anchors_license_nothing_2026_07_21.md` |

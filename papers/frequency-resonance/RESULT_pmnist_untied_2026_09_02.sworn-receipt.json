@@ -2,232 +2,281 @@
  "schema": "styxx.sworn.verdict-receipt/v0",
  "format": "sworn/0.1",
  "document": {
-  "name": "RESULT_untied_magnitudes_2026_09_02.md",
-  "inline_sha256": "c2df35cd86efddf60fa2997c3a6b6e425b28e6e4d9d5587abf5f797e04a6b58c",
-  "canonical_sha256": "e480a8a21effd9cf359969e501a2ae95e7582386bf54b0d81f8324d155f70f0e"
+  "name": "RESULT_pmnist_untied_2026_09_02.md",
+  "inline_sha256": "95e6527f5de0f4d8f81677f0aef4d2467f48597144bb8cde6889361a5484d617",
+  "canonical_sha256": "714d226ea342461261c915aaf74427681744ef62b77506c54c23ce183bccd654"
  },
  "commit": "9e005e8911f4fe2eff0fedd171911b2d8a9c7b5f",
  "manifest_digest": null,
  "spans": [
   {
-   "at": 485,
-   "start": 485,
-   "end": 552,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/verdict",
+   "at": 451,
+   "start": 451,
+   "end": 485,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/verdict",
    "kind": "quote",
    "verdict": "HELD",
    "reason": null,
    "detail": {
-    "needle_bytes": 39,
-    "haystack_bytes": 39
+    "needle_bytes": 32,
+    "haystack_bytes": 32
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
   },
   {
-   "at": 950,
-   "start": 859,
-   "end": 876,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/arms/real2/params",
+   "at": 661,
+   "start": 565,
+   "end": 571,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/means/free",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
    "detail": {
-    "printed_token": "168524",
-    "printed": "168524",
-    "receipt": "168524",
-    "receipt_rounded": "168524",
-    "fractional_digits": 0,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
-  },
-  {
-   "at": 1079,
-   "start": 885,
-   "end": 898,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/arms/free/params",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "168524",
-    "printed": "168524",
-    "receipt": "168524",
-    "receipt_rounded": "168524",
-    "fractional_digits": 0,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
-  },
-  {
-   "at": 1340,
-   "start": 1044,
-   "end": 1103,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/metrics/anchor_max_abs_dev",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "0.0",
-    "printed": "0.0",
-    "receipt": "0.0",
-    "receipt_rounded": "0.0",
-    "fractional_digits": 1,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
-  },
-  {
-   "at": 1513,
-   "start": 1105,
-   "end": 1149,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/arms/free/kcap_mean",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "6.0",
-    "printed": "6.0",
-    "receipt": "6.0",
-    "receipt_rounded": "6.0",
-    "fractional_digits": 1,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
-  },
-  {
-   "at": 1667,
-   "start": 1154,
-   "end": 1174,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/arms/clamped/kcap_mean",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "2.6667",
-    "printed": "2.6667",
-    "receipt": "2.6666666666666665",
-    "receipt_rounded": "2.6667",
+    "printed_token": "0.9242",
+    "printed": "0.9242",
+    "receipt": "0.9242",
+    "receipt_rounded": "0.9242",
     "fractional_digits": 4,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
   },
   {
-   "at": 1861,
-   "start": 1240,
-   "end": 1264,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/metrics/gap_free_minus_clamped",
+   "at": 829,
+   "start": 632,
+   "end": 638,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/means/clamped",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
    "detail": {
-    "printed_token": "3.3333",
-    "printed": "3.3333",
-    "receipt": "3.3333",
-    "receipt_rounded": "3.3333",
+    "printed_token": "0.6069",
+    "printed": "0.6069",
+    "receipt": "0.6069",
+    "receipt_rounded": "0.6069",
     "fractional_digits": 4,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
   },
   {
-   "at": 2024,
-   "start": 1287,
-   "end": 1330,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/arms/real2/kcap_mean",
+   "at": 981,
+   "start": 680,
+   "end": 686,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/metrics/anchor_max_abs_dev",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
    "detail": {
-    "printed_token": "2.6667",
-    "printed": "2.6667",
-    "receipt": "2.6666666666666665",
-    "receipt_rounded": "2.6667",
+    "printed_token": "0.0047",
+    "printed": "0.0047",
+    "receipt": "0.0047",
+    "receipt_rounded": "0.0047",
     "fractional_digits": 4,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
   },
   {
-   "at": 2178,
-   "start": 1335,
-   "end": 1352,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/metrics/real2_minus_clamped",
+   "at": 1238,
+   "start": 820,
+   "end": 826,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/metrics/gap_free_minus_clamped",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
    "detail": {
-    "printed_token": "0.0",
-    "printed": "0.0",
-    "receipt": "0.0",
-    "receipt_rounded": "0.0",
-    "fractional_digits": 1,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
-  },
-  {
-   "at": 2314,
-   "start": 1358,
-   "end": 1375,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/metrics/free_minus_real2",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "3.3333",
-    "printed": "3.3333",
-    "receipt": "3.3333",
-    "receipt_rounded": "3.3333",
+    "printed_token": "0.3173",
+    "printed": "0.3173",
+    "receipt": "0.3173",
+    "receipt_rounded": "0.3173",
     "fractional_digits": 4,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
   },
   {
-   "at": 2443,
-   "start": 1377,
-   "end": 1406,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/metrics/recovery_fraction",
+   "at": 1484,
+   "start": 945,
+   "end": 951,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/means/real2",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
    "detail": {
-    "printed_token": "0.0",
-    "printed": "0.0",
-    "receipt": "0.0",
-    "receipt_rounded": "0.0",
-    "fractional_digits": 1,
+    "printed_token": "0.6411",
+    "printed": "0.6411",
+    "receipt": "0.6411",
+    "receipt_rounded": "0.6411",
+    "fractional_digits": 4,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
+  },
+  {
+   "at": 1594,
+   "start": 953,
+   "end": 959,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/metrics/real2_minus_clamped",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.0342",
+    "printed": "0.0342",
+    "receipt": "0.0342",
+    "receipt_rounded": "0.0342",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
+  },
+  {
+   "at": 1737,
+   "start": 978,
+   "end": 984,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/metrics/free_minus_real2",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.2831",
+    "printed": "0.2831",
+    "receipt": "0.2831",
+    "receipt_rounded": "0.2831",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
+  },
+  {
+   "at": 1894,
+   "start": 1020,
+   "end": 1026,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/metrics/recovery_fraction",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.1078",
+    "printed": "0.1078",
+    "receipt": "0.1078",
+    "receipt_rounded": "0.1078",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
+  },
+  {
+   "at": 2409,
+   "start": 1419,
+   "end": 1425,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/test_acc/clamped/0",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.5528",
+    "printed": "0.5528",
+    "receipt": "0.5528",
+    "receipt_rounded": "0.5528",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
+  },
+  {
+   "at": 2529,
+   "start": 1430,
+   "end": 1436,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/test_acc/clamped/1",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.6609",
+    "printed": "0.6609",
+    "receipt": "0.6609",
+    "receipt_rounded": "0.6609",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
+  },
+  {
+   "at": 2725,
+   "start": 1517,
+   "end": 1523,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/test_acc/real2/0",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.6701",
+    "printed": "0.6701",
+    "receipt": "0.6701",
+    "receipt_rounded": "0.6701",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
+  },
+  {
+   "at": 2843,
+   "start": 1528,
+   "end": 1533,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/test_acc/real2/1",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.612",
+    "printed": "0.612",
+    "receipt": "0.612",
+    "receipt_rounded": "0.612",
+    "fractional_digits": 3,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
+  },
+  {
+   "at": 3966,
+   "start": 2544,
+   "end": 2550,
+   "receipt": "path:papers/frequency-resonance/pmnist_untied_result.json#/plumbing/scan_redteam/tolerance",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.0001",
+    "printed": "0.0001",
+    "receipt": "0.0001",
+    "receipt_rounded": "0.0001",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "2b3848c5c4ab1f3847ef694c1e71b82a98d921b5bcab9a20febdd482333cdbca"
   }
  ],
  "counts": {
-  "HELD": 11,
+  "HELD": 14,
   "FAILED": 0,
   "UNRESOLVED": 0,
   "MALFORMED": 0,
   "WITHHELD": 0
  },
- "sworn_total": 11,
+ "sworn_total": 14,
  "unresolved": 0,
  "document_verdict": "SWORN-HELD",
  "document_malformed": null,
  "coverage": {
-  "estimate": 0.8462,
-  "unsworn_claims_estimate": 2,
+  "estimate": 0.9333,
+  "unsworn_claims_estimate": 1,
   "unsworn_claims": [
    {
-    "start": 117,
-    "end": 217,
-    "text": "Fathom Lab · 2026-09-02 · Frozen by `PREREG_untied_magnitudes_2026_09_02.md`, committed before the"
-   },
-   {
-    "start": 2529,
-    "end": 2813,
-    "text": "> **Forward-pointer, added 2026-09-02.** The same contrast on permuted MNIST scored `PARTIAL__diversity_recovers_some`: rotation carries about nine tenths of the gap, diversity at most a tenth, inside"
+    "start": 2126,
+    "end": 2182,
+    "text": "`run_pmnist_untied_fast.py` changed no arm, model, seed,"
    }
   ],
   "advisory": true,
@@ -266,6 +315,6 @@
   }
  },
  "certifies": "the spans the author bound were checked against bytes the author did not write, at the commit or manifest the document names — NOT a claim that the document is correct, NOT a claim that the right sentences were bound, NOT a check that the tags were written at write time, and only as trustworthy as the harness that minted the manifest and the history that holds the commit",
- "digest": "651d1379818d46098c4e915198dcc484f0beb4f892e334d39eae0feeb646731c",
+ "digest": "3d52cacf697deb9f15726679f520bc101cb19f8de5b157f98a022fd0b31a4842",
  "timestamp": "2026-09-02T12:01:49Z"
 }
