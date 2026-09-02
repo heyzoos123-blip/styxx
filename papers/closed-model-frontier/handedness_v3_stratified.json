@@ -1,0 +1,54 @@
+{
+  "what": "handedness_v3_stratified.py -- POST-HOC, referee-prompted, NOT preregistered.",
+  "source": "handedness_v3_result.json",
+  "post_hoc": true,
+  "preregistered": false,
+  "by_kind": {
+    "header": {
+      "decimal": {
+        "genuine": 142,
+        "n": 142,
+        "share": 1.0
+      },
+      "integer": {
+        "genuine": 15,
+        "n": 23,
+        "share": 0.6522
+      },
+      "all": {
+        "genuine": 157,
+        "n": 165,
+        "share": 0.9515
+      }
+    },
+    "line": {
+      "comma": {
+        "genuine": 9,
+        "n": 12,
+        "share": 0.75
+      },
+      "decimal": {
+        "genuine": 73,
+        "n": 76,
+        "share": 0.9605
+      },
+      "integer": {
+        "genuine": 26,
+        "n": 81,
+        "share": 0.321
+      },
+      "all": {
+        "genuine": 108,
+        "n": 169,
+        "share": 0.6391
+      }
+    }
+  },
+  "raw_delta_header_minus_line": 0.3124,
+  "kind_adjusted_delta_mh_weights": 0.117,
+  "line_standardized_to_header_kind_mix": 0.8714,
+  "standardized_delta": 0.0801,
+  "decimal_share_of_header_cell": 0.8606,
+  "frozen_bar_for_the_raw_delta": 0.15,
+  "kind_adjusted_delta_clears_the_frozen_bar": false
+}
