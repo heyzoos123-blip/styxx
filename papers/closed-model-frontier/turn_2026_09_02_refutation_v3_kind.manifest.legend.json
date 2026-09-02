@@ -1,0 +1,162 @@
+{
+ "legend": {
+  "r1": {
+   "kind_of_source": "harness_note",
+   "what": "command line of: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r2": {
+   "kind_of_source": "tool_stdout",
+   "what": "stdout of: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r3": {
+   "kind_of_source": "tool_stderr",
+   "what": "stderr of: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r4": {
+   "kind_of_source": "harness_note",
+   "what": "exit code of: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r5": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/header/decimal/genuine, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r6": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/header/decimal/n, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r7": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/header/decimal/share, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r8": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/header/integer/genuine, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r9": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/header/integer/n, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r10": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/header/integer/share, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r11": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/header/all/genuine, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r12": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/header/all/n, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r13": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/header/all/share, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r14": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/line/comma/genuine, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r15": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/line/comma/n, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r16": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/line/comma/share, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r17": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/line/decimal/genuine, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r18": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/line/decimal/n, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r19": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/line/decimal/share, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r20": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/line/integer/genuine, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r21": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/line/integer/n, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r22": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/line/integer/share, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r23": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/line/all/genuine, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r24": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/line/all/n, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r25": {
+   "kind_of_source": "harness_note",
+   "what": "/by_kind/line/all/share, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r26": {
+   "kind_of_source": "harness_note",
+   "what": "/raw_delta_header_minus_line, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r27": {
+   "kind_of_source": "harness_note",
+   "what": "/kind_adjusted_delta_mh_weights, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r28": {
+   "kind_of_source": "harness_note",
+   "what": "/line_standardized_to_header_kind_mix, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r29": {
+   "kind_of_source": "harness_note",
+   "what": "/standardized_delta, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r30": {
+   "kind_of_source": "harness_note",
+   "what": "/decimal_share_of_header_cell, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  },
+  "r31": {
+   "kind_of_source": "harness_note",
+   "what": "/frozen_bar_for_the_raw_delta, extracted by the harness from: python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json",
+   "digest_only": false
+  }
+ },
+ "manifest": "turn_2026_09_02_refutation_v3_kind.manifest.json",
+ "harness": "styxx/sworn_harness.py",
+ "note": "harness-written; not a receipt; the verifier never reads it. Every scalar here was extracted by styxx.sworn_harness's fixed extractor table, never by the author."
+}
