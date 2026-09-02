@@ -81,6 +81,22 @@ analogy is the author's, and the receipts are silent on it. That anything here w
 against strangers in more than one panel of one model family. The five verdicts are each bounded
 in their own documents, and this synthesis inherits every bound.
 
+
+## Referee objection, 2026-09-02 — the first leg, weakened
+
+The statistical referee's stratification of the header/line receipts by token kind
+(`closed-model-frontier/handedness_v3_stratified.json`, post-hoc): kind-adjusted, the gap is
+<sworn r="path:papers/closed-model-frontier/handedness_v3_stratified.json#/kind_adjusted_delta_mh_weights" k="numeric">0.117</sworn> against the raw
+<sworn r="path:papers/closed-model-frontier/handedness_v3_stratified.json#/raw_delta_header_minus_line" k="numeric">0.3124</sworn>, because the header cell is
+<sworn r="path:papers/closed-model-frontier/handedness_v3_stratified.json#/decimal_share_of_header_cell" k="numeric">0.8606</sworn> decimals and decimals are claims whoever
+hands them. Leg 1 of this synthesis therefore shows a form effect with a structure residue,
+not a structure effect. The grain declared in `h_mapping.json` v2 is kept as a declaration; the
+claim that the receipts *draw* the structure-versus-co-occurrence line is withdrawn to the
+strength the adjusted number supports, and the stronger sentence in the thesis above should be
+read with this section beside it. Legs 2 through 5 are untouched by the objection; the
+referee's second objection, that the thirteen-of-thirteen figure is circular with its own bar,
+was disclosed in that preregistration and is repeated here so nobody reads it as independent.
+
 ---
 
 *The verifier trusted words it found near numbers and the model trusted a detector it built for

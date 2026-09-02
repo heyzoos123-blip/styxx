@@ -58,6 +58,29 @@ token on this corpus printed seven fractional digits, so the question the brief 
 against text — has no cell here, and the question this corpus can answer is the one it
 answered. Nothing about verification: this is accusation only.
 
+
+## Referee objection, 2026-09-02 — the gap is mostly token kind
+
+A statistical referee, reading the committed rows, objected that the two cells are not
+comparable populations. Re-derived here (`handedness_v3_stratified.py`, post-hoc, not
+preregistered, moving no gate): the header cell is
+<sworn r="path:papers/closed-model-frontier/handedness_v3_stratified.json#/decimal_share_of_header_cell" k="numeric">0.8606</sworn> decimals, and decimals are claims almost
+regardless of who handed them — within decimals, header
+<sworn r="path:papers/closed-model-frontier/handedness_v3_stratified.json#/by_kind/header/decimal/share" k="numeric">1.0</sworn> against line
+<sworn r="path:papers/closed-model-frontier/handedness_v3_stratified.json#/by_kind/line/decimal/share" k="numeric">0.9605</sworn>; within integers, header
+<sworn r="path:papers/closed-model-frontier/handedness_v3_stratified.json#/by_kind/header/integer/share" k="numeric">0.6522</sworn> against line
+<sworn r="path:papers/closed-model-frontier/handedness_v3_stratified.json#/by_kind/line/integer/share" k="numeric">0.321</sworn>. The kind-adjusted difference is
+<sworn r="path:papers/closed-model-frontier/handedness_v3_stratified.json#/kind_adjusted_delta_mh_weights" k="numeric">0.117</sworn>, under the
+<sworn r="path:papers/closed-model-frontier/handedness_v3_stratified.json#/frozen_bar_for_the_raw_delta" k="numeric">0.15</sworn> this preregistration froze for the raw
+difference of <sworn r="path:papers/closed-model-frontier/handedness_v3_stratified.json#/raw_delta_header_minus_line" k="numeric">0.3124</sworn>. The verdict above was scored
+on the raw difference as frozen and stands as a scored verdict. The reading — that structure,
+not form, made the header-handed accusation truer — does not stand as written: at least part of
+the split is `object_form`, the class the handedness mapping declared. The referee also noted
+what this document's own preregistration disclosed: its bar was frozen after the INVALID v2 run
+had shown the identical cells, and the panel is one model family whose 2026-08-27 sanity gate
+failed. A kind-stratified re-test on a fresh panel, preregistered, is owed before this result
+is read as a mechanism.
+
 ---
 
 *Handed is not one thing. A label the author chose hands the verifier a claim; a word that

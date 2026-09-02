@@ -3,10 +3,10 @@
  "format": "sworn/0.1",
  "document": {
   "name": "RESULT_handedness_v3_header_handed_2026_09_02.md",
-  "inline_sha256": "0609e4cc5c29330472f339751d565a51ecd6dce32f9cf07959dec119209725ad",
-  "canonical_sha256": "81b3d210de936ec8460733062a6ebcac54b5c407f8320fb52fcca04311e54aea"
+  "inline_sha256": "6556679be995a1bdfe78d3736f5cbc4bef63233d3e0d418ba41c4678bc101ac7",
+  "canonical_sha256": "f40f9f8a7e1006e4a8439814adc35dacfc96bb72f46d34084582c0bde5768bdd"
  },
- "commit": "b1a6326ef35b894065c81f722800d1c4de0f8bc8",
+ "commit": "abc4917cf2cee66badbb116d9d02ac679f8ece4d",
  "manifest_digest": null,
  "spans": [
   {
@@ -274,27 +274,176 @@
     "rounding": "ROUND_HALF_EVEN"
    },
    "resolved_sha256": "c8732a104e40403b9f0691513521a9b6f0efa588d1ee6b4232b8e3ece9913757"
+  },
+  {
+   "at": 5686,
+   "start": 3971,
+   "end": 3977,
+   "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/decimal_share_of_header_cell",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.8606",
+    "printed": "0.8606",
+    "receipt": "0.8606",
+    "receipt_rounded": "0.8606",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "87ce75d7f98ae8f67d948026cefaecf7b2aee64a0f740a5c1726daa4e766325d"
+  },
+  {
+   "at": 5917,
+   "start": 4077,
+   "end": 4080,
+   "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/by_kind/header/decimal/share",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "1.0",
+    "printed": "1.0",
+    "receipt": "1.0",
+    "receipt_rounded": "1.0",
+    "fractional_digits": 1,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "87ce75d7f98ae8f67d948026cefaecf7b2aee64a0f740a5c1726daa4e766325d"
+  },
+  {
+   "at": 6059,
+   "start": 4094,
+   "end": 4100,
+   "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/by_kind/line/decimal/share",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.9605",
+    "printed": "0.9605",
+    "receipt": "0.9605",
+    "receipt_rounded": "0.9605",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "87ce75d7f98ae8f67d948026cefaecf7b2aee64a0f740a5c1726daa4e766325d"
+  },
+  {
+   "at": 6214,
+   "start": 4126,
+   "end": 4132,
+   "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/by_kind/header/integer/share",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.6522",
+    "printed": "0.6522",
+    "receipt": "0.6522",
+    "receipt_rounded": "0.6522",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "87ce75d7f98ae8f67d948026cefaecf7b2aee64a0f740a5c1726daa4e766325d"
+  },
+  {
+   "at": 6359,
+   "start": 4146,
+   "end": 4151,
+   "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/by_kind/line/integer/share",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.321",
+    "printed": "0.321",
+    "receipt": "0.321",
+    "receipt_rounded": "0.321",
+    "fractional_digits": 3,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "87ce75d7f98ae8f67d948026cefaecf7b2aee64a0f740a5c1726daa4e766325d"
+  },
+  {
+   "at": 6521,
+   "start": 4185,
+   "end": 4190,
+   "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/kind_adjusted_delta_mh_weights",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.117",
+    "printed": "0.117",
+    "receipt": "0.117",
+    "receipt_rounded": "0.117",
+    "fractional_digits": 3,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "87ce75d7f98ae8f67d948026cefaecf7b2aee64a0f740a5c1726daa4e766325d"
+  },
+  {
+   "at": 6665,
+   "start": 4202,
+   "end": 4206,
+   "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/frozen_bar_for_the_raw_delta",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.15",
+    "printed": "0.15",
+    "receipt": "0.15",
+    "receipt_rounded": "0.15",
+    "fractional_digits": 2,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "87ce75d7f98ae8f67d948026cefaecf7b2aee64a0f740a5c1726daa4e766325d"
+  },
+  {
+   "at": 6848,
+   "start": 4260,
+   "end": 4266,
+   "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/raw_delta_header_minus_line",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.3124",
+    "printed": "0.3124",
+    "receipt": "0.3124",
+    "receipt_rounded": "0.3124",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "87ce75d7f98ae8f67d948026cefaecf7b2aee64a0f740a5c1726daa4e766325d"
   }
  ],
  "counts": {
-  "HELD": 15,
+  "HELD": 23,
   "FAILED": 0,
   "UNRESOLVED": 0,
   "MALFORMED": 0,
   "WITHHELD": 0
  },
- "sworn_total": 15,
+ "sworn_total": 23,
  "unresolved": 0,
  "document_verdict": "SWORN-HELD",
  "document_malformed": null,
  "coverage": {
-  "estimate": 0.9375,
-  "unsworn_claims_estimate": 1,
+  "estimate": 0.92,
+  "unsworn_claims_estimate": 2,
   "unsworn_claims": [
    {
     "start": 144,
     "end": 239,
     "text": "Fathom Lab · 2026-09-02 · Frozen by `PREREG_handedness_v3_join_rule_2026_09_02.md`, committed"
+   },
+   {
+    "start": 4491,
+    "end": 4561,
+    "text": "the split is `object_form`, the class the handedness mapping declared."
    }
   ],
   "advisory": true,
@@ -333,6 +482,6 @@
   }
  },
  "certifies": "the spans the author bound were checked against bytes the author did not write, at the commit or manifest the document names — NOT a claim that the document is correct, NOT a claim that the right sentences were bound, NOT a check that the tags were written at write time, and only as trustworthy as the harness that minted the manifest and the history that holds the commit",
- "digest": "86641e5794c119680b0029a0554edd2ffe7eb9a6c38d8e5783c856a8d2c8382e",
- "timestamp": "2026-09-02T00:34:17Z"
+ "digest": "0fe7a34dd19c619d6f44d3cd7a12b84d502290f31c68d7263d7be0777b6a84cf",
+ "timestamp": "2026-09-02T04:22:36Z"
 }

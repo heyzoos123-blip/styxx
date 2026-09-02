@@ -131,6 +131,15 @@ frozen table untouched. `h_mapping.json` moves to schema v2: `grain` per `object
 correlation and range-sanity clauses incidental) and `target_grain` per instrument row (sworn is the
 limiting case, all structure). Census re-folded under the new mapping hash; two tests pin the column.
 
+**Referee objection on the header/line result, re-derived and sworn.** A statistical referee read
+the committed v3 rows and objected that the 0.3124 gap is mostly token kind: the header cell is 86%
+decimals, decimals are claims whoever hands them (header 1.000 vs line 0.961), and kind-adjusted
+the gap is 0.117, under the 0.15 the preregistration froze for the raw difference.
+`handedness_v3_stratified.py` re-derives it from the committed rows (post-hoc, no gate moved); the
+RESULT and the SYNTHESIS carry sworn addenda that withdraw the structure reading to the strength
+the adjusted number supports. The verdict stands as scored; the mechanism claim is owed a
+kind-stratified, preregistered re-test on a fresh panel.
+
 **OATH v0.14, preregistered and SHIP: range-sanity reports instead of accusing.** `V14_RANGE_SANITY_REPORT`
 (default OFF, nothing committed changes) turns the v0.3 out-of-range rule into a reporter. The A/B: on
 the lab's own 207 documents the flag moves 0 of 8,583 tokens; on the rebuilt external corpus it removes
