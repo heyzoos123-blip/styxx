@@ -55,7 +55,10 @@ author decided, at write time, and the harness disposes.
 
 - **`exec` kind:** a span that swears to the command's identity, not only to its output, so a
   reader can tell "the suite" from "the three tests the agent chose". Reserved in v0.1, MALFORMED
-  there by design.
+  there by design. *Addendum, later the same day:* v0.1 already covers the identity without a new
+  kind — the harness now mints each command line as its own `harness_note` receipt, first, and
+  the author quotes it (`k="quote"`). What `exec` would still add is the verifier checking that
+  the quoted command is the one whose stdout the next span cites; that binding stays owed.
 - **The legend inside the manifest,** covered by the digest, so what an `rN` is cannot drift from
   what it holds.
 - **Multi-line needles** for `quote` and `absent` over file lists; v0.1's needle is one inline

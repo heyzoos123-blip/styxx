@@ -80,7 +80,9 @@ or commit does not hold, are neutral with a notice until the repository flips `-
 pass. The gate never mints, never edits, never picks receipts; it prints the legend and writes the
 verdict receipt, and the manifest, legend and receipt ride as artifacts with the legend in the job
 summary. The pytest extractor now emits the same five keys in the same order so receipt ids are
-stable across runs. Seven gate tests.
+stable across runs. Seven gate tests. Every command the harness runs now mints its command line
+as the first receipt, so an author swears to *what was run* by quoting it — the suite and three
+chosen tests no longer mint the same-looking receipts.
 
 **The frequency arc: the efficiency control the arc owed itself, and the profiler shipped.**
 `RESULT_efficiency_control_from_receipts_2026_09_02.md` reads two committed receipts of one

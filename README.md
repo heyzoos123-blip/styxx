@@ -439,20 +439,25 @@ so you can write the description before the run exists:
 
 | receipt | holds |
 |---|---|
-| `r4` | commits in `base..head` (`git rev-list --count`) |
-| `r9` / `r10` / `r11` | files changed / insertions / deletions (`git diff --shortstat`) |
-| `r12` | the full patch, digest only (`k="hash"`) |
-| `r13` | the changed-file list (`k="quote"` one path, `k="absent"` a path you did not touch) |
-| `r16` | exit code of `ruff check styxx` |
-| `r20` / `r21` / `r22` / `r23` / `r24` | pytest passed / failed / skipped / xfailed / errors |
-| `r17` | pytest's stdout (`k="quote"` an error line) |
+| `r5` | commits in `base..head` (`git rev-list --count`) |
+| `r11` / `r12` / `r13` | files changed / insertions / deletions (`git diff --shortstat`) |
+| `r14` | the full patch, digest only (`k="hash"`) |
+| `r15` | the changed-file list (`k="quote"` one path, `k="absent"` a path you did not touch) |
+| `r19` | exit code of `ruff check styxx` |
+| `r20` | the command line pytest was run with (`k="quote"` it, to swear to WHAT was run) |
+| `r24` / `r25` / `r26` / `r27` / `r28` | pytest passed / failed / skipped / xfailed / errors |
+| `r21` | pytest's stdout (`k="quote"` an error line) |
+
+Every command mints its command line first, then stdout, stderr, exit code, then the scalars the
+harness extracts; the full order is in the workflow file.
 
 A description that swears:
 
 ```
-Touched <sworn r="r9" k="numeric">3 files</sworn> in <sworn r="r4" k="numeric">2 commits</sworn>.
-Suite: <sworn r="r20" k="numeric">3657 passed</sworn>, <sworn r="r21" k="numeric">0 failed</sworn>.
-Did not touch <sworn r="r13" k="absent">`OATH_CONTRACT.md`</sworn>.
+Touched <sworn r="r11" k="numeric">3 files</sworn> in <sworn r="r5" k="numeric">2 commits</sworn>.
+Ran <sworn r="r20" k="quote">`python -m pytest tests -q --no-header -p no:cacheprovider --tb=line`</sworn>:
+<sworn r="r24" k="numeric">3657 passed</sworn>, <sworn r="r25" k="numeric">0 failed</sworn>.
+Did not touch <sworn r="r15" k="absent">`OATH_CONTRACT.md`</sworn>.
 ```
 
 Policy, in one table (`styxx/sworn_gate.py`): SWORN-HELD with every span resolved **passes**;

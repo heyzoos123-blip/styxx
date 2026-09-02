@@ -8,12 +8,12 @@ name: sworn
 # with styxx.sworn_gate. Receipts are minted in a FIXED order so an author can write `rN` before
 # the run exists:
 #
-#   r1-r5    git rev-list --count BASE..HEAD : stdout, stderr, exit, count, list
-#   r6-r13   git diff --shortstat BASE HEAD  : stdout, stderr, exit, files_changed, insertions,
-#                                              deletions, patch (digest only), names
-#   r14-r16  python -m ruff check styxx      : stdout, stderr, exit
-#   r17-r24  python -m pytest tests -q       : stdout, stderr, exit, passed, failed, skipped,
-#                                              xfailed, errors
+#   r1-r6    git rev-list --count BASE..HEAD : argv, stdout, stderr, exit, count, list
+#   r7-r15   git diff --shortstat BASE HEAD  : argv, stdout, stderr, exit, files_changed,
+#                                              insertions, deletions, patch (digest only), names
+#   r16-r19  python -m ruff check styxx      : argv, stdout, stderr, exit
+#   r20-r28  python -m pytest tests -q ...   : argv, stdout, stderr, exit, passed, failed,
+#                                              skipped, xfailed, errors
 #
 # `path:` receipts resolve at the PR head commit. Policy (styxx.sworn_gate): SWORN-HELD passes,
 # SWORN-FAILED and MALFORMED fail, UNSWORN passes with a notice until this repository flips

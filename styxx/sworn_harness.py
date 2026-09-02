@@ -7,8 +7,9 @@ commits." Sworn output lets it bind each of those numbers to a receipt — but i
 for the things a coding agent reports on: commands it ran, the diff it produced, the commits it
 made. It mints a ``sworn/manifest/0.1`` manifest whose receipts are:
 
-- for every command: its stdout (``tool_stdout``, complete), its stderr (``tool_stderr``,
-  complete) and its exit code (``harness_note``, complete);
+- for every command: its command line (``harness_note``, so the author can swear to WHAT was
+  run), its stdout (``tool_stdout``, complete), its stderr (``tool_stderr``, complete) and its
+  exit code (``harness_note``, complete);
 - for the commands this harness knows how to read, scalars the HARNESS extracted — pytest's
   passed/failed/skipped counts (``test_report``), ``git diff --shortstat``'s files, insertions
   and deletions and ``git rev-list --count``'s commit count (``harness_note``);
@@ -164,7 +165,10 @@ class Harness:
         argv = list(argv)
         r = subprocess.run(argv, cwd=self.cwd, capture_output=True, check=False, timeout=timeout)
         label = " ".join(argv)
-        ids = {"stdout": self._mint(r.stdout, "tool_stdout", "stdout of: %s" % label),
+        # The command line itself, minted by the harness, so an author can swear to WHAT was run
+        # (`k="quote"` against it) and a reader can tell the suite from three chosen tests.
+        ids = {"argv": self._mint(label.encode("utf-8"), "harness_note", "command line of: %s" % label),
+               "stdout": self._mint(r.stdout, "tool_stdout", "stdout of: %s" % label),
                "stderr": self._mint(r.stderr, "tool_stderr", "stderr of: %s" % label),
                "exit_code": self._mint(str(r.returncode).encode("ascii"), "harness_note",
                                        "exit code of: %s" % label)}

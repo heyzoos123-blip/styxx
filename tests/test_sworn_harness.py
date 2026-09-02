@@ -37,6 +37,7 @@ def test_exec_mints_stdout_stderr_and_exit_code_as_external_kinds(tmp_path):
     h.save()
     m = Manifest.load(tmp_path / "m.json")
     assert m.intact()
+    assert m.receipts[ids["argv"]]["kind_of_source"] == "harness_note"
     assert m.receipts[ids["stdout"]]["kind_of_source"] == "tool_stdout"
     assert m.receipts[ids["stderr"]]["kind_of_source"] == "tool_stderr"
     assert m.receipts[ids["exit_code"]]["kind_of_source"] == "harness_note"
@@ -53,7 +54,7 @@ def test_exec_mints_stdout_stderr_and_exit_code_as_external_kinds(tmp_path):
 def test_an_unknown_command_yields_no_extracted_scalars(tmp_path):
     h = Harness(tmp_path / "m.json", turn="t1", cwd=str(tmp_path))
     ids = h.exec([sys.executable, "-c", "print('3 files changed, 10 insertions(+)')"])
-    assert set(ids) == {"stdout", "stderr", "exit_code"}, "the author cannot make the harness extract"
+    assert set(ids) == {"argv", "stdout", "stderr", "exit_code"}, "the author cannot make the harness extract"
 
 
 def _git(cwd, *args):
@@ -107,6 +108,8 @@ def test_a_report_sworn_to_harness_receipts_verifies_without_a_tree(repo):
     e = h.exec([sys.executable, "-c", "print('12 passed in 0.1s')"])
     h.save()
     m = Manifest.load(cwd / "m.json")
+    import base64
+    assert base64.b64decode(m.receipts[e["argv"]]["bytes"]).decode().startswith(sys.executable + " -c ")
     doc = ("# report\n\nThis change touched <sworn r=\"%s\" k=\"numeric\">2 files</sworn> across "
            "<sworn r=\"%s\" k=\"numeric\">2 commits</sworn>, adding "
            "<sworn r=\"%s\" k=\"numeric\">2 lines</sworn>; the run exited "
@@ -130,6 +133,6 @@ def test_cli_new_exec_diff_commits_roundtrip(repo, capsys):
     assert main([str(mp), "--cwd", str(cwd), "diff", base, head]) == 0
     assert main([str(mp), "--cwd", str(cwd), "commits", base, head]) == 0
     m = Manifest.load(mp)
-    assert m.intact() and len(m.receipts) == 3 + 8 + 5
+    assert m.intact() and len(m.receipts) == 4 + 9 + 6
     with pytest.raises(SystemExit):
         main([str(mp), "--cwd", str(cwd), "new", "--turn", "again"])
