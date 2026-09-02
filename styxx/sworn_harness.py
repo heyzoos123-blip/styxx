@@ -58,13 +58,13 @@ def extract_pytest(stdout: bytes, stderr: bytes) -> Dict[str, int]:
     text = (stdout + stderr).decode("utf-8", errors="replace")
     lines = [ln for ln in text.strip().splitlines() if ln.strip()]
     summary = lines[-1] if lines else ""
-    out = {}
+    # Always the same five keys in the same order, so the receipt ids a workflow mints are stable
+    # from run to run and an author can write `rN` before the run exists.
+    out = {"passed": 0, "failed": 0, "skipped": 0, "xfailed": 0, "errors": 0}
     for key in ("passed", "failed", "skipped", "xfailed", "error", "errors"):
         m = re.search(r"(\d+) %s\b" % key, summary)
         if m:
             out["errors" if key == "error" else key] = int(m.group(1))
-    for key in ("passed", "failed"):
-        out.setdefault(key, 0)
     return out
 
 

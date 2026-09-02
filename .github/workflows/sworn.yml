@@ -1,0 +1,81 @@
+name: sworn
+
+# The merge gate that reads a sworn pull-request description
+# (papers/sworn/DESIGN_agent_that_swears_2026_09_02.md, papers/sworn/SPEC_sworn_output_v01_2026_09_01.md).
+#
+# On every pull request this job mints a sworn/manifest/0.1 manifest ON THE PR HEAD with
+# styxx.sworn_harness — the author has no write access here — then verifies the PR body against it
+# with styxx.sworn_gate. Receipts are minted in a FIXED order so an author can write `rN` before
+# the run exists:
+#
+#   r1-r5    git rev-list --count BASE..HEAD : stdout, stderr, exit, count, list
+#   r6-r13   git diff --shortstat BASE HEAD  : stdout, stderr, exit, files_changed, insertions,
+#                                              deletions, patch (digest only), names
+#   r14-r16  python -m ruff check styxx      : stdout, stderr, exit
+#   r17-r24  python -m pytest tests -q       : stdout, stderr, exit, passed, failed, skipped,
+#                                              xfailed, errors
+#
+# `path:` receipts resolve at the PR head commit. Policy (styxx.sworn_gate): SWORN-HELD passes,
+# SWORN-FAILED and MALFORMED fail, UNSWORN passes with a notice until this repository flips
+# `--strict`. The manifest, its legend and the verdict receipt are uploaded as artifacts and the
+# legend is written to the job summary.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    name: sworn description gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout PR head with full history (path receipts and the dogfood test walk git)"
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install styxx + test deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+
+      - name: Mint the manifest on the PR head (harness-owned extraction; fixed receipt order)
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          TURN: pr-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
+        run: |
+          mkdir -p sworn-ci
+          python -m styxx.sworn_harness sworn-ci/manifest.json new --turn "$TURN"
+          python -m styxx.sworn_harness sworn-ci/manifest.json commits "$BASE" "$HEAD"
+          python -m styxx.sworn_harness sworn-ci/manifest.json diff "$BASE" "$HEAD"
+          python -m styxx.sworn_harness sworn-ci/manifest.json exec -- python -m ruff check styxx
+          python -m styxx.sworn_harness sworn-ci/manifest.json exec -- python -m pytest tests -q --no-header -p no:cacheprovider --tb=line
+
+      - name: Write the PR body to a file (the body is data, never executed)
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: printf '%s\n' "$PR_BODY" > sworn-ci/pr_body.md
+
+      - name: Gate
+        env:
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python -m styxx.sworn_gate sworn-ci/pr_body.md --manifest sworn-ci/manifest.json \
+            --repo . --commit "$HEAD" --out sworn-ci/gate_receipt.json | tee sworn-ci/gate.txt
+          { echo '## sworn description gate'; echo; echo '```'; cat sworn-ci/gate.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload manifest, legend, receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sworn-ci-${{ github.event.pull_request.number }}
+          path: sworn-ci/

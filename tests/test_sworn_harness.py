@@ -16,10 +16,12 @@ from styxx.sworn_harness import (Harness, extract_count, extract_pytest, extract
 
 
 def test_extractors_read_only_the_tool_summary_shapes():
-    assert extract_pytest(b"....\n12 passed, 2 skipped in 0.3s\n", b"") == {"passed": 12, "failed": 0, "skipped": 2}
+    assert extract_pytest(b"....\n12 passed, 2 skipped in 0.3s\n", b"") == \
+        {"passed": 12, "failed": 0, "skipped": 2, "xfailed": 0, "errors": 0}
     assert extract_pytest(b"3 failed, 9 passed, 1 xfailed, 1 error in 1s\n", b"") == \
-        {"passed": 9, "failed": 3, "xfailed": 1, "errors": 1}
-    assert extract_pytest(b"", b"") == {"passed": 0, "failed": 0}
+        {"passed": 9, "failed": 3, "skipped": 0, "xfailed": 1, "errors": 1}
+    assert extract_pytest(b"", b"") == {"passed": 0, "failed": 0, "skipped": 0, "xfailed": 0, "errors": 0}
+    assert list(extract_pytest(b"1 passed\n", b"")) == ["passed", "failed", "skipped", "xfailed", "errors"]
     assert extract_shortstat(b" 3 files changed, 10 insertions(+), 2 deletions(-)\n", b"") == \
         {"files_changed": 3, "insertions": 10, "deletions": 2}
     assert extract_shortstat(b" 1 file changed, 1 deletion(-)\n", b"") == \
