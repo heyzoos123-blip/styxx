@@ -1,0 +1,232 @@
+# -*- coding: utf-8 -*-
+"""styxx.sworn_harness — the harness side of sworn output for CODING work.
+
+An agent that finishes a task writes a report: "the suite passes, three files changed, two
+commits." Sworn output lets it bind each of those numbers to a receipt — but invariant 2 of
+``sworn/0.1`` says receipts are harness-minted, never author-minted. This module is that harness
+for the things a coding agent reports on: commands it ran, the diff it produced, the commits it
+made. It mints a ``sworn/manifest/0.1`` manifest whose receipts are:
+
+- for every command: its stdout (``tool_stdout``, complete), its stderr (``tool_stderr``,
+  complete) and its exit code (``harness_note``, complete);
+- for the commands this harness knows how to read, scalars the HARNESS extracted — pytest's
+  passed/failed/skipped counts (``test_report``), ``git diff --shortstat``'s files, insertions
+  and deletions and ``git rev-list --count``'s commit count (``harness_note``);
+- for a diff: the full patch bytes (``tool_stdout``, complete, for ``hash``) and the changed-file
+  list (``tool_stdout``, complete, for ``quote``/``absent``).
+
+The gaming vector this design closes: extraction owned by the author. If the agent supplied the
+regex that pulls "3 files changed" out of the output, it could supply one that finds the number it
+wants. Here the extractor table is fixed in this file, keyed by the command's first tokens; a
+command the harness does not know yields stdout, stderr and exit code only, and the author may
+swear to those bytes (``hash``, ``quote``, ``absent``) or to the exit code (``numeric``) and to
+nothing the harness did not itself read. Every receipt kind this module mints is in
+``SOURCE_KINDS_EXTERNAL``; it cannot mint an author-side kind.
+
+Beside the manifest it writes a legend — ``<manifest>.legend.json`` — saying what each ``rN``
+is, so the author can pick the right receipt. The legend is harness-written and is not a
+receipt; the verifier never reads it.
+
+  python -m styxx.sworn_harness M.json new --turn ID
+  python -m styxx.sworn_harness M.json exec -- pytest -q tests/test_sworn.py
+  python -m styxx.sworn_harness M.json diff BASE HEAD
+  python -m styxx.sworn_harness M.json commits BASE HEAD
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+from typing import Callable, Dict, List, Optional, Sequence, Tuple
+
+from styxx.sworn import SOURCE_KINDS_EXTERNAL, Manifest
+
+__all__ = ["Harness", "EXTRACTORS", "extract_pytest", "extract_shortstat", "extract_count", "main"]
+
+HARNESS_NAME = "styxx/sworn_harness.py"
+
+
+# --- extractors: fixed in this file, keyed by command shape, never supplied by the author -------
+
+def extract_pytest(stdout: bytes, stderr: bytes) -> Dict[str, int]:
+    """pytest's summary line, read the way harness_pytest.py reads it."""
+    text = (stdout + stderr).decode("utf-8", errors="replace")
+    lines = [ln for ln in text.strip().splitlines() if ln.strip()]
+    summary = lines[-1] if lines else ""
+    out = {}
+    for key in ("passed", "failed", "skipped", "xfailed", "error", "errors"):
+        m = re.search(r"(\d+) %s\b" % key, summary)
+        if m:
+            out["errors" if key == "error" else key] = int(m.group(1))
+    for key in ("passed", "failed"):
+        out.setdefault(key, 0)
+    return out
+
+
+def extract_shortstat(stdout: bytes, stderr: bytes) -> Dict[str, int]:
+    """``git diff --shortstat``: '3 files changed, 10 insertions(+), 2 deletions(-)'."""
+    text = stdout.decode("utf-8", errors="replace")
+    out = {"files_changed": 0, "insertions": 0, "deletions": 0}
+    m = re.search(r"(\d+) files? changed", text)
+    if m:
+        out["files_changed"] = int(m.group(1))
+    m = re.search(r"(\d+) insertions?\(\+\)", text)
+    if m:
+        out["insertions"] = int(m.group(1))
+    m = re.search(r"(\d+) deletions?\(-\)", text)
+    if m:
+        out["deletions"] = int(m.group(1))
+    return out
+
+
+def extract_count(stdout: bytes, stderr: bytes) -> Dict[str, int]:
+    """``git rev-list --count``: one integer on stdout."""
+    text = stdout.decode("utf-8", errors="replace").strip()
+    return {"count": int(text)} if re.fullmatch(r"\d+", text) else {}
+
+
+def _is_pytest(argv: Sequence[str]) -> bool:
+    return (argv[:1] == ["pytest"] or argv[:3] == [sys.executable, "-m", "pytest"]
+            or (len(argv) >= 3 and argv[1:3] == ["-m", "pytest"]))
+
+
+def _is_shortstat(argv: Sequence[str]) -> bool:
+    return argv[:2] == ["git", "diff"] and "--shortstat" in argv
+
+
+def _is_revcount(argv: Sequence[str]) -> bool:
+    return argv[:2] == ["git", "rev-list"] and "--count" in argv
+
+
+# (predicate, extractor, kind_of_source for the scalars it mints)
+EXTRACTORS: List[Tuple[Callable[[Sequence[str]], bool], Callable[[bytes, bytes], Dict[str, int]], str]] = [
+    (_is_pytest, extract_pytest, "test_report"),
+    (_is_shortstat, extract_shortstat, "harness_note"),
+    (_is_revcount, extract_count, "harness_note"),
+]
+
+
+class Harness:
+    """Mint receipts for commands, diffs and commit ranges into one turn manifest."""
+
+    def __init__(self, path, turn: Optional[str] = None, cwd: Optional[str] = None):
+        self.path = Path(path)
+        self.cwd = str(cwd or Path.cwd())
+        if self.path.exists():
+            self.manifest = Manifest.load(self.path)
+            self.legend = json.loads(self._legend_path().read_text(encoding="utf-8")) \
+                if self._legend_path().exists() else {"legend": {}}
+        else:
+            if not turn:
+                raise SystemExit("REFUSED: a new manifest needs --turn")
+            self.manifest = Manifest(harness=HARNESS_NAME, turn=turn)
+            self.legend = {"legend": {}}
+
+    # -- receipts -------------------------------------------------------------------------------
+    def _legend_path(self) -> Path:
+        return self.path.with_name(self.path.name[:-len(".json")] + ".legend.json"
+                                   if self.path.name.endswith(".json") else self.path.name + ".legend.json")
+
+    def _next_id(self) -> str:
+        n = max((int(k[1:]) for k in self.manifest.receipts), default=0) + 1
+        return "r%d" % n
+
+    def _mint(self, data: bytes, kind: str, what: str) -> str:
+        assert kind in SOURCE_KINDS_EXTERNAL, kind          # this harness cannot mint author kinds
+        rid = self._next_id()
+        self.manifest.add(rid, data, kind, complete=True)
+        self.legend["legend"][rid] = {"kind_of_source": kind, "what": what}
+        return rid
+
+    def save(self) -> Path:
+        self.manifest.write(self.path)
+        self.legend["manifest"] = self.path.name
+        self.legend["harness"] = HARNESS_NAME
+        self.legend["note"] = ("harness-written; not a receipt; the verifier never reads it. "
+                               "Every scalar here was extracted by styxx.sworn_harness's fixed "
+                               "extractor table, never by the author.")
+        self._legend_path().write_text(json.dumps(self.legend, indent=1) + "\n", encoding="utf-8")
+        return self.path
+
+    # -- steps ----------------------------------------------------------------------------------
+    def exec(self, argv: Sequence[str], timeout: Optional[float] = None) -> Dict[str, str]:
+        """Run ``argv`` in cwd; mint stdout, stderr, exit code, and any harness-extracted scalars."""
+        argv = list(argv)
+        r = subprocess.run(argv, cwd=self.cwd, capture_output=True, check=False, timeout=timeout)
+        label = " ".join(argv)
+        ids = {"stdout": self._mint(r.stdout, "tool_stdout", "stdout of: %s" % label),
+               "stderr": self._mint(r.stderr, "tool_stderr", "stderr of: %s" % label),
+               "exit_code": self._mint(str(r.returncode).encode("ascii"), "harness_note",
+                                       "exit code of: %s" % label)}
+        for pred, fn, kind in EXTRACTORS:
+            if pred(argv):
+                for name, val in fn(r.stdout, r.stderr).items():
+                    ids[name] = self._mint(str(val).encode("ascii"), kind,
+                                           "%s, extracted by the harness from: %s" % (name, label))
+                break
+        return ids
+
+    def diff(self, base: str, head: str) -> Dict[str, str]:
+        """Mint the shortstat scalars, the full patch (for hash) and the changed-file list."""
+        ids = self.exec(["git", "diff", "--shortstat", base, head])
+        patch = subprocess.run(["git", "diff", base, head], cwd=self.cwd, capture_output=True, check=False)
+        names = subprocess.run(["git", "diff", "--name-only", base, head], cwd=self.cwd,
+                               capture_output=True, check=False)
+        ids["patch"] = self._mint(patch.stdout, "tool_stdout", "git diff %s %s (full patch)" % (base, head))
+        ids["names"] = self._mint(names.stdout, "tool_stdout", "git diff --name-only %s %s" % (base, head))
+        return ids
+
+    def commits(self, base: str, head: str) -> Dict[str, str]:
+        """Mint the commit count and the list of commit ids in base..head."""
+        ids = self.exec(["git", "rev-list", "--count", "%s..%s" % (base, head)])
+        lst = subprocess.run(["git", "rev-list", "%s..%s" % (base, head)], cwd=self.cwd,
+                             capture_output=True, check=False)
+        ids["list"] = self._mint(lst.stdout, "tool_stdout", "git rev-list %s..%s" % (base, head))
+        return ids
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(prog="styxx.sworn_harness",
+                                 description="harness-side receipts for a coding agent's report")
+    ap.add_argument("manifest")
+    ap.add_argument("--cwd", default=None)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    n = sub.add_parser("new")
+    n.add_argument("--turn", required=True)
+    e = sub.add_parser("exec")
+    e.add_argument("argv", nargs=argparse.REMAINDER)
+    d = sub.add_parser("diff")
+    d.add_argument("base")
+    d.add_argument("head")
+    c = sub.add_parser("commits")
+    c.add_argument("base")
+    c.add_argument("head")
+    a = ap.parse_args(argv)
+    if a.cmd == "new":
+        h = Harness(a.manifest, turn=a.turn, cwd=a.cwd)
+        if h.path.exists():
+            raise SystemExit("REFUSED: %s exists; extend it with exec/diff/commits" % h.path)
+        h.save()
+        print("minted %s for turn %s" % (h.path.name, a.turn))
+        return 0
+    h = Harness(a.manifest, cwd=a.cwd)
+    if a.cmd == "exec":
+        cmd = [x for x in a.argv if x != "--"] if a.argv[:1] == ["--"] else a.argv
+        if not cmd:
+            raise SystemExit("REFUSED: exec needs a command after --")
+        ids = h.exec(cmd)
+    elif a.cmd == "diff":
+        ids = h.diff(a.base, a.head)
+    else:
+        ids = h.commits(a.base, a.head)
+    h.save()
+    for k, v in ids.items():
+        print("%s\t%s\t%s" % (v, k, h.legend["legend"][v]["what"]))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
