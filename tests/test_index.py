@@ -82,3 +82,15 @@ def test_negative_result_is_a_first_class_status():
     assert "NEGATIVE-RESULT" in src
     txt = INDEX.read_text(encoding="utf-8")
     assert "NEGATIVE-RESULT" in txt, "the index must define the status it uses"
+
+
+def test_every_accepted_refutation_is_marked_contested_in_the_index():
+    from styxx.referee import index as referee_index
+    text = (ROOT / "papers" / "INDEX.md").read_text(encoding="utf-8")
+    assert "## 4. CONTESTED" in text
+    section = text[text.index("## 4. CONTESTED"):]
+    for target, rs in referee_index(ROOT).items():
+        for r in rs:
+            if r["status"] == "ACCEPTED":
+                assert Path(target).name in section, target
+                assert Path(r["refutation"]).name in section, r["refutation"]

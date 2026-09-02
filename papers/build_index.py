@@ -35,7 +35,6 @@ from __future__ import annotations
 
 import json
 import re
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -115,11 +114,28 @@ def main() -> int:
 
     problems += bad_tags + bad_status + missing_mod
 
+    # CONTESTED: a result with an ACCEPTED sworn refutation (styxx.referee) must be marked in the
+    # INDEX by name. The index is authored; this only refuses an index that hides a contest.
+    from styxx.referee import index as referee_index
+    contested = {t: [r["refutation"] for r in rs if r["status"] == "ACCEPTED"]
+                 for t, rs in referee_index(ROOT).items()}
+    contested = {t: rs for t, rs in contested.items() if rs and t != "(no target)"}
+    section = text[text.find("## 4. CONTESTED"):] if "## 4. CONTESTED" in text else ""
+    for t, rs in sorted(contested.items()):
+        base = Path(t).name
+        if base not in section:
+            problems.append(f"contested result not marked in INDEX §4: {base} (refuted by {', '.join(Path(r).name for r in rs)})")
+        for r in rs:
+            if Path(r).name not in section:
+                problems.append(f"accepted refutation not listed in INDEX §4: {Path(r).name}")
+
     payload = {
         "what": "structural check of papers/INDEX.md against the tree",
         "checked": ["every arc directory has a row", "every row names a real directory",
                     "tags from the closed vocabulary", "statuses from the closed vocabulary",
-                    "modules named in ships-in exist"],
+                    "modules named in ships-in exist",
+                    "every result with an ACCEPTED sworn refutation is marked in §4 CONTESTED"],
+        "contested": {t: [Path(r).name for r in rs] for t, rs in sorted(contested.items())},
         "not_checked": ("the one-sentence terminal claim, the idea index and the receipts "
                         "index are AUTHORED judgments and are never validated here — a script "
                         "that regenerated them would be inventing what it claims to check"),

@@ -5,8 +5,14 @@
   "every row names a real directory",
   "tags from the closed vocabulary",
   "statuses from the closed vocabulary",
-  "modules named in ships-in exist"
+  "modules named in ships-in exist",
+  "every result with an ACCEPTED sworn refutation is marked in \u00a74 CONTESTED"
  ],
+ "contested": {
+  "papers/closed-model-frontier/RESULT_handedness_v3_header_handed_2026_09_02.md": [
+   "REFUTATION_handedness_v3_kind_2026_09_02.md"
+  ]
+ },
  "not_checked": "the one-sentence terminal claim, the idea index and the receipts index are AUTHORED judgments and are never validated here \u2014 a script that regenerated them would be inventing what it claims to check",
  "arc_directories": 48,
  "rows": 48,
