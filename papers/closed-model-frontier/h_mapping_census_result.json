@@ -1,7 +1,7 @@
 {
   "purpose": "handedness (h) of styxx.certify's obligation predicate, per declared mapping",
   "mapping_schema": "styxx-oath/h-mapping/v2",
-  "mapping_sha256": "6e47a58e7e56730727ff956a846a4195c23e8a1f00451d89dbd6744a4709433f",
+  "mapping_sha256": "9fb2d3dcf7efc90b7f55afa0a037849115bcb06e1386ad69c5a0b2deb34db1c0",
   "verifier_sha256": "65194cc64b8078b6d4a169932921b101d9f0c980d95c4f2773f953bd501e9151",
   "sources": {
     "emittable_by_this_verifier": [

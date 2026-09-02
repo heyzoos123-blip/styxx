@@ -22,8 +22,8 @@
    "handed_by": "object_text",
    "emittable": true,
    "note": "self-scoped since v0.5: the `n=` register obligates only its own glued token.",
-   "grain": "structural",
-   "grain_note": "the `n=` register is the author's own notation glued to the token; it cannot co-occur by accident."
+   "grain": "mixed",
+   "grain_note": "structural IN THIS LAB'S IDIOM: the `n=` register is the author's own notation glued to the token. Corrected 2026-09-02 after a definitional referee: abroad the register fires on configuration knobs (11 of the 13 external n-glued tokens in oath_external_epistemics_ledger.jsonl are `+MTP n=3`, a multi-token-prediction setting, not a sample size), which is this mapping's own definition of incidental; and every n-glued token, 13 external and 84 internal, is ABSTAIN, so the label rests on zero panel data. Declared, not measured; a foreign-idiom n= is incidental."
   },
   "range-correlation": {
    "clause": "_TRIGGERS_CORR on bctx AND decimals > 0 AND value in [-1, 1] (v0.4, PREREG_oath_v04_recall_decimalguard)",
@@ -113,10 +113,10 @@
  },
  "revised_on": "2026-09-02",
  "object_text_grain": {
-  "what": "object_text splits by HOW the object's words handed the target. Named on 2026-09-02 after RESULT_handedness_v3_header_handed_2026_09_02 (header-handed accusations genuine at 0.9515, line-handed at 0.6391, same panel) and read across the day's verdicts in SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.md. DECLARED, not derived; the classes above stay as declared.",
+  "what": "object_text splits by HOW the object's words handed the target. Named on 2026-09-02 after RESULT_handedness_v3_header_handed_2026_09_02 (header-handed accusations genuine at 0.9515, line-handed at 0.6391, same panel) and read across the day's verdicts in SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.md. DECLARED, not derived; the classes above stay as declared. Two referees on 2026-09-02 (RESULT_handedness_v3 addendum; RESULT_handedness_v4_INVALID) showed the header/line split is mostly token kind and that even the author's own label does not survive kind-adjustment; the grain stays declared and is not read as a measured mechanism.",
   "structural": "the target was handed by a label the author chose and committed to: a column header bound to the token, a register glued to it by the author's own notation. Cannot arise by accident of proximity.",
   "incidental": "the target was handed by a word that co-occurred on the line, or by a rule written for one idiom firing in another. Proximity, not commitment.",
-  "mixed": "the source hands both kinds and the certificate can tell them apart per token: epistemics.binding_context.header_bound true is structural, false is incidental (the v3 join rule).",
+  "mixed": "the source hands both kinds. For vocabulary the certificate can tell them apart per token (epistemics.binding_context.header_bound true is structural, false is incidental — the v3 join rule; v4 (2026-09-02) showed even that is bag-of-words at table scope, and the author's OWN column or row label is the sharper operationalization). For n-glued the split is by idiom: the lab's sample-size register against a foreign configuration knob.",
   "object_form_has_no_grain": "precision and structural-precision read the token's shape, never the object's words; grain is null for them."
  }
 }
