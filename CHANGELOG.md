@@ -140,6 +140,16 @@ RESULT and the SYNTHESIS carry sworn addenda that withdraw the structure reading
 the adjusted number supports. The verdict stands as scored; the mechanism claim is owed a
 kind-stratified, preregistered re-test on a fresh panel.
 
+**Token-level h, v4: the author's own label, preregistered — INVALID by one row, and the reading
+withdrawn.** A definitional referee showed v3's header cell was bag-of-words at table scope (six of
+its eight false accusations were `Rank` indices). `PREREG_handedness_v4_own_label_2026_09_02.md` froze
+the author's-own-label rule; the definition moved 19 table rows where the plumbing bar said 20, so
+INVALID ships as INVALID. Reported beside it: own-label split 0.3528 raw, 0.0662 kind-adjusted; the
+receipt separates table (0.934) from prose (0.591). The synthesis's first leg is withdrawn; the
+h-mapping's `n=` grain is corrected to mixed by idiom (zero panel data; abroad it fires on config
+knobs), census re-folded, declaration re-sworn. `DESIGN_handedness_stratified_retest_2026_09_02.md`
+specifies the fresh-draw, multi-family re-test that could test structure properly, sharing S1's draw.
+
 **OATH v0.14, preregistered and SHIP: range-sanity reports instead of accusing.** `V14_RANGE_SANITY_REPORT`
 (default OFF, nothing committed changes) turns the v0.3 out-of-range rule into a reporter. The A/B: on
 the lab's own 207 documents the flag moves 0 of 8,583 tokens; on the rebuilt external corpus it removes

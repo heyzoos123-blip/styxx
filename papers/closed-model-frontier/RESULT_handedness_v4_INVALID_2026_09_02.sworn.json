@@ -1,0 +1,135 @@
+{
+ "spec": "sworn/0.1",
+ "commit": "77bebe6d5377141de43020165e132a91c81088cc",
+ "document": {
+  "name": "RESULT_handedness_v4_INVALID_2026_09_02.md",
+  "sha256": "dcfe0a1d948deffee8867d75a33db00e8c3df38b5f21c32e1bdcd1b65dbd6d2d"
+ },
+ "text": "# RESULT — token-level h, v4: the author's own label — INVALID, one row under a plumbing bar — 2026-09-02\n\nFathom Lab · 2026-09-02 · closed-model-frontier · Preregistration:\n`PREREG_handedness_v4_own_label_2026_09_02.md` (commit 7f96cd73). Receipt: `handedness_v4_result.json`\nat `77bebe6d5377`. **Verdict, as scored under the frozen gates:**\n`INVALID__operationalization_failed_plumbing`.\n\n## What failed\n\nThe plumbing gate `G_P_rowlabel` asked the definition to move at least 20 of the line cell's\ntable rows to STRUCTURAL; it moved\n19. The bar was this author's\nguess at the definitional referee's count of 32 row-label rows, and the definition as frozen —\na trigger in the token's own column header or its own row label — found 19 of them. One row.\nThe preregistration's rule is that a bar does not move after data, and a plumbing bar is a bar.\nINVALID ships as INVALID.\n\nEvery other plumbing check passed: 0 documents missing\nfrom the hash-verified cache, and the eight header-cell false accusations of v3 all landed in\nINCIDENTAL by the definition alone\n(0 misplaced).\n\n## What the frozen substantive gates would have read — reported, not a verdict\n\nUnder the own-label split the structural cell holds\n89 rows at\n0.9888 genuine and the incidental cell\n245 rows at\n0.7224; with the largest repository dropped, the difference\nis 0.3528, over the 0.15 bar. Kind-adjusted across\ndecimal, integer and comma strata over all repositories, the difference is\n0.0662, under the same bar. Within decimals the\ncells are 1.0 against\n0.9778; the structural cell is\n83 decimals of 89, and its integer stratum holds\n6 tokens. Had the plumbing gate passed, the\noutcome table names this `OWN_LABEL__form_confounded`. It did not pass, and this paragraph is\nwhat the receipt shows, not what the preregistration licenses.\n\n## What the re-split did to v3's cells\n\nOf v3's 165 header-handed rows, 95\nmoved to INCIDENTAL: their own column label carried no trigger; the word that obligated them\nlived in another column. Of the 169 line-handed rows,\n19 moved to STRUCTURAL on their own row\nlabel. The split the receipt draws most sharply is the one the definitional referee named:\ntable rows are genuine at 0.934\n(197) and prose lines at\n0.5912\n(137) — genre, which the synthesis had demoted to a proxy.\n\n## Reading, bounded\n\nTwo referees and two runs now agree from different directions: on these receipts, \"who handed\nthe target\" separates accusations mostly by token kind and by genre, and the residue that could\nbe called structure is a sliver inside a near-ceiling decimal stratum. The mechanism reading in\n`SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.md` is withdrawn to that; the h-mapping's\ngrain stays a declaration. What would test structure properly is\n`DESIGN_handedness_stratified_retest_2026_09_02.md`: a fresh draw, seats of more than one model\nfamily, strata declared before the draw. Nothing here licenses the accusing branch.\n\n---\n\n*The bar was one row too high and the definition was one row too honest. Under it, the author's\nown label separated the cells by 0.35 and token kind took all but 0.07 of that back.*\n",
+ "spans": [
+  {
+   "start": 352,
+   "end": 397,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/verdict",
+   "kind": "quote"
+  },
+  {
+   "start": 544,
+   "end": 546,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/line_table_rows_reclassified_structural",
+   "kind": "numeric"
+  },
+  {
+   "start": 924,
+   "end": 943,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/docs_missing",
+   "kind": "numeric"
+  },
+  {
+   "start": 1074,
+   "end": 1075,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/eight_named_rows_not_incidental",
+   "kind": "numeric"
+  },
+  {
+   "start": 1223,
+   "end": 1230,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/cells/structural/n",
+   "kind": "numeric"
+  },
+  {
+   "start": 1234,
+   "end": 1240,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/cells/structural/share",
+   "kind": "numeric"
+  },
+  {
+   "start": 1273,
+   "end": 1281,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/cells/incidental/n",
+   "kind": "numeric"
+  },
+  {
+   "start": 1285,
+   "end": 1291,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/cells/incidental/share",
+   "kind": "numeric"
+  },
+  {
+   "start": 1348,
+   "end": 1354,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/delta_ex_top_repo",
+   "kind": "numeric"
+  },
+  {
+   "start": 1471,
+   "end": 1477,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/kind_adjusted_delta_all",
+   "kind": "numeric"
+  },
+  {
+   "start": 1529,
+   "end": 1532,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/by_kind/structural/decimal/share",
+   "kind": "numeric"
+  },
+  {
+   "start": 1541,
+   "end": 1547,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/by_kind/incidental/decimal/share",
+   "kind": "numeric"
+  },
+  {
+   "start": 1572,
+   "end": 1574,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/by_kind/structural/decimal/n",
+   "kind": "numeric"
+  },
+  {
+   "start": 1621,
+   "end": 1622,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/by_kind/structural/integer/n",
+   "kind": "numeric"
+  },
+  {
+   "start": 1895,
+   "end": 1897,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/v3_cell_by_v4_cell/header_to_incidental",
+   "kind": "numeric"
+  },
+  {
+   "start": 2045,
+   "end": 2047,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/v3_cell_by_v4_cell/line_to_structural",
+   "kind": "numeric"
+  },
+  {
+   "start": 2202,
+   "end": 2207,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/table_vs_prose/table/share",
+   "kind": "numeric"
+  },
+  {
+   "start": 2209,
+   "end": 2212,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/table_vs_prose/table/n",
+   "kind": "numeric"
+  },
+  {
+   "start": 2233,
+   "end": 2239,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/table_vs_prose/prose/share",
+   "kind": "numeric"
+  },
+  {
+   "start": 2241,
+   "end": 2244,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/table_vs_prose/prose/n",
+   "kind": "numeric"
+  }
+ ],
+ "manifest": {
+  "spec": "sworn/manifest/0.1",
+  "receipts": {}
+ }
+}

@@ -2,118 +2,50 @@
  "schema": "styxx.sworn.verdict-receipt/v0",
  "format": "sworn/0.1",
  "document": {
-  "name": "SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.md",
-  "inline_sha256": "f532b948bc3deeaceff86f199c8ca583bc27a0469ec9ee0786c4af5bfc130c04",
-  "canonical_sha256": "3caf7d850ce6639fd58f96623297fb91537ac21e7e2dadd4d147cc0181477c9d"
+  "name": "RESULT_handedness_v4_INVALID_2026_09_02.md",
+  "inline_sha256": "13b41d84995ab2f370e311b92f813f6d51a0b1cec5a70ad85203247d7d54949a",
+  "canonical_sha256": "dcfe0a1d948deffee8867d75a33db00e8c3df38b5f21c32e1bdcd1b65dbd6d2d"
  },
  "commit": "77bebe6d5377141de43020165e132a91c81088cc",
  "manifest_digest": null,
  "spans": [
   {
-   "at": 1649,
-   "start": 1649,
-   "end": 1701,
-   "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/verdict",
+   "at": 352,
+   "start": 352,
+   "end": 397,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/verdict",
    "kind": "quote",
    "verdict": "HELD",
    "reason": null,
    "detail": {
-    "needle_bytes": 27,
-    "haystack_bytes": 27
+    "needle_bytes": 43,
+    "haystack_bytes": 43
    },
-   "resolved_sha256": "f7f2532fd218121580faae7f6b3031d42982a117463a51e4bbfbb9416981e26c"
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
   },
   {
-   "at": 1801,
-   "start": 1703,
-   "end": 1762,
-   "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/cells/header/genuine_share",
+   "at": 642,
+   "start": 544,
+   "end": 546,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/line_table_rows_reclassified_structural",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
    "detail": {
-    "printed_token": "0.9515",
-    "printed": "0.9515",
-    "receipt": "0.9515",
-    "receipt_rounded": "0.9515",
-    "fractional_digits": 4,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "f7f2532fd218121580faae7f6b3031d42982a117463a51e4bbfbb9416981e26c"
-  },
-  {
-   "at": 1981,
-   "start": 1764,
-   "end": 1769,
-   "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/cells/header/n",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "165",
-    "printed": "165",
-    "receipt": "165",
-    "receipt_rounded": "165",
+    "printed_token": "19",
+    "printed": "19",
+    "receipt": "19",
+    "receipt_rounded": "19",
     "fractional_digits": 0,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "f7f2532fd218121580faae7f6b3031d42982a117463a51e4bbfbb9416981e26c"
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
   },
   {
-   "at": 2100,
-   "start": 1776,
-   "end": 1847,
-   "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/cells/line/genuine_share",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "0.6391",
-    "printed": "0.6391",
-    "receipt": "0.6391",
-    "receipt_rounded": "0.6391",
-    "fractional_digits": 4,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "f7f2532fd218121580faae7f6b3031d42982a117463a51e4bbfbb9416981e26c"
-  },
-  {
-   "at": 2290,
-   "start": 1849,
-   "end": 1854,
-   "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/cells/line/n",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "169",
-    "printed": "169",
-    "receipt": "169",
-    "receipt_rounded": "169",
-    "fractional_digits": 0,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "f7f2532fd218121580faae7f6b3031d42982a117463a51e4bbfbb9416981e26c"
-  },
-  {
-   "at": 2623,
-   "start": 2077,
-   "end": 2128,
-   "receipt": "path:papers/closed-model-frontier/range_sanity_report_ab_result.json#/verdict",
-   "kind": "quote",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "needle_bytes": 26,
-    "haystack_bytes": 26
-   },
-   "resolved_sha256": "a89b37287dc2985846e233280415b706d8156d3dff1a17c9ec99a5e261413e63"
-  },
-  {
-   "at": 2847,
-   "start": 2194,
-   "end": 2219,
-   "receipt": "path:papers/closed-model-frontier/range_sanity_report_ab_result.json#/internal/tokens_moved",
+   "at": 1162,
+   "start": 924,
+   "end": 943,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/docs_missing",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
@@ -125,31 +57,13 @@
     "fractional_digits": 0,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "a89b37287dc2985846e233280415b706d8156d3dff1a17c9ec99a5e261413e63"
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
   },
   {
-   "at": 3008,
-   "start": 2232,
-   "end": 2260,
-   "receipt": "path:papers/closed-model-frontier/range_sanity_report_ab_result.json#/external/accusations_removed",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "13",
-    "printed": "13",
-    "receipt": "13",
-    "receipt_rounded": "13",
-    "fractional_digits": 0,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "a89b37287dc2985846e233280415b706d8156d3dff1a17c9ec99a5e261413e63"
-  },
-  {
-   "at": 3176,
-   "start": 2270,
-   "end": 2284,
-   "receipt": "path:papers/closed-model-frontier/range_sanity_report_ab_result.json#/external/removed_genuine_by_panel",
+   "at": 1425,
+   "start": 1074,
+   "end": 1075,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/eight_named_rows_not_incidental",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
@@ -161,184 +75,84 @@
     "fractional_digits": 0,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "a89b37287dc2985846e233280415b706d8156d3dff1a17c9ec99a5e261413e63"
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
   },
   {
-   "at": 3398,
-   "start": 2357,
-   "end": 2363,
-   "receipt": "path:papers/closed-model-frontier/range_sanity_report_ab_result.json#/false_accusation_rate_after",
+   "at": 1706,
+   "start": 1223,
+   "end": 1230,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/cells/structural/n",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
    "detail": {
-    "printed_token": "0.2323",
-    "printed": "0.2323",
-    "receipt": "0.2323",
-    "receipt_rounded": "0.2323",
+    "printed_token": "89",
+    "printed": "89",
+    "receipt": "89",
+    "receipt_rounded": "89",
+    "fractional_digits": 0,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
+  },
+  {
+   "at": 1828,
+   "start": 1234,
+   "end": 1240,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/cells/structural/share",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.9888",
+    "printed": "0.9888",
+    "receipt": "0.9888",
+    "receipt_rounded": "0.9888",
     "fractional_digits": 4,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "a89b37287dc2985846e233280415b706d8156d3dff1a17c9ec99a5e261413e63"
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
   },
   {
-   "at": 3711,
-   "start": 2541,
-   "end": 2594,
-   "receipt": "path:papers/closed-model-frontier/oath_obligation_claimhood_join.json#/arms/external/obligated/claim_share",
+   "at": 1982,
+   "start": 1273,
+   "end": 1281,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/cells/incidental/n",
    "kind": "numeric",
    "verdict": "HELD",
    "reason": null,
    "detail": {
-    "printed_token": "0.7826",
-    "printed": "0.7826",
-    "receipt": "0.7826",
-    "receipt_rounded": "0.7826",
+    "printed_token": "245",
+    "printed": "245",
+    "receipt": "245",
+    "receipt_rounded": "245",
+    "fractional_digits": 0,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
+  },
+  {
+   "at": 2105,
+   "start": 1285,
+   "end": 1291,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/cells/incidental/share",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.7224",
+    "printed": "0.7224",
+    "receipt": "0.7224",
+    "receipt_rounded": "0.7224",
     "fractional_digits": 4,
     "rounding": "ROUND_HALF_EVEN"
    },
-   "resolved_sha256": "2cd20b4dedafa3edc6c091720281b5c67a43de4df5250e90929fef073d16335d"
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
   },
   {
-   "at": 3909,
-   "start": 2601,
-   "end": 2640,
-   "receipt": "path:papers/closed-model-frontier/oath_obligation_claimhood_join.json#/arms/external/volunteered/claim_share",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "0.3654",
-    "printed": "0.3654",
-    "receipt": "0.3654",
-    "receipt_rounded": "0.3654",
-    "fractional_digits": 4,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "2cd20b4dedafa3edc6c091720281b5c67a43de4df5250e90929fef073d16335d"
-  },
-  {
-   "at": 4438,
-   "start": 2990,
-   "end": 3056,
-   "receipt": "path:papers/frequency-resonance/efficiency_control_result.json#/verdict",
-   "kind": "quote",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "needle_bytes": 20,
-    "haystack_bytes": 20
-   },
-   "resolved_sha256": "15df99ef1ae343cbc2ef92447efff978a1e2ed486e09c09f0f38aa4b4b096dbf"
-  },
-  {
-   "at": 4690,
-   "start": 3141,
-   "end": 3147,
-   "receipt": "path:papers/frequency-resonance/efficiency_control_result.json#/metrics/static_matched_minus_rich_8",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "0.1959",
-    "printed": "0.1959",
-    "receipt": "0.1959",
-    "receipt_rounded": "0.1959",
-    "fractional_digits": 4,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "15df99ef1ae343cbc2ef92447efff978a1e2ed486e09c09f0f38aa4b4b096dbf"
-  },
-  {
-   "at": 4937,
-   "start": 3257,
-   "end": 3332,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/verdict",
-   "kind": "quote",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "needle_bytes": 39,
-    "haystack_bytes": 39
-   },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
-  },
-  {
-   "at": 5165,
-   "start": 3394,
-   "end": 3408,
-   "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/metrics/recovery_fraction",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "0.0",
-    "printed": "0.0",
-    "receipt": "0.0",
-    "receipt_rounded": "0.0",
-    "fractional_digits": 1,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "09b75f04616cf6ce4ff553d6e4b313056f858820b936115c811ed9d51ada648c"
-  },
-  {
-   "at": 7397,
-   "start": 5515,
-   "end": 5520,
-   "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/kind_adjusted_delta_mh_weights",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "0.117",
-    "printed": "0.117",
-    "receipt": "0.117",
-    "receipt_rounded": "0.117",
-    "fractional_digits": 3,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "87ce75d7f98ae8f67d948026cefaecf7b2aee64a0f740a5c1726daa4e766325d"
-  },
-  {
-   "at": 7546,
-   "start": 5537,
-   "end": 5543,
-   "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/raw_delta_header_minus_line",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "0.3124",
-    "printed": "0.3124",
-    "receipt": "0.3124",
-    "receipt_rounded": "0.3124",
-    "fractional_digits": 4,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "87ce75d7f98ae8f67d948026cefaecf7b2aee64a0f740a5c1726daa4e766325d"
-  },
-  {
-   "at": 7705,
-   "start": 5572,
-   "end": 5578,
-   "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/decimal_share_of_header_cell",
-   "kind": "numeric",
-   "verdict": "HELD",
-   "reason": null,
-   "detail": {
-    "printed_token": "0.8606",
-    "printed": "0.8606",
-    "receipt": "0.8606",
-    "receipt_rounded": "0.8606",
-    "fractional_digits": 4,
-    "rounding": "ROUND_HALF_EVEN"
-   },
-   "resolved_sha256": "87ce75d7f98ae8f67d948026cefaecf7b2aee64a0f740a5c1726daa4e766325d"
-  },
-  {
-   "at": 9011,
-   "start": 6753,
-   "end": 6759,
+   "at": 2283,
+   "start": 1348,
+   "end": 1354,
    "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/delta_ex_top_repo",
    "kind": "numeric",
    "verdict": "HELD",
@@ -354,9 +168,9 @@
    "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
   },
   {
-   "at": 9144,
-   "start": 6768,
-   "end": 6774,
+   "at": 2524,
+   "start": 1471,
+   "end": 1477,
    "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/kind_adjusted_delta_all",
    "kind": "numeric",
    "verdict": "HELD",
@@ -372,9 +186,117 @@
    "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
   },
   {
-   "at": 9342,
-   "start": 6842,
-   "end": 6847,
+   "at": 2706,
+   "start": 1529,
+   "end": 1532,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/by_kind/structural/decimal/share",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "1.0",
+    "printed": "1.0",
+    "receipt": "1.0",
+    "receipt_rounded": "1.0",
+    "fractional_digits": 1,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
+  },
+  {
+   "at": 2843,
+   "start": 1541,
+   "end": 1547,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/by_kind/incidental/decimal/share",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "0.9778",
+    "printed": "0.9778",
+    "receipt": "0.9778",
+    "receipt_rounded": "0.9778",
+    "fractional_digits": 4,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
+  },
+  {
+   "at": 2999,
+   "start": 1572,
+   "end": 1574,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/by_kind/structural/decimal/n",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "83",
+    "printed": "83",
+    "receipt": "83",
+    "receipt_rounded": "83",
+    "fractional_digits": 0,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
+  },
+  {
+   "at": 3169,
+   "start": 1621,
+   "end": 1622,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/by_kind/structural/integer/n",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "6",
+    "printed": "6",
+    "receipt": "6",
+    "receipt_rounded": "6",
+    "fractional_digits": 0,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
+  },
+  {
+   "at": 3564,
+   "start": 1895,
+   "end": 1897,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/v3_cell_by_v4_cell/header_to_incidental",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "95",
+    "printed": "95",
+    "receipt": "95",
+    "receipt_rounded": "95",
+    "fractional_digits": 0,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
+  },
+  {
+   "at": 3846,
+   "start": 2045,
+   "end": 2047,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/v3_cell_by_v4_cell/line_to_structural",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "19",
+    "printed": "19",
+    "receipt": "19",
+    "receipt_rounded": "19",
+    "fractional_digits": 0,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
+  },
+  {
+   "at": 4133,
+   "start": 2202,
+   "end": 2207,
    "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/table_vs_prose/table/share",
    "kind": "numeric",
    "verdict": "HELD",
@@ -390,9 +312,27 @@
    "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
   },
   {
-   "at": 9475,
-   "start": 6856,
-   "end": 6862,
+   "at": 4259,
+   "start": 2209,
+   "end": 2212,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/table_vs_prose/table/n",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "197",
+    "printed": "197",
+    "receipt": "197",
+    "receipt_rounded": "197",
+    "fractional_digits": 0,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
+  },
+  {
+   "at": 4398,
+   "start": 2233,
+   "end": 2239,
    "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/table_vs_prose/prose/share",
    "kind": "numeric",
    "verdict": "HELD",
@@ -406,29 +346,41 @@
     "rounding": "ROUND_HALF_EVEN"
    },
    "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
+  },
+  {
+   "at": 4525,
+   "start": 2241,
+   "end": 2244,
+   "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/table_vs_prose/prose/n",
+   "kind": "numeric",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "printed_token": "137",
+    "printed": "137",
+    "receipt": "137",
+    "receipt_rounded": "137",
+    "fractional_digits": 0,
+    "rounding": "ROUND_HALF_EVEN"
+   },
+   "resolved_sha256": "10cc32dbcbf3d36a9dcd8d6ff59e86f082fe12bda5cdc467720a107bd04dc850"
   }
  ],
  "counts": {
-  "HELD": 23,
+  "HELD": 20,
   "FAILED": 0,
   "UNRESOLVED": 0,
   "MALFORMED": 0,
   "WITHHELD": 0
  },
- "sworn_total": 23,
+ "sworn_total": 20,
  "unresolved": 0,
  "document_verdict": "SWORN-HELD",
  "document_malformed": null,
  "coverage": {
-  "estimate": 0.9583,
-  "unsworn_claims_estimate": 1,
-  "unsworn_claims": [
-   {
-    "start": 4064,
-    "end": 4158,
-    "text": "`external` — but `object_text` now owes a split: **structural** (a label the author chose: a"
-   }
-  ],
+  "estimate": 1.0,
+  "unsworn_claims_estimate": 0,
+  "unsworn_claims": [],
   "advisory": true,
   "ceiling_note": "advisory: the denominator is counted by styxx.claimdetect (STRUCT-1), measured at precision 0.4211 on n=38 with two known recall misses; false flags bias coverage low, misses bias it high; never a gate, never a measurement",
   "splitter": "diffgate:(?<=[.!?])\\s+|\\n+",
@@ -465,6 +417,6 @@
   }
  },
  "certifies": "the spans the author bound were checked against bytes the author did not write, at the commit or manifest the document names — NOT a claim that the document is correct, NOT a claim that the right sentences were bound, NOT a check that the tags were written at write time, and only as trustworthy as the harness that minted the manifest and the history that holds the commit",
- "digest": "798aad063a059e38be6f641575fe19ff563e352c7bdf039e5c74ceaed618d5d0",
- "timestamp": "2026-09-02T04:42:42Z"
+ "digest": "e6cd8baf8a2035ef268ab49887f8eedb3097c299e3756e044bedf63eb7642ef3",
+ "timestamp": "2026-09-02T04:42:41Z"
 }

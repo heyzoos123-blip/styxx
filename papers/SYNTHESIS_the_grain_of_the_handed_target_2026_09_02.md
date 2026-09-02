@@ -97,6 +97,22 @@ read with this section beside it. Legs 2 through 5 are untouched by the objectio
 referee's second objection, that the thirteen-of-thirteen figure is circular with its own bar,
 was disclosed in that preregistration and is repeated here so nobody reads it as independent.
 
+
+## Second referee, and v4 — the first leg, withdrawn
+
+A definitional referee showed v3's header cell never operationalized "a label the author chose":
+it was any trigger anywhere in the header row, and six of its eight false accusations were rank
+indices whose own column was `Rank`. `PREREG_handedness_v4_own_label_2026_09_02.md` froze the
+author's-own-label rule and ran it on the same rows: INVALID on a plumbing bar by one row, and
+reported beside it, the own-label split at <sworn r="path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/delta_ex_top_repo" k="numeric">0.3528</sworn>
+raw and <sworn r="path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/kind_adjusted_delta_all" k="numeric">0.0662</sworn> kind-adjusted. The split the
+receipt draws is table against prose, <sworn r="path:papers/closed-model-frontier/handedness_v4_result.json#/table_vs_prose/table/share" k="numeric">0.934</sworn> against
+<sworn r="path:papers/closed-model-frontier/handedness_v4_result.json#/table_vs_prose/prose/share" k="numeric">0.5912</sworn>. Leg 1 is withdrawn: on these receipts the
+verifier's accusations separate by token kind and genre, not by structure. The referee also
+showed the mapping's `n=` label rested on zero panel data and fires abroad on configuration
+knobs; the mapping now says so. Legs 2 through 5 stand on their own receipts, and the analogy
+between them and the verifier is the author's, unsupported by leg 1.
+
 ---
 
 *The verifier trusted words it found near numbers and the model trusted a detector it built for
