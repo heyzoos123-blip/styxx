@@ -1,0 +1,109 @@
+{
+  "prereg": "PREREG_pmnist_untied_2026_09_02.md",
+  "config": {
+    "task": "permuted-MNIST",
+    "perm_seed": 1234,
+    "T": 784,
+    "H": 64,
+    "d_ssm": 64,
+    "blocks": 3,
+    "steps": 4000,
+    "seeds": [
+      0,
+      1
+    ],
+    "device": "cpu",
+    "torch": "2.13.0+cu130",
+    "smoke": false
+  },
+  "params": {
+    "free": 101002,
+    "clamped": 100810,
+    "real2": 101002
+  },
+  "test_acc": {
+    "free": [
+      0.9294,
+      0.9189
+    ],
+    "clamped": [
+      0.5528,
+      0.6609
+    ],
+    "real2": [
+      0.6701,
+      0.612
+    ]
+  },
+  "means": {
+    "free": 0.9242,
+    "clamped": 0.6069,
+    "real2": 0.6411
+  },
+  "metrics": {
+    "anchor_max_abs_dev": 0.0047,
+    "gap_free_minus_clamped": 0.3173,
+    "free_minus_real2": 0.2831,
+    "real2_minus_clamped": 0.0342,
+    "recovery_fraction": 0.1078
+  },
+  "verdict": "PARTIAL__diversity_recovers_some",
+  "gates": {
+    "G_P_anchors": true,
+    "G_C_gap": true,
+    "G_R_recovers": false,
+    "G_R_fails": false
+  },
+  "plumbing": {
+    "runner": "run_pmnist_untied_fast.py",
+    "what": "run_pmnist_untied_fast.py -- PLUMBING for the frozen PREREG_pmnist_untied_2026_09_02 runner.",
+    "sharded_jobs": [
+      {
+        "arm": "free",
+        "seed": 0,
+        "seconds": 8208.3,
+        "threads": 1
+      },
+      {
+        "arm": "free",
+        "seed": 1,
+        "seconds": 8226.3,
+        "threads": 1
+      },
+      {
+        "arm": "clamped",
+        "seed": 0,
+        "seconds": 4149.9,
+        "threads": 2
+      },
+      {
+        "arm": "clamped",
+        "seed": 1,
+        "seconds": 4145.2,
+        "threads": 2
+      },
+      {
+        "arm": "real2",
+        "seed": 0,
+        "seconds": 11149.0,
+        "threads": 1
+      },
+      {
+        "arm": "real2",
+        "seed": 1,
+        "seconds": 11040.9,
+        "threads": 1
+      }
+    ],
+    "scan_redteam": {
+      "scan": "chunked exact scan, real arithmetic, chunk=28, time-invariant lam",
+      "vs_seq_scan_fwd_max_abs": 1.3654538634000346e-05,
+      "vs_seq_scan_grad_max_rel": 1.0578170820779912e-06,
+      "real_path_vs_seq_scan_max_abs": 8.58306884765625e-06,
+      "clru_dtheta_max_rel": 1.909123190628496e-06,
+      "clru_dnu_max_rel": 7.506467048426169e-06,
+      "tolerance": 0.0001
+    },
+    "anchors_gate_is_the_detector": "G_P_anchors"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "arm": "clamped",
+  "seed": 0,
+  "test_acc": 0.5528,
+  "seconds": 4149.9,
+  "threads": 2,
+  "device": "cpu",
+  "torch": "2.13.0+cu130",
+  "steps": 4000,
+  "smoke": false,
+  "redteam": {
+    "scan": "chunked exact scan, real arithmetic, chunk=28, time-invariant lam",
+    "vs_seq_scan_fwd_max_abs": 1.3654538634000346e-05,
+    "vs_seq_scan_grad_max_rel": 1.0578170820779912e-06,
+    "real_path_vs_seq_scan_max_abs": 8.58306884765625e-06,
+    "clru_dtheta_max_rel": 1.909123190628496e-06,
+    "clru_dnu_max_rel": 7.506467048426169e-06,
+    "tolerance": 0.0001
+  }
+}
