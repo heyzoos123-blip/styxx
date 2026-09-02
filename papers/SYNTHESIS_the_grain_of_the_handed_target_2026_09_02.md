@@ -1,5 +1,7 @@
 # SYNTHESIS — the grain of the handed target: structure hands a claim, co-occurrence hands a coin — 2026-09-02
 
+> **WITHDRAWN, 2026-09-02, the same day.** Three referees read this against its own receipts. Leg 1 is a token-kind and genre effect (`RESULT_handedness_v3` addendum; `RESULT_handedness_v4_INVALID`). The cross-domain analogy is inverted by the sequence-model receipts (last addendum below). The five verdicts stand individually as scored; the thesis that joins them does not. The text is kept unchanged above the addenda so the withdrawal can be read against what it withdraws.
+
 Fathom Lab · 2026-09-02 · **A synthesis, not a result.** It measures nothing; it reads five
 preregistered verdicts issued today, three of them HELD and two of them the INVALIDs that
 preceded a HELD, and says what they jointly mean. Every number in it is sworn to the receipt that
@@ -112,6 +114,24 @@ verifier's accusations separate by token kind and genre, not by structure. The r
 showed the mapping's `n=` label rested on zero panel data and fires abroad on configuration
 knobs; the mapping now says so. Legs 2 through 5 stand on their own receipts, and the analogy
 between them and the verifier is the author's, unsupported by leg 1.
+
+
+## Third referee — the analogy, inverted by its own receipts
+
+Neither sequence-model preregistration names a handedness factor; their frozen questions are
+parameter efficiency and rotation against diversity, and their verdicts answer those. Under M2's
+own vocabulary the mapping runs the other way: the FREE arm's rotation is a learned parameter,
+an instrument that finds its own target, and the arm that was *handed* the true period — the
+oracle — lost at the primary width to a bank handed nothing at all:
+<sworn r="path:papers/frequency-resonance/efficiency_control_result.json#/drift/8/oracle" k="numeric">0.6451</sworn> against <sworn r="path:papers/frequency-resonance/efficiency_control_result.json#/drift/8/static_matched" k="numeric">0.7519</sworn>.
+On the verifier side the handed arm won; on the model side it lost. That is the opposite of a
+shared mechanism, and the sentence in the thesis about "the rotation the weights were trained to
+use" being structure committed to before the instrument looked is false as written. Legs 2 and 3
+keep their own verdicts, CAPACITY_IN_DISGUISE and ROTATION_LOAD_BEARING__beyond_diversity, which
+say nothing about handedness and were never asked to. What would test a shared mechanism is an
+SSM preregistration that freezes the factor itself — a structure-handed arm, a co-occurrence-
+handed arm fed a spurious correlate of the period, and a no-target arm at matched parameters —
+and that experiment has not been run.
 
 ---
 

@@ -149,6 +149,9 @@ receipt separates table (0.934) from prose (0.591). The synthesis's first leg is
 h-mapping's `n=` grain is corrected to mixed by idiom (zero panel data; abroad it fires on config
 knobs), census re-folded, declaration re-sworn. `DESIGN_handedness_stratified_retest_2026_09_02.md`
 specifies the fresh-draw, multi-family re-test that could test structure properly, sharing S1's draw.
+A third referee inverted the cross-domain analogy from the efficiency receipt (oracle 0.6451 against
+static_matched 0.7519 at width 8: the handed arm lost). The SYNTHESIS is marked WITHDRAWN at the top,
+text kept, three sworn addenda; the five verdicts stand individually. The AUDIT's M2 addendum says so.
 
 **OATH v0.14, preregistered and SHIP: range-sanity reports instead of accusing.** `V14_RANGE_SANITY_REPORT`
 (default OFF, nothing committed changes) turns the v0.3 out-of-range rule into a reporter. The A/B: on

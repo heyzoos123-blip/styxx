@@ -1,148 +1,160 @@
 {
  "spec": "sworn/0.1",
- "commit": "77bebe6d5377141de43020165e132a91c81088cc",
+ "commit": "d7d7813e1069ffdbc7ce5912705d3b7a6d5a0879",
  "document": {
   "name": "SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.md",
-  "sha256": "3caf7d850ce6639fd58f96623297fb91537ac21e7e2dadd4d147cc0181477c9d"
+  "sha256": "a638bb009232fe8fea5b525f5390b80570ed9da72645c677c6208504810fe22f"
  },
- "text": "# SYNTHESIS — the grain of the handed target: structure hands a claim, co-occurrence hands a coin — 2026-09-02\n\nFathom Lab · 2026-09-02 · **A synthesis, not a result.** It measures nothing; it reads five\npreregistered verdicts issued today, three of them HELD and two of them the INVALIDs that\npreceded a HELD, and says what they jointly mean. Every number in it is sworn to the receipt that\nholds it at commit `a5b0328ea212`; the reading is the author's and is the part a reader should argue\nwith. Mechanism M2 in `AUDIT_the_whole_program_2026_09_01.md` — *a number measured where the\ntarget was supplied collapses when the instrument must find it* — was found eleven times and\nnamed once. Today it acquired a grain.\n\n## The thesis\n\n*Handed* was one word for two things. A target can be handed to an instrument by **structure** —\na label the author chose and committed to, a column header, an oath tag, a rotation the weights\nwere trained to use — or by **co-occurrence** — a word that happened to be nearby, a rule written\nfor one idiom and fired in another, a detector guessing at a rhythm it was not given. Instruments\ntrusting the first kind held today under frozen bars. Instruments trusting the second kind were\nthe false accusations, the capacity in disguise, and the detector that never earned its\nparameters. The prose-versus-artifact split the audit examined was a proxy for handed-versus-found;\nhanded-versus-found is itself a proxy for **structure-versus-co-occurrence**, and that is the line\nthe receipts draw.\n\n## The five verdicts, as receipts\n\n**1. On the verifier's accusations, the structure is a column header.**\nThe frozen verdict was `HEADER_HANDED_ACCUSES_TRUER`:\naccusations handed by a table header were genuine at 0.9515\n(n=165), and\naccusations handed by a trigger word in the line were genuine at 0.6391\n(n=169), on the 2026-08-27 external blind panel with no token\nre-judged. Both are `object_text` under the handedness declaration; only one is structure.\n\n**2. On the verifier's rules, a rule outside its idiom is co-occurrence.**\nThe frozen verdict was `SHIP__range_sanity_reports`: the v0.3 out-of-range\nrule, written for this lab's prose, moved 0 of the lab's own tokens\nand accused 13 tokens on foreign READMEs of which\n0 were genuine; turning it into a reporter takes\nthe external false-accusation rate to 0.2323. A bounded\nword before a number is a handed target; on a README it is a coin.\n\n**3. On the verifier's oaths, the same line was drawn on 2026-08-30.** The join RESULT found that\nobligated oaths on foreign text were claims at 0.7826\nwhile volunteered oaths were claims at 0.3654.\nAn obligation is a handed target; a volunteered value match is a coincidence the verifier found\non its own. Found, here, was the worse half — and today's grain says why the handed half was\nstill only 0.78: some of its handing was co-occurrence.\n\n**4. On the sequence model, the clever detector was co-occurrence and the rotation was\nstructure.** The efficiency control's frozen verdict was `CAPACITY_IN_DISGUISE`:\na static bank spending the adaptive detector's parameters on more modes beat it by\n0.1959 at the primary width — a detector that\nguesses the input's rhythm is a target the model handed itself. And\nthe untied-magnitudes verdict was `ROTATION_LOAD_BEARING__beyond_diversity`:\na real bank with twice the independent timescales recovered\na fraction 0.0 of the clamped bank's lost capacity. The\nrotation the weights were trained to use is not a guess. It is the structure, and nothing the\nmodel could infer replaced it.\n\n**5. On the format, sworn output is the limiting case: all structure, no co-occurrence.** The\nauthor binds one sentence to one receipt leaf at write time; the verifier is handed a\ncommitment, never a target to find. This document is written in it, and its own verdict is the\ndemonstration that the reading above rests on bytes an author could not have written.\n\n## What the grain changes\n\nThe handedness declaration's classes stay as declared — `object_text`, `object_form`, `receipt`,\n`external` — but `object_text` now owes a split: **structural** (a label the author chose: a\nheader, a tag, a declared field) against **incidental** (a word that co-occurred). The mapping's\nnext version names it, and the instrument-level table gains a column: does this instrument take\nits targets from structure the author committed to, or from co-occurrence it inferred? Read down\nthat column, the eleven prose-claimhood instruments of the census are all incidental readers,\nand the instruments that survived their strangers — the oath's obligated half, the header-handed\naccusations, the phase clamp, sworn — all read structure.\n\n## What this synthesis does not say\n\nThat structure is truth: a header can label a column of fabricated numbers, and a sworn span can\nbind a trivial sentence — invariant 4 of the spec exists because of exactly that. That the\nsequence-model results and the verifier results share a mechanism rather than a shape; the\nanalogy is the author's, and the receipts are silent on it. That anything here was measured\nagainst strangers in more than one panel of one model family. The five verdicts are each bounded\nin their own documents, and this synthesis inherits every bound.\n\n\n## Referee objection, 2026-09-02 — the first leg, weakened\n\nThe statistical referee's stratification of the header/line receipts by token kind\n(`closed-model-frontier/handedness_v3_stratified.json`, post-hoc): kind-adjusted, the gap is\n0.117 against the raw\n0.3124, because the header cell is\n0.8606 decimals and decimals are claims whoever\nhands them. Leg 1 of this synthesis therefore shows a form effect with a structure residue,\nnot a structure effect. The grain declared in `h_mapping.json` v2 is kept as a declaration; the\nclaim that the receipts *draw* the structure-versus-co-occurrence line is withdrawn to the\nstrength the adjusted number supports, and the stronger sentence in the thesis above should be\nread with this section beside it. Legs 2 through 5 are untouched by the objection; the\nreferee's second objection, that the thirteen-of-thirteen figure is circular with its own bar,\nwas disclosed in that preregistration and is repeated here so nobody reads it as independent.\n\n\n## Second referee, and v4 — the first leg, withdrawn\n\nA definitional referee showed v3's header cell never operationalized \"a label the author chose\":\nit was any trigger anywhere in the header row, and six of its eight false accusations were rank\nindices whose own column was `Rank`. `PREREG_handedness_v4_own_label_2026_09_02.md` froze the\nauthor's-own-label rule and ran it on the same rows: INVALID on a plumbing bar by one row, and\nreported beside it, the own-label split at 0.3528\nraw and 0.0662 kind-adjusted. The split the\nreceipt draws is table against prose, 0.934 against\n0.5912. Leg 1 is withdrawn: on these receipts the\nverifier's accusations separate by token kind and genre, not by structure. The referee also\nshowed the mapping's `n=` label rested on zero panel data and fires abroad on configuration\nknobs; the mapping now says so. Legs 2 through 5 stand on their own receipts, and the analogy\nbetween them and the verifier is the author's, unsupported by leg 1.\n\n---\n\n*The verifier trusted words it found near numbers and the model trusted a detector it built for\nitself, and both were coins. What held was what had been chosen and committed to before the\ninstrument looked: the header, the oath, the rotation. Handed is not one thing. Structure hands a\nclaim; co-occurrence hands a coin.*\n",
+ "text": "# SYNTHESIS — the grain of the handed target: structure hands a claim, co-occurrence hands a coin — 2026-09-02\n\n> **WITHDRAWN, 2026-09-02, the same day.** Three referees read this against its own receipts. Leg 1 is a token-kind and genre effect (`RESULT_handedness_v3` addendum; `RESULT_handedness_v4_INVALID`). The cross-domain analogy is inverted by the sequence-model receipts (last addendum below). The five verdicts stand individually as scored; the thesis that joins them does not. The text is kept unchanged above the addenda so the withdrawal can be read against what it withdraws.\n\nFathom Lab · 2026-09-02 · **A synthesis, not a result.** It measures nothing; it reads five\npreregistered verdicts issued today, three of them HELD and two of them the INVALIDs that\npreceded a HELD, and says what they jointly mean. Every number in it is sworn to the receipt that\nholds it at commit `a5b0328ea212`; the reading is the author's and is the part a reader should argue\nwith. Mechanism M2 in `AUDIT_the_whole_program_2026_09_01.md` — *a number measured where the\ntarget was supplied collapses when the instrument must find it* — was found eleven times and\nnamed once. Today it acquired a grain.\n\n## The thesis\n\n*Handed* was one word for two things. A target can be handed to an instrument by **structure** —\na label the author chose and committed to, a column header, an oath tag, a rotation the weights\nwere trained to use — or by **co-occurrence** — a word that happened to be nearby, a rule written\nfor one idiom and fired in another, a detector guessing at a rhythm it was not given. Instruments\ntrusting the first kind held today under frozen bars. Instruments trusting the second kind were\nthe false accusations, the capacity in disguise, and the detector that never earned its\nparameters. The prose-versus-artifact split the audit examined was a proxy for handed-versus-found;\nhanded-versus-found is itself a proxy for **structure-versus-co-occurrence**, and that is the line\nthe receipts draw.\n\n## The five verdicts, as receipts\n\n**1. On the verifier's accusations, the structure is a column header.**\nThe frozen verdict was `HEADER_HANDED_ACCUSES_TRUER`:\naccusations handed by a table header were genuine at 0.9515\n(n=165), and\naccusations handed by a trigger word in the line were genuine at 0.6391\n(n=169), on the 2026-08-27 external blind panel with no token\nre-judged. Both are `object_text` under the handedness declaration; only one is structure.\n\n**2. On the verifier's rules, a rule outside its idiom is co-occurrence.**\nThe frozen verdict was `SHIP__range_sanity_reports`: the v0.3 out-of-range\nrule, written for this lab's prose, moved 0 of the lab's own tokens\nand accused 13 tokens on foreign READMEs of which\n0 were genuine; turning it into a reporter takes\nthe external false-accusation rate to 0.2323. A bounded\nword before a number is a handed target; on a README it is a coin.\n\n**3. On the verifier's oaths, the same line was drawn on 2026-08-30.** The join RESULT found that\nobligated oaths on foreign text were claims at 0.7826\nwhile volunteered oaths were claims at 0.3654.\nAn obligation is a handed target; a volunteered value match is a coincidence the verifier found\non its own. Found, here, was the worse half — and today's grain says why the handed half was\nstill only 0.78: some of its handing was co-occurrence.\n\n**4. On the sequence model, the clever detector was co-occurrence and the rotation was\nstructure.** The efficiency control's frozen verdict was `CAPACITY_IN_DISGUISE`:\na static bank spending the adaptive detector's parameters on more modes beat it by\n0.1959 at the primary width — a detector that\nguesses the input's rhythm is a target the model handed itself. And\nthe untied-magnitudes verdict was `ROTATION_LOAD_BEARING__beyond_diversity`:\na real bank with twice the independent timescales recovered\na fraction 0.0 of the clamped bank's lost capacity. The\nrotation the weights were trained to use is not a guess. It is the structure, and nothing the\nmodel could infer replaced it.\n\n**5. On the format, sworn output is the limiting case: all structure, no co-occurrence.** The\nauthor binds one sentence to one receipt leaf at write time; the verifier is handed a\ncommitment, never a target to find. This document is written in it, and its own verdict is the\ndemonstration that the reading above rests on bytes an author could not have written.\n\n## What the grain changes\n\nThe handedness declaration's classes stay as declared — `object_text`, `object_form`, `receipt`,\n`external` — but `object_text` now owes a split: **structural** (a label the author chose: a\nheader, a tag, a declared field) against **incidental** (a word that co-occurred). The mapping's\nnext version names it, and the instrument-level table gains a column: does this instrument take\nits targets from structure the author committed to, or from co-occurrence it inferred? Read down\nthat column, the eleven prose-claimhood instruments of the census are all incidental readers,\nand the instruments that survived their strangers — the oath's obligated half, the header-handed\naccusations, the phase clamp, sworn — all read structure.\n\n## What this synthesis does not say\n\nThat structure is truth: a header can label a column of fabricated numbers, and a sworn span can\nbind a trivial sentence — invariant 4 of the spec exists because of exactly that. That the\nsequence-model results and the verifier results share a mechanism rather than a shape; the\nanalogy is the author's, and the receipts are silent on it. That anything here was measured\nagainst strangers in more than one panel of one model family. The five verdicts are each bounded\nin their own documents, and this synthesis inherits every bound.\n\n\n## Referee objection, 2026-09-02 — the first leg, weakened\n\nThe statistical referee's stratification of the header/line receipts by token kind\n(`closed-model-frontier/handedness_v3_stratified.json`, post-hoc): kind-adjusted, the gap is\n0.117 against the raw\n0.3124, because the header cell is\n0.8606 decimals and decimals are claims whoever\nhands them. Leg 1 of this synthesis therefore shows a form effect with a structure residue,\nnot a structure effect. The grain declared in `h_mapping.json` v2 is kept as a declaration; the\nclaim that the receipts *draw* the structure-versus-co-occurrence line is withdrawn to the\nstrength the adjusted number supports, and the stronger sentence in the thesis above should be\nread with this section beside it. Legs 2 through 5 are untouched by the objection; the\nreferee's second objection, that the thirteen-of-thirteen figure is circular with its own bar,\nwas disclosed in that preregistration and is repeated here so nobody reads it as independent.\n\n\n## Second referee, and v4 — the first leg, withdrawn\n\nA definitional referee showed v3's header cell never operationalized \"a label the author chose\":\nit was any trigger anywhere in the header row, and six of its eight false accusations were rank\nindices whose own column was `Rank`. `PREREG_handedness_v4_own_label_2026_09_02.md` froze the\nauthor's-own-label rule and ran it on the same rows: INVALID on a plumbing bar by one row, and\nreported beside it, the own-label split at 0.3528\nraw and 0.0662 kind-adjusted. The split the\nreceipt draws is table against prose, 0.934 against\n0.5912. Leg 1 is withdrawn: on these receipts the\nverifier's accusations separate by token kind and genre, not by structure. The referee also\nshowed the mapping's `n=` label rested on zero panel data and fires abroad on configuration\nknobs; the mapping now says so. Legs 2 through 5 stand on their own receipts, and the analogy\nbetween them and the verifier is the author's, unsupported by leg 1.\n\n\n## Third referee — the analogy, inverted by its own receipts\n\nNeither sequence-model preregistration names a handedness factor; their frozen questions are\nparameter efficiency and rotation against diversity, and their verdicts answer those. Under M2's\nown vocabulary the mapping runs the other way: the FREE arm's rotation is a learned parameter,\nan instrument that finds its own target, and the arm that was *handed* the true period — the\noracle — lost at the primary width to a bank handed nothing at all:\n0.6451 against 0.7519.\nOn the verifier side the handed arm won; on the model side it lost. That is the opposite of a\nshared mechanism, and the sentence in the thesis about \"the rotation the weights were trained to\nuse\" being structure committed to before the instrument looked is false as written. Legs 2 and 3\nkeep their own verdicts, CAPACITY_IN_DISGUISE and ROTATION_LOAD_BEARING__beyond_diversity, which\nsay nothing about handedness and were never asked to. What would test a shared mechanism is an\nSSM preregistration that freezes the factor itself — a structure-handed arm, a co-occurrence-\nhanded arm fed a spurious correlate of the period, and a no-target arm at matched parameters —\nand that experiment has not been run.\n\n---\n\n*The verifier trusted words it found near numbers and the model trusted a detector it built for\nitself, and both were coins. What held was what had been chosen and committed to before the\ninstrument looked: the header, the oath, the rotation. Handed is not one thing. Structure hands a\nclaim; co-occurrence hands a coin.*\n",
  "spans": [
   {
-   "start": 1649,
-   "end": 1701,
+   "start": 2128,
+   "end": 2180,
    "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/verdict",
    "kind": "quote"
   },
   {
-   "start": 1703,
-   "end": 1762,
+   "start": 2182,
+   "end": 2241,
    "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/cells/header/genuine_share",
    "kind": "numeric"
   },
   {
-   "start": 1764,
-   "end": 1769,
+   "start": 2243,
+   "end": 2248,
    "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/cells/header/n",
    "kind": "numeric"
   },
   {
-   "start": 1776,
-   "end": 1847,
+   "start": 2255,
+   "end": 2326,
    "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/cells/line/genuine_share",
    "kind": "numeric"
   },
   {
-   "start": 1849,
-   "end": 1854,
+   "start": 2328,
+   "end": 2333,
    "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/cells/line/n",
    "kind": "numeric"
   },
   {
-   "start": 2077,
-   "end": 2128,
+   "start": 2556,
+   "end": 2607,
    "receipt": "path:papers/closed-model-frontier/range_sanity_report_ab_result.json#/verdict",
    "kind": "quote"
   },
   {
-   "start": 2194,
-   "end": 2219,
+   "start": 2673,
+   "end": 2698,
    "receipt": "path:papers/closed-model-frontier/range_sanity_report_ab_result.json#/internal/tokens_moved",
    "kind": "numeric"
   },
   {
-   "start": 2232,
-   "end": 2260,
+   "start": 2711,
+   "end": 2739,
    "receipt": "path:papers/closed-model-frontier/range_sanity_report_ab_result.json#/external/accusations_removed",
    "kind": "numeric"
   },
   {
-   "start": 2270,
-   "end": 2284,
+   "start": 2749,
+   "end": 2763,
    "receipt": "path:papers/closed-model-frontier/range_sanity_report_ab_result.json#/external/removed_genuine_by_panel",
    "kind": "numeric"
   },
   {
-   "start": 2357,
-   "end": 2363,
+   "start": 2836,
+   "end": 2842,
    "receipt": "path:papers/closed-model-frontier/range_sanity_report_ab_result.json#/false_accusation_rate_after",
    "kind": "numeric"
   },
   {
-   "start": 2541,
-   "end": 2594,
+   "start": 3020,
+   "end": 3073,
    "receipt": "path:papers/closed-model-frontier/oath_obligation_claimhood_join.json#/arms/external/obligated/claim_share",
    "kind": "numeric"
   },
   {
-   "start": 2601,
-   "end": 2640,
+   "start": 3080,
+   "end": 3119,
    "receipt": "path:papers/closed-model-frontier/oath_obligation_claimhood_join.json#/arms/external/volunteered/claim_share",
    "kind": "numeric"
   },
   {
-   "start": 2990,
-   "end": 3056,
+   "start": 3469,
+   "end": 3535,
    "receipt": "path:papers/frequency-resonance/efficiency_control_result.json#/verdict",
    "kind": "quote"
   },
   {
-   "start": 3141,
-   "end": 3147,
+   "start": 3620,
+   "end": 3626,
    "receipt": "path:papers/frequency-resonance/efficiency_control_result.json#/metrics/static_matched_minus_rich_8",
    "kind": "numeric"
   },
   {
-   "start": 3257,
-   "end": 3332,
+   "start": 3736,
+   "end": 3811,
    "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/verdict",
    "kind": "quote"
   },
   {
-   "start": 3394,
-   "end": 3408,
+   "start": 3873,
+   "end": 3887,
    "receipt": "path:papers/rhythm-rescue/untied_control_result.json#/metrics/recovery_fraction",
    "kind": "numeric"
   },
   {
-   "start": 5515,
-   "end": 5520,
+   "start": 5994,
+   "end": 5999,
    "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/kind_adjusted_delta_mh_weights",
    "kind": "numeric"
   },
   {
-   "start": 5537,
-   "end": 5543,
+   "start": 6016,
+   "end": 6022,
    "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/raw_delta_header_minus_line",
    "kind": "numeric"
   },
   {
-   "start": 5572,
-   "end": 5578,
+   "start": 6051,
+   "end": 6057,
    "receipt": "path:papers/closed-model-frontier/handedness_v3_stratified.json#/decimal_share_of_header_cell",
    "kind": "numeric"
   },
   {
-   "start": 6753,
-   "end": 6759,
+   "start": 7232,
+   "end": 7238,
    "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/delta_ex_top_repo",
    "kind": "numeric"
   },
   {
-   "start": 6768,
-   "end": 6774,
+   "start": 7247,
+   "end": 7253,
    "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/metrics/kind_adjusted_delta_all",
    "kind": "numeric"
   },
   {
-   "start": 6842,
-   "end": 6847,
+   "start": 7321,
+   "end": 7326,
    "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/table_vs_prose/table/share",
    "kind": "numeric"
   },
   {
-   "start": 6856,
-   "end": 6862,
+   "start": 7335,
+   "end": 7341,
    "receipt": "path:papers/closed-model-frontier/handedness_v4_result.json#/table_vs_prose/prose/share",
+   "kind": "numeric"
+  },
+  {
+   "start": 8248,
+   "end": 8254,
+   "receipt": "path:papers/frequency-resonance/efficiency_control_result.json#/drift/8/oracle",
+   "kind": "numeric"
+  },
+  {
+   "start": 8263,
+   "end": 8269,
+   "receipt": "path:papers/frequency-resonance/efficiency_control_result.json#/drift/8/static_matched",
    "kind": "numeric"
   }
  ],

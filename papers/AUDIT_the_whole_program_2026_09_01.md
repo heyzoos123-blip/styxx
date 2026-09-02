@@ -216,6 +216,12 @@ to the receipts in `SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.md`; dec
 `grain` in `closed-model-frontier/h_mapping.json` v2. Added as an addendum so the count above
 stays readable as published; nothing in the frozen table is edited.
 
+*Withdrawn later the same day.* Three referees read the synthesis against its receipts: leg 1 is a
+token-kind and genre effect, and the cross-domain analogy is inverted by the efficiency receipt
+(the arm handed the true period lost to a bank handed nothing). The grain in `h_mapping.json` v2
+stays a declaration; M2 keeps its original statement and no grain. See the synthesis's addenda
+and `RESULT_handedness_v4_INVALID_2026_09_02.md`.
+
 ## 3. WHAT IS SETTLED, WITH RECEIPTS
 
 Settled here means: preregistered, scored against a frozen bar, and not contradicted by anything
