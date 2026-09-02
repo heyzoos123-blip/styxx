@@ -82,7 +82,11 @@ verdict receipt, and the manifest, legend and receipt ride as artifacts with the
 summary. The pytest extractor now emits the same five keys in the same order so receipt ids are
 stable across runs. Seven gate tests. Every command the harness runs now mints its command line
 as the first receipt, so an author swears to *what was run* by quoting it — the suite and three
-chosen tests no longer mint the same-looking receipts.
+chosen tests no longer mint the same-looking receipts. `styxx.sworn_preview` (NEW) is the author's
+mirror: the same lexer and adjudication against the working tree, commit field `worktree`, no
+receipt written, exit 1 unless SWORN-HELD so it can sit in a pre-commit hook.
+`tests/test_sworn_receipt_map.py` pins the README's and the workflow's receipt map to what the
+harness actually mints.
 
 **The frequency arc: the efficiency control the arc owed itself, and the profiler shipped.**
 `RESULT_efficiency_control_from_receipts_2026_09_02.md` reads two committed receipts of one
