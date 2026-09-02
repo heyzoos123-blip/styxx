@@ -61,6 +61,10 @@ author decided, at write time, and the harness disposes.
   the quoted command is the one whose stdout the next span cites; that binding stays owed.
 - **The legend inside the manifest,** covered by the digest, so what an `rN` is cannot drift from
   what it holds.
+- **A `>` inside a receipt.** v0.1's lexer closes the tag at the first `>`, so a JSON-pointer key
+  containing `>` (a transition table's `header->incidental`) cannot be sworn to; the sidecar
+  refuses, correctly. v0.2 owes an escape, or a rule that receipt keys are URL-encoded. Met on
+  2026-09-02 while swearing `RESULT_handedness_v4_INVALID`; the keys were renamed.
 - **Multi-line needles** for `quote` and `absent` over file lists; v0.1's needle is one inline
   code span, on purpose, and a file list wants more.
 - **Measurement.** `DESIGN_sworn_measurement_2026_09_01.md` names the seats this needs: bound
