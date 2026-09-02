@@ -33,6 +33,7 @@ receipt; the verifier never reads it.
   python -m styxx.sworn_harness M.json exec -- pytest -q tests/test_sworn.py
   python -m styxx.sworn_harness M.json diff BASE HEAD
   python -m styxx.sworn_harness M.json commits BASE HEAD
+  python -m styxx.sworn_harness M.json turn BASE HEAD --turn ID     # the standard turn, fixed order
 """
 from __future__ import annotations
 
@@ -192,6 +193,18 @@ class Harness:
         ids["names"] = self._mint(names.stdout, "tool_stdout", "git diff --name-only %s %s" % (base, head))
         return ids
 
+    def standard(self, base: str, head: str, *, ruff_argv: Optional[Sequence[str]] = None,
+                 pytest_argv: Optional[Sequence[str]] = None) -> Dict[str, Dict[str, str]]:
+        """THE STANDARD TURN — the order the workflow, the README's receipt map and a local author
+        all share, so an `rN` written before the run exists names the same bytes in CI:
+        commits (r1-r6), diff (r7-r15), ruff (r16-r19), pytest (r20-r28)."""
+        assert not self.manifest.receipts, "standard() mints into a fresh manifest only"
+        ruff_argv = list(ruff_argv or [sys.executable, "-m", "ruff", "check", "styxx"])
+        pytest_argv = list(pytest_argv or [sys.executable, "-m", "pytest", "tests", "-q", "--no-header",
+                                           "-p", "no:cacheprovider", "--tb=line"])
+        return {"commits": self.commits(base, head), "diff": self.diff(base, head),
+                "ruff": self.exec(ruff_argv), "pytest": self.exec(pytest_argv)}
+
     def commits(self, base: str, head: str) -> Dict[str, str]:
         """Mint the commit count and the list of commit ids in base..head."""
         ids = self.exec(["git", "rev-list", "--count", "%s..%s" % (base, head)])
@@ -217,6 +230,10 @@ def main(argv=None) -> int:
     c = sub.add_parser("commits")
     c.add_argument("base")
     c.add_argument("head")
+    s = sub.add_parser("turn", help="the standard turn: commits, diff, ruff, pytest in the fixed order")
+    s.add_argument("base")
+    s.add_argument("head")
+    s.add_argument("--turn", required=True)
     a = ap.parse_args(argv)
     if a.cmd == "new":
         h = Harness(a.manifest, turn=a.turn, cwd=a.cwd)
@@ -224,6 +241,16 @@ def main(argv=None) -> int:
             raise SystemExit("REFUSED: %s exists; extend it with exec/diff/commits" % h.path)
         h.save()
         print("minted %s for turn %s" % (h.path.name, a.turn))
+        return 0
+    if a.cmd == "turn":
+        h = Harness(a.manifest, turn=a.turn, cwd=a.cwd)
+        if h.manifest.receipts:
+            raise SystemExit("REFUSED: turn mints into a fresh manifest; %s already holds receipts" % h.path)
+        groups = h.standard(a.base, a.head)
+        h.save()
+        for g, ids in groups.items():
+            for k, v in ids.items():
+                print("%s\t%s.%s\t%s" % (v, g, k, h.legend["legend"][v]["what"]))
         return 0
     h = Harness(a.manifest, cwd=a.cwd)
     if a.cmd == "exec":

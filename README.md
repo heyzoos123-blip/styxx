@@ -449,7 +449,13 @@ so you can write the description before the run exists:
 | `r21` | pytest's stdout (`k="quote"` an error line) |
 
 Every command mints its command line first, then stdout, stderr, exit code, then the scalars the
-harness extracts; the full order is in the workflow file.
+harness extracts. The order lives in one place, `Harness.standard`, which the workflow calls; run
+the same line locally to get the same ids before you push, then preview the description:
+
+```
+python -m styxx.sworn_harness m.json turn BASE HEAD --turn local
+python -m styxx.sworn_preview pr_body.md --manifest m.json
+```
 
 A description that swears:
 

@@ -57,11 +57,9 @@ jobs:
           TURN: pr-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
         run: |
           mkdir -p sworn-ci
-          python -m styxx.sworn_harness sworn-ci/manifest.json new --turn "$TURN"
-          python -m styxx.sworn_harness sworn-ci/manifest.json commits "$BASE" "$HEAD"
-          python -m styxx.sworn_harness sworn-ci/manifest.json diff "$BASE" "$HEAD"
-          python -m styxx.sworn_harness sworn-ci/manifest.json exec -- python -m ruff check styxx
-          python -m styxx.sworn_harness sworn-ci/manifest.json exec -- python -m pytest tests -q --no-header -p no:cacheprovider --tb=line
+          # the standard turn: commits, diff, ruff, pytest — one subcommand, so a local author who
+          # runs the same line gets the same rN ids (styxx.sworn_harness.Harness.standard)
+          python -m styxx.sworn_harness sworn-ci/manifest.json turn "$BASE" "$HEAD" --turn "$TURN"
 
       - name: Write the PR body to a file (the body is data, never executed)
         env:

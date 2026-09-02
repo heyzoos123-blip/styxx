@@ -45,10 +45,9 @@ def repo(tmp_path):
 def test_the_harness_mints_the_promised_ids_for_the_workflow_commands(repo):
     cwd, base, head = repo
     h = Harness(cwd / "m.json", turn="map", cwd=str(cwd))
-    c = h.commits(base, head)
-    d = h.diff(base, head)
-    r = h.exec([sys.executable, "-m", "ruff", "--version"])           # same shape as the workflow's ruff step
-    p = h.exec([sys.executable, "-m", "pytest", "--version"])         # recognised as pytest; extracts zeros
+    g = h.standard(base, head, ruff_argv=[sys.executable, "-m", "ruff", "--version"],
+                   pytest_argv=[sys.executable, "-m", "pytest", "--version"])   # same shapes, fast
+    c, d, r, p = g["commits"], g["diff"], g["ruff"], g["pytest"]
     minted = {"commits.count": c["count"], "diff.files_changed": d["files_changed"], "diff.insertions": d["insertions"],
               "diff.deletions": d["deletions"], "diff.patch": d["patch"], "diff.names": d["names"],
               "ruff.exit_code": r["exit_code"], "pytest.argv": p["argv"], "pytest.stdout": p["stdout"],
