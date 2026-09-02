@@ -136,3 +136,22 @@ def test_cli_new_exec_diff_commits_roundtrip(repo, capsys):
     assert m.intact() and len(m.receipts) == 4 + 9 + 6
     with pytest.raises(SystemExit):
         main([str(mp), "--cwd", str(cwd), "new", "--turn", "again"])
+
+
+def test_a_rederivation_script_has_every_numeric_leaf_minted_by_the_harness(tmp_path):
+    script = tmp_path / "rederive.py"
+    script.write_text("import json, sys\nprint(json.dumps({'delta': 0.117, 'cells': {'a': {'n': 165, 'ok': True}}, "
+                      "'list': [1, 2.5], 'note': 'text'}) if '--emit-json' in sys.argv else 'no')\n")
+    h = Harness(tmp_path / "m.json", turn="ref", cwd=str(tmp_path))
+    ids = h.exec([sys.executable, str(script), "--emit-json"])
+    h.save()
+    m = Manifest.load(tmp_path / "m.json")
+    import base64
+    val = lambda rid: base64.b64decode(m.receipts[rid]["bytes"])  # noqa: E731
+    assert val(ids["/delta"]) == b"0.117" and val(ids["/cells/a/n"]) == b"165"
+    assert val(ids["/list/0"]) == b"1" and val(ids["/list/1"]) == b"2.5"
+    assert "/cells/a/ok" not in ids and "/note" not in ids          # booleans and strings are not numbers
+    assert m.receipts[ids["/delta"]]["kind_of_source"] == "harness_note"
+    # without the flag the same script is an unknown command: bytes and exit code only
+    ids2 = h.exec([sys.executable, str(script)])
+    assert set(ids2) == {"argv", "stdout", "stderr", "exit_code"}

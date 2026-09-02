@@ -12,7 +12,10 @@ made. It mints a ``sworn/manifest/0.1`` manifest whose receipts are:
   exit code (``harness_note``, complete);
 - for the commands this harness knows how to read, scalars the HARNESS extracted — pytest's
   passed/failed/skipped counts (``test_report``), ``git diff --shortstat``'s files, insertions
-  and deletions and ``git rev-list --count``'s commit count (``harness_note``);
+  and deletions and ``git rev-list --count``'s commit count (``harness_note``), and for a
+  re-derivation script run with ``--emit-json``, EVERY numeric leaf of the one JSON object it
+  prints (``harness_note``) — the receipt a sworn REFUTATION binds to, so a referee's number is
+  held to the same standard as the author's;
 - for a diff: the full patch as a digest-only receipt (``tool_stdout``, complete, for ``hash``;
   the bytes re-derive from git at the two commits) and the changed-file list (``tool_stdout``,
   complete, for ``quote``/``absent``).
@@ -44,11 +47,12 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Callable, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 from styxx.sworn import SOURCE_KINDS_EXTERNAL, Manifest
 
-__all__ = ["Harness", "EXTRACTORS", "extract_pytest", "extract_shortstat", "extract_count", "main"]
+__all__ = ["Harness", "EXTRACTORS", "extract_pytest", "extract_shortstat", "extract_count",
+           "extract_rederive", "REDERIVE_FLAG", "main"]
 
 HARNESS_NAME = "styxx/sworn_harness.py"
 
@@ -92,6 +96,41 @@ def extract_count(stdout: bytes, stderr: bytes) -> Dict[str, int]:
     return {"count": int(text)} if re.fullmatch(r"\d+", text) else {}
 
 
+REDERIVE_FLAG = "--emit-json"
+REDERIVE_CAP = 64
+
+
+def extract_rederive(stdout: bytes, stderr: bytes) -> Dict[str, Any]:
+    """A re-derivation script (``--emit-json``) prints one JSON object; every numeric leaf is
+    minted, in document order, keyed by its JSON-pointer path — the harness records what the
+    script printed, all of it, and the author chooses nothing about which numbers exist."""
+    try:
+        obj = json.loads(stdout.decode("utf-8"))
+    except (ValueError, UnicodeDecodeError):
+        return {}
+    out: Dict[str, Any] = {}
+
+    def walk(x, path):
+        if len(out) >= REDERIVE_CAP:
+            return
+        if isinstance(x, bool):
+            return
+        if isinstance(x, (int, float)):
+            out[path] = x
+        elif isinstance(x, dict):
+            for k, v in x.items():
+                walk(v, path + "/" + str(k).replace("~", "~0").replace("/", "~1"))
+        elif isinstance(x, list):
+            for i, v in enumerate(x):
+                walk(v, path + "/" + str(i))
+    walk(obj, "")
+    return out
+
+
+def _is_rederive(argv: Sequence[str]) -> bool:
+    return REDERIVE_FLAG in argv
+
+
 def _is_pytest(argv: Sequence[str]) -> bool:
     return (argv[:1] == ["pytest"] or argv[:3] == [sys.executable, "-m", "pytest"]
             or (len(argv) >= 3 and argv[1:3] == ["-m", "pytest"]))
@@ -106,7 +145,8 @@ def _is_revcount(argv: Sequence[str]) -> bool:
 
 
 # (predicate, extractor, kind_of_source for the scalars it mints)
-EXTRACTORS: List[Tuple[Callable[[Sequence[str]], bool], Callable[[bytes, bytes], Dict[str, int]], str]] = [
+EXTRACTORS: List[Tuple[Callable[[Sequence[str]], bool], Callable[[bytes, bytes], Dict[str, Any]], str]] = [
+    (_is_rederive, extract_rederive, "harness_note"),
     (_is_pytest, extract_pytest, "test_report"),
     (_is_shortstat, extract_shortstat, "harness_note"),
     (_is_revcount, extract_count, "harness_note"),
@@ -176,7 +216,7 @@ class Harness:
         for pred, fn, kind in EXTRACTORS:
             if pred(argv):
                 for name, val in fn(r.stdout, r.stderr).items():
-                    ids[name] = self._mint(str(val).encode("ascii"), kind,
+                    ids[name] = self._mint(json.dumps(val).encode("ascii"), kind,
                                            "%s, extracted by the harness from: %s" % (name, label))
                 break
         return ids

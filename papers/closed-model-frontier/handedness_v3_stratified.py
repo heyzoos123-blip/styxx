@@ -13,6 +13,7 @@ scored on the raw delta, as frozen; this is the reading's correction, not the ve
 from __future__ import annotations
 
 import json
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -58,6 +59,9 @@ def main() -> int:
     out["frozen_bar_for_the_raw_delta"] = 0.15
     out["kind_adjusted_delta_clears_the_frozen_bar"] = bool(num / den >= 0.15)
     OUT.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
+    if "--emit-json" in sys.argv:
+        print(json.dumps(out, sort_keys=False))        # one object: what styxx.sworn_harness mints from
+        return 0
     print(json.dumps({k: v for k, v in out.items() if k != "by_kind"}, indent=1))
     print(json.dumps(out["by_kind"]))
     return 0
