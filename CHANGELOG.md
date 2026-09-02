@@ -71,6 +71,17 @@ and their reason. `DESIGN_agent_that_swears_2026_09_02.md` states the deployment
 mints the manifest on the PR head; the verifier gates the merge on the description's spans) and the
 threat it does not close here (the agent held write access to the manifest file).
 
+**The merge gate (`styxx.sworn_gate` + `.github/workflows/sworn.yml`, NEW).** The deployment the
+design named, built: on every pull request CI mints a manifest on the PR head with the harness —
+commit range, diff, CI's lint, the full suite — in a fixed receipt order an author can write `rN`
+against before the run exists, then the gate verifies the PR body. SWORN-HELD with every span
+resolved passes; SWORN-FAILED and MALFORMED fail; UNSWORN, and a span naming a receipt the manifest
+or commit does not hold, are neutral with a notice until the repository flips `--strict`, never a
+pass. The gate never mints, never edits, never picks receipts; it prints the legend and writes the
+verdict receipt, and the manifest, legend and receipt ride as artifacts with the legend in the job
+summary. The pytest extractor now emits the same five keys in the same order so receipt ids are
+stable across runs. Seven gate tests.
+
 **The frequency arc: the efficiency control the arc owed itself, and the profiler shipped.**
 `RESULT_efficiency_control_from_receipts_2026_09_02.md` reads two committed receipts of one
 experiment together: at every width measured, a static bank with fewer parameters than the

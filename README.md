@@ -430,6 +430,37 @@ on accusations — silence is honest and never fails. the rules, each learned by
 are in [OATH_CONTRACT.md](OATH_CONTRACT.md), including the limits: a document can keep this
 contract perfectly and still be completely wrong.
 
+### swearing in a pull request
+
+Every pull request runs `.github/workflows/sworn.yml`. CI mints a `sworn/manifest/0.1` manifest
+on the PR head with `styxx.sworn_harness` (the author has no write access there) and
+`styxx.sworn_gate` verifies the PR description against it. Receipts are minted in a fixed order,
+so you can write the description before the run exists:
+
+| receipt | holds |
+|---|---|
+| `r4` | commits in `base..head` (`git rev-list --count`) |
+| `r9` / `r10` / `r11` | files changed / insertions / deletions (`git diff --shortstat`) |
+| `r12` | the full patch, digest only (`k="hash"`) |
+| `r13` | the changed-file list (`k="quote"` one path, `k="absent"` a path you did not touch) |
+| `r16` | exit code of `ruff check styxx` |
+| `r20` / `r21` / `r22` / `r23` / `r24` | pytest passed / failed / skipped / xfailed / errors |
+| `r17` | pytest's stdout (`k="quote"` an error line) |
+
+A description that swears:
+
+```
+Touched <sworn r="r9" k="numeric">3 files</sworn> in <sworn r="r4" k="numeric">2 commits</sworn>.
+Suite: <sworn r="r20" k="numeric">3657 passed</sworn>, <sworn r="r21" k="numeric">0 failed</sworn>.
+Did not touch <sworn r="r13" k="absent">`OATH_CONTRACT.md`</sworn>.
+```
+
+Policy, in one table (`styxx/sworn_gate.py`): SWORN-HELD with every span resolved **passes**;
+SWORN-FAILED and MALFORMED **fail**; UNSWORN, and a span naming a receipt the manifest does not
+hold, are **neutral with a notice** until this repository flips `--strict`. UNSWORN is not "no
+failures". The manifest, its legend and the verdict receipt are uploaded as artifacts and the legend
+is written to the job summary. The gate never proposes tags and never edits the description.
+
 ## links
 
 | | |
