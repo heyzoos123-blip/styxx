@@ -22,6 +22,9 @@ name: sworn
 
 on:
   pull_request:
+    # `edited` matters: an author swears by editing the description after reading the legend
+    # the first run printed, and the head sha does not change, so the manifest re-mints identically.
+    types: [opened, edited, synchronize, reopened]
 
 permissions:
   contents: read
