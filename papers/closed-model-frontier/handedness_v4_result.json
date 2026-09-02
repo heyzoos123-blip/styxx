@@ -125,10 +125,10 @@
   }
  },
  "v3_cell_by_v4_cell": {
-  "header->structural": 70,
-  "header->incidental": 95,
-  "line->structural": 19,
-  "line->incidental": 150
+  "header_to_structural": 70,
+  "header_to_incidental": 95,
+  "line_to_structural": 19,
+  "line_to_incidental": 150
  },
  "eight_named_rows": {
   "T0239": "incidental",

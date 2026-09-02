@@ -140,7 +140,7 @@ def main() -> int:
                        for c, rs in (("structural", S), ("incidental", I))},
            "table_vs_prose": {"table": share([r for r in rows if r["is_table"]]),
                               "prose": share([r for r in rows if not r["is_table"]])},
-           "v3_cell_by_v4_cell": {f"{a}->{b}": sum(1 for r in rows if r["cell"] == a and r["v4_cell"] == b)
+           "v3_cell_by_v4_cell": {f"{a}_to_{b}": sum(1 for r in rows if r["cell"] == a and r["v4_cell"] == b)
                                   for a in ("header", "line") for b in ("structural", "incidental")},
            "eight_named_rows": eight, "metrics": metrics, "rows": rows}
     v = Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=False)
