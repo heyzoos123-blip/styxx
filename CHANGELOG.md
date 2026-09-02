@@ -58,6 +58,19 @@ definition, never accused. The verifier is handed commitments, not a target.
   are recognised (the spec's lexical rules are closed); a hidden commitment inflating coverage
   is a v0.2 item.
 
+**The agent that swears (`styxx.sworn_harness`, NEW).** The harness side of sworn output for
+coding work: every command it runs yields stdout, stderr and exit code as receipts; pytest counts,
+`git diff --shortstat` and `git rev-list --count` yield scalars extracted by a table fixed in the
+harness, never by the author — author-owned extraction is the gaming vector it closes. Every kind
+minted is external. A legend beside the manifest says what each `rN` is. Six tests, one of them a
+report that verifies with no tree and a lie against the same receipts that fails. Rehearsed on its
+author: `papers/sworn/AGENT_REPORT_round_2026_09_02.md` is the first sworn agent report for coding
+work in the tree — 42 commits, 92 files, the full suite's 3657 passed and 2 failed, CI's lint clean
+and the repo-wide lint not, every number bound to what the tool printed, including the two failures
+and their reason. `DESIGN_agent_that_swears_2026_09_02.md` states the deployment this rehearses (CI
+mints the manifest on the PR head; the verifier gates the merge on the description's spans) and the
+threat it does not close here (the agent held write access to the manifest file).
+
 **The frequency arc: the efficiency control the arc owed itself, and the profiler shipped.**
 `RESULT_efficiency_control_from_receipts_2026_09_02.md` reads two committed receipts of one
 experiment together: at every width measured, a static bank with fewer parameters than the

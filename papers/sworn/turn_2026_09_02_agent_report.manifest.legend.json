@@ -1,0 +1,111 @@
+{
+ "legend": {
+  "r1": {
+   "kind_of_source": "tool_stdout",
+   "what": "stdout of: git rev-list --count 28ae2d0a1d0673d011a9a03a39a23bfb233dd720..f93beee9"
+  },
+  "r2": {
+   "kind_of_source": "tool_stderr",
+   "what": "stderr of: git rev-list --count 28ae2d0a1d0673d011a9a03a39a23bfb233dd720..f93beee9"
+  },
+  "r3": {
+   "kind_of_source": "harness_note",
+   "what": "exit code of: git rev-list --count 28ae2d0a1d0673d011a9a03a39a23bfb233dd720..f93beee9"
+  },
+  "r4": {
+   "kind_of_source": "harness_note",
+   "what": "count, extracted by the harness from: git rev-list --count 28ae2d0a1d0673d011a9a03a39a23bfb233dd720..f93beee9"
+  },
+  "r5": {
+   "kind_of_source": "tool_stdout",
+   "what": "git rev-list 28ae2d0a1d0673d011a9a03a39a23bfb233dd720..f93beee9"
+  },
+  "r6": {
+   "kind_of_source": "tool_stdout",
+   "what": "stdout of: git diff --shortstat 28ae2d0a1d0673d011a9a03a39a23bfb233dd720 f93beee9"
+  },
+  "r7": {
+   "kind_of_source": "tool_stderr",
+   "what": "stderr of: git diff --shortstat 28ae2d0a1d0673d011a9a03a39a23bfb233dd720 f93beee9"
+  },
+  "r8": {
+   "kind_of_source": "harness_note",
+   "what": "exit code of: git diff --shortstat 28ae2d0a1d0673d011a9a03a39a23bfb233dd720 f93beee9"
+  },
+  "r9": {
+   "kind_of_source": "harness_note",
+   "what": "files_changed, extracted by the harness from: git diff --shortstat 28ae2d0a1d0673d011a9a03a39a23bfb233dd720 f93beee9"
+  },
+  "r10": {
+   "kind_of_source": "harness_note",
+   "what": "insertions, extracted by the harness from: git diff --shortstat 28ae2d0a1d0673d011a9a03a39a23bfb233dd720 f93beee9"
+  },
+  "r11": {
+   "kind_of_source": "harness_note",
+   "what": "deletions, extracted by the harness from: git diff --shortstat 28ae2d0a1d0673d011a9a03a39a23bfb233dd720 f93beee9"
+  },
+  "r12": {
+   "kind_of_source": "tool_stdout",
+   "what": "git diff 28ae2d0a1d0673d011a9a03a39a23bfb233dd720 f93beee9 (full patch)"
+  },
+  "r13": {
+   "kind_of_source": "tool_stdout",
+   "what": "git diff --name-only 28ae2d0a1d0673d011a9a03a39a23bfb233dd720 f93beee9"
+  },
+  "r14": {
+   "kind_of_source": "tool_stdout",
+   "what": "stdout of: python -m ruff check ."
+  },
+  "r15": {
+   "kind_of_source": "tool_stderr",
+   "what": "stderr of: python -m ruff check ."
+  },
+  "r16": {
+   "kind_of_source": "harness_note",
+   "what": "exit code of: python -m ruff check ."
+  },
+  "r17": {
+   "kind_of_source": "tool_stdout",
+   "what": "stdout of: python -m pytest tests -q --no-header -p no:cacheprovider --tb=line"
+  },
+  "r18": {
+   "kind_of_source": "tool_stderr",
+   "what": "stderr of: python -m pytest tests -q --no-header -p no:cacheprovider --tb=line"
+  },
+  "r19": {
+   "kind_of_source": "harness_note",
+   "what": "exit code of: python -m pytest tests -q --no-header -p no:cacheprovider --tb=line"
+  },
+  "r20": {
+   "kind_of_source": "test_report",
+   "what": "passed, extracted by the harness from: python -m pytest tests -q --no-header -p no:cacheprovider --tb=line"
+  },
+  "r21": {
+   "kind_of_source": "test_report",
+   "what": "failed, extracted by the harness from: python -m pytest tests -q --no-header -p no:cacheprovider --tb=line"
+  },
+  "r22": {
+   "kind_of_source": "test_report",
+   "what": "skipped, extracted by the harness from: python -m pytest tests -q --no-header -p no:cacheprovider --tb=line"
+  },
+  "r23": {
+   "kind_of_source": "test_report",
+   "what": "xfailed, extracted by the harness from: python -m pytest tests -q --no-header -p no:cacheprovider --tb=line"
+  },
+  "r24": {
+   "kind_of_source": "tool_stdout",
+   "what": "stdout of: python -m ruff check styxx"
+  },
+  "r25": {
+   "kind_of_source": "tool_stderr",
+   "what": "stderr of: python -m ruff check styxx"
+  },
+  "r26": {
+   "kind_of_source": "harness_note",
+   "what": "exit code of: python -m ruff check styxx"
+  }
+ },
+ "manifest": "turn_2026_09_02_agent_report.manifest.json",
+ "harness": "styxx/sworn_harness.py",
+ "note": "harness-written; not a receipt; the verifier never reads it. Every scalar here was extracted by styxx.sworn_harness's fixed extractor table, never by the author."
+}

@@ -46,3 +46,8 @@ papers/closed-model-frontier/RESULT_range_sanity_report_SHIP_2026_09_02.sworn-re
 papers/SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.md -text
 papers/SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.sworn.json -text
 papers/SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.sworn-receipt.json -text
+papers/sworn/AGENT_REPORT_round_2026_09_02.md -text
+papers/sworn/AGENT_REPORT_round_2026_09_02.sworn.json -text
+papers/sworn/AGENT_REPORT_round_2026_09_02.sworn-receipt.json -text
+papers/sworn/turn_2026_09_02_agent_report.manifest.json -text
+papers/sworn/turn_2026_09_02_agent_report.manifest.legend.json -text
