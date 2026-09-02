@@ -28,7 +28,7 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from styxx.sworn import GitTree, Manifest, _parse_receipt, load_sidecar, verify
 
@@ -37,12 +37,6 @@ __all__ = ["check", "index", "main"]
 REFUTATION_GLOB = "papers/**/REFUTATION_*.sworn.json"
 ACCEPTED, REJECTED = "ACCEPTED", "REJECTED"
 _PY = re.compile(r"(?<![\w/.-])([\w./-]+\.py)\b")
-
-
-def _needle(raw: bytes, span: dict) -> Optional[str]:
-    inner = raw[span["start"]:span["end"]]
-    m = re.search(rb"`([^`\n]+)`", inner)
-    return m.group(1).decode("utf-8", "replace") if m else None
 
 
 def check(sidecar_obj: dict, repo=".") -> dict:
@@ -57,8 +51,6 @@ def check(sidecar_obj: dict, repo=".") -> dict:
         reasons.append("not_sworn_held:%s" % core["document_verdict"])
     if core["counts"].get("UNRESOLVED"):
         reasons.append("unresolved_spans:%d" % core["counts"]["UNRESOLVED"])
-    from styxx.sworn import render
-    raw = render(side)
     manifest = Manifest.from_dict(side["manifest"]) if side.get("manifest", {}).get("receipts") else None
     targets, scripts, rn_bound = [], [], 0
     for s in core["spans"]:

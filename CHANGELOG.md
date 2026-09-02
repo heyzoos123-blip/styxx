@@ -153,6 +153,15 @@ A third referee inverted the cross-domain analogy from the efficiency receipt (o
 static_matched 0.7519 at width 8: the handed arm lost). The SYNTHESIS is marked WITHDRAWN at the top,
 text kept, three sworn addenda; the five verdicts stand individually. The AUDIT's M2 addendum says so.
 
+**Sworn refutation (`styxx.referee`, NEW) — the critic held to the author's standard.** A re-derivation
+script run with `--emit-json` has every numeric leaf minted by the harness as a receipt; a REFUTATION
+document swears to those and binds to the document it attacks by quoting that document's own bytes
+at the commit. `styxx.referee check` ACCEPTS only a refutation that is SWORN-HELD with no unresolved
+span, quotes a target, binds at least one harness receipt, and whose quoted command lines name
+scripts committed at that commit; `index` lists which documents are contested and by what. First
+instance: `REFUTATION_handedness_v3_kind_2026_09_02.md`, the harness ran the referee's script and
+the critic's 0.117 binds to what it printed. `tests/test_referee.py` accepts every committed one.
+
 **OATH v0.14, preregistered and SHIP: range-sanity reports instead of accusing.** `V14_RANGE_SANITY_REPORT`
 (default OFF, nothing committed changes) turns the v0.3 out-of-range rule into a reporter. The A/B: on
 the lab's own 207 documents the flag moves 0 of 8,583 tokens; on the rebuilt external corpus it removes

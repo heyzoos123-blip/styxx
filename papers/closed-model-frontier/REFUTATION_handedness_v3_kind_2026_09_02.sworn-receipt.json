@@ -3,16 +3,30 @@
  "format": "sworn/0.1",
  "document": {
   "name": "REFUTATION_handedness_v3_kind_2026_09_02.md",
-  "inline_sha256": "83e29007977fb88d4a4ad34d6a356b4755e4a09801aff88ad349425662486ee1",
-  "canonical_sha256": "78a3f2985f56a26d08475141a8249c296a866123aeead53d06de1d4136ad0ba9"
+  "inline_sha256": "250626357aa8bcb3cc490a6d7d7294572fdf9ef89148fc3fdfa01ea4b2d68c05",
+  "canonical_sha256": "b6ea03c18d975f44c4dcc1441646b1000f231a49555f059b44eedf602944dc38"
  },
- "commit": "2f41775c0fdeb36c601d5b52d315ff7b94ffedf9",
+ "commit": "37c7bdcbbea50f703dacd146ad730d2fcd0e4157",
  "manifest_digest": "6e5f9b536d4e2108aebf817c916ff59463d2e4080448d9c2109b263c324199c0",
  "spans": [
   {
-   "at": 686,
-   "start": 686,
-   "end": 692,
+   "at": 629,
+   "start": 629,
+   "end": 705,
+   "receipt": "path:papers/closed-model-frontier/RESULT_handedness_v3_header_handed_2026_09_02.md#L1",
+   "kind": "quote",
+   "verdict": "HELD",
+   "reason": null,
+   "detail": {
+    "needle_bytes": 46,
+    "haystack_bytes": 142
+   },
+   "resolved_sha256": "6556679be995a1bdfe78d3736f5cbc4bef63233d3e0d418ba41c4678bc101ac7"
+  },
+  {
+   "at": 870,
+   "start": 755,
+   "end": 761,
    "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/cells/header/genuine_share",
    "kind": "numeric",
    "verdict": "HELD",
@@ -28,9 +42,9 @@
    "resolved_sha256": "f7f2532fd218121580faae7f6b3031d42982a117463a51e4bbfbb9416981e26c"
   },
   {
-   "at": 831,
-   "start": 712,
-   "end": 718,
+   "at": 1015,
+   "start": 781,
+   "end": 787,
    "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/cells/line/genuine_share",
    "kind": "numeric",
    "verdict": "HELD",
@@ -46,9 +60,9 @@
    "resolved_sha256": "f7f2532fd218121580faae7f6b3031d42982a117463a51e4bbfbb9416981e26c"
   },
   {
-   "at": 1080,
-   "start": 844,
-   "end": 921,
+   "at": 1264,
+   "start": 913,
+   "end": 990,
    "receipt": "r1",
    "kind": "quote",
    "verdict": "HELD",
@@ -60,9 +74,9 @@
    "resolved_sha256": "5e8cf8b450b234ed0efed94ebe05c8d96af094e8339ad57f9c8f579c697b8b60"
   },
   {
-   "at": 1249,
-   "start": 981,
-   "end": 987,
+   "at": 1433,
+   "start": 1050,
+   "end": 1056,
    "receipt": "r30",
    "kind": "numeric",
    "verdict": "HELD",
@@ -78,9 +92,9 @@
    "resolved_sha256": "1323d6ee5fdb435a86cd6918dc5903880d3acd19923f4509e8b259c1130308ef"
   },
   {
-   "at": 1331,
-   "start": 1028,
-   "end": 1031,
+   "at": 1515,
+   "start": 1097,
+   "end": 1100,
    "receipt": "r7",
    "kind": "numeric",
    "verdict": "HELD",
@@ -96,9 +110,9 @@
    "resolved_sha256": "d0ff5974b6aa52cf562bea5921840c032a860a91a3512f7fe8f768f6bbe005f6"
   },
   {
-   "at": 1377,
-   "start": 1040,
-   "end": 1046,
+   "at": 1561,
+   "start": 1109,
+   "end": 1115,
    "receipt": "r19",
    "kind": "numeric",
    "verdict": "HELD",
@@ -114,9 +128,9 @@
    "resolved_sha256": "fb4cf12f9f7b5aadcca708dda2c01cd1836e85e423e28f1cf00c68d20ed1433b"
   },
   {
-   "at": 1437,
-   "start": 1065,
-   "end": 1071,
+   "at": 1621,
+   "start": 1134,
+   "end": 1140,
    "receipt": "r10",
    "kind": "numeric",
    "verdict": "HELD",
@@ -132,9 +146,9 @@
    "resolved_sha256": "4d2c990d8f18e62077b96467f51ccf55d083e637272be53ed8c36cd7d864cd7a"
   },
   {
-   "at": 1487,
-   "start": 1080,
-   "end": 1085,
+   "at": 1671,
+   "start": 1149,
+   "end": 1154,
    "receipt": "r22",
    "kind": "numeric",
    "verdict": "HELD",
@@ -150,9 +164,9 @@
    "resolved_sha256": "537c4a765d83b7efd014d53b615c89f1451bd3940d8154a6e37eb5857be2c69b"
   },
   {
-   "at": 1551,
-   "start": 1109,
-   "end": 1115,
+   "at": 1735,
+   "start": 1178,
+   "end": 1184,
    "receipt": "r26",
    "kind": "numeric",
    "verdict": "HELD",
@@ -168,9 +182,9 @@
    "resolved_sha256": "51c81107be51976721e78c420f6bd776c25231c58c773598a7dd3b9e08ebca2e"
   },
   {
-   "at": 1601,
-   "start": 1124,
-   "end": 1129,
+   "at": 1785,
+   "start": 1193,
+   "end": 1198,
    "receipt": "r27",
    "kind": "numeric",
    "verdict": "HELD",
@@ -186,9 +200,9 @@
    "resolved_sha256": "6870d38c3ef7f55283a88abb2ff4c61d4566f397a4a40df924c2cf43d32cd308"
   },
   {
-   "at": 1667,
-   "start": 1155,
-   "end": 1159,
+   "at": 1851,
+   "start": 1224,
+   "end": 1228,
    "receipt": "r31",
    "kind": "numeric",
    "verdict": "HELD",
@@ -205,13 +219,13 @@
   }
  ],
  "counts": {
-  "HELD": 11,
+  "HELD": 12,
   "FAILED": 0,
   "UNRESOLVED": 0,
   "MALFORMED": 0,
   "WITHHELD": 0
  },
- "sworn_total": 11,
+ "sworn_total": 12,
  "unresolved": 0,
  "document_verdict": "SWORN-HELD",
  "document_malformed": null,
@@ -255,6 +269,6 @@
   }
  },
  "certifies": "the spans the author bound were checked against bytes the author did not write, at the commit or manifest the document names — NOT a claim that the document is correct, NOT a claim that the right sentences were bound, NOT a check that the tags were written at write time, and only as trustworthy as the harness that minted the manifest and the history that holds the commit",
- "digest": "9778f473025414882d806cdcb294ae9b614f4c9c6d72119407601233c2374567",
- "timestamp": "2026-09-02T04:50:32Z"
+ "digest": "a5a527f5aba9a00128292461cbe5acd8fe7beb719bf80dadcec8d5684c4fe9ab",
+ "timestamp": "2026-09-02T04:53:01Z"
 }

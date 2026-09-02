@@ -34,7 +34,7 @@ def repo(tmp_path):
     return tmp_path, _git(tmp_path, "rev-parse", "HEAD")
 
 
-def _refutation(cwd, commit, *, quote_target=True, cmd_path="papers/rederive.py"):
+def _refutation(cwd, commit, *, quote_target=True, cmd_path="papers/rederive.py", lie=False):
     h = Harness(cwd / "m.json", turn="ref", cwd=str(cwd))
     ids = h.exec([sys.executable, cmd_path, "--emit-json"])
     h.save()
@@ -45,6 +45,8 @@ def _refutation(cwd, commit, *, quote_target=True, cmd_path="papers/rederive.py"
            + 'The harness ran <sworn r="%s" k="quote">`%s %s --emit-json`</sworn> and it printed '
              '<sworn r="%s" k="numeric">0.117</sworn> adjusted against <sworn r="%s" k="numeric">0.3124</sworn> raw.\n'
            % (ids["argv"], sys.executable, cmd_path, ids["/adjusted"], ids["/raw"])).encode()
+    if lie:
+        doc = doc.replace(b">0.117<", b">0.118<", 1)
     return to_sidecar(doc, "REFUTATION_x.md", commit, manifest=m)
 
 
@@ -70,14 +72,8 @@ def test_an_uncommitted_script_is_rejected(repo):
 
 def test_a_lie_in_the_refutation_is_rejected_by_the_verifier(repo):
     cwd, commit = repo
-    side = _refutation(cwd, commit)
-    side["document"]["text"] = side["document"]["text"].replace("0.117", "0.118", 1) if "text" in side["document"] else side["document"]["text"]
-    from styxx.sworn import render
-    raw = render(side).replace(b"0.117", b"0.118", 1)
-    side2 = to_sidecar(raw, "REFUTATION_x.md", commit, manifest=None)
-    side2["manifest"] = side["manifest"]
-    r = check(side2, cwd)
-    assert r["status"] == REJECTED and any(x.startswith("not_sworn_held") for x in r["reasons"])
+    r = check(_refutation(cwd, commit, lie=True), cwd)
+    assert r["status"] == REJECTED and any(x.startswith("not_sworn_held:SWORN-FAILED") for x in r["reasons"])
 
 
 def test_index_lists_targets(repo):

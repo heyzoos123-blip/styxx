@@ -5,11 +5,11 @@ A statistical referee objected to `RESULT_handedness_v3_header_handed_2026_09_02
 objection is a set of numbers, so it is held to the author's standard: the harness ran the
 referee's re-derivation script and minted what it printed, and every number below binds to one
 of those receipts or to the result under attack. Manifest:
-`turn_2026_09_02_refutation_v3_kind.manifest.json`; verifier at commit `2f41775c0fde`.
+`turn_2026_09_02_refutation_v3_kind.manifest.json`; verifier at commit `37c7bdcbbea5`.
 
 ## The claim under attack
 
-The result's cells: header-handed accusations genuine at
+<sworn r="path:papers/closed-model-frontier/RESULT_handedness_v3_header_handed_2026_09_02.md#L1" k="quote">The result whose title says `an accusation handed by a table header is true`</sworn>. Its cells: header-handed accusations genuine at
 <sworn r="path:papers/closed-model-frontier/handedness_v3_result.json#/cells/header/genuine_share" k="numeric">0.9515</sworn> and line-handed at
 <sworn r="path:papers/closed-model-frontier/handedness_v3_result.json#/cells/line/genuine_share" k="numeric">0.6391</sworn>, read as structure handing a truer target than
 co-occurrence.

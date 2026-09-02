@@ -1,75 +1,81 @@
 {
  "spec": "sworn/0.1",
- "commit": "2f41775c0fdeb36c601d5b52d315ff7b94ffedf9",
+ "commit": "37c7bdcbbea50f703dacd146ad730d2fcd0e4157",
  "document": {
   "name": "REFUTATION_handedness_v3_kind_2026_09_02.md",
-  "sha256": "78a3f2985f56a26d08475141a8249c296a866123aeead53d06de1d4136ad0ba9"
+  "sha256": "b6ea03c18d975f44c4dcc1441646b1000f231a49555f059b44eedf602944dc38"
  },
- "text": "# REFUTATION — the header/line gap is mostly token kind — sworn, 2026-09-02\n\nFathom Lab · 2026-09-02 · closed-model-frontier · **The first sworn refutation in this tree.**\nA statistical referee objected to `RESULT_handedness_v3_header_handed_2026_09_02.md`. The\nobjection is a set of numbers, so it is held to the author's standard: the harness ran the\nreferee's re-derivation script and minted what it printed, and every number below binds to one\nof those receipts or to the result under attack. Manifest:\n`turn_2026_09_02_refutation_v3_kind.manifest.json`; verifier at commit `2f41775c0fde`.\n\n## The claim under attack\n\nThe result's cells: header-handed accusations genuine at\n0.9515 and line-handed at\n0.6391, read as structure handing a truer target than\nco-occurrence.\n\n## The refutation, re-derived by the harness\n\nThe harness ran `python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json`\nagainst the committed rows. It printed: the header cell is\n0.8606 decimals; within decimals the cells are\n1.0 against\n0.9605; within integers,\n0.6522 against\n0.321. The raw difference of\n0.3124 becomes\n0.117 kind-adjusted, under the\n0.15 the preregistration froze for the raw one.\n\n## What this refutation does and does not do\n\nIt does not touch the verdict, which was scored on the raw difference as frozen. It withdraws\nthe reading. It rests on the same one-family panel as the result and inherits that boundary. And\nit is the shape every refutation in this lab now takes: a referee who says a number ships the\nscript that produces it, the harness records what the script printed, and the critic swears to\nthe same kind of receipt the author did.\n\n---\n\n*A claim was sworn. Its refutation is sworn. The reader needs neither author's word.*\n",
+ "text": "# REFUTATION — the header/line gap is mostly token kind — sworn, 2026-09-02\n\nFathom Lab · 2026-09-02 · closed-model-frontier · **The first sworn refutation in this tree.**\nA statistical referee objected to `RESULT_handedness_v3_header_handed_2026_09_02.md`. The\nobjection is a set of numbers, so it is held to the author's standard: the harness ran the\nreferee's re-derivation script and minted what it printed, and every number below binds to one\nof those receipts or to the result under attack. Manifest:\n`turn_2026_09_02_refutation_v3_kind.manifest.json`; verifier at commit `37c7bdcbbea5`.\n\n## The claim under attack\n\nThe result whose title says `an accusation handed by a table header is true`. Its cells: header-handed accusations genuine at\n0.9515 and line-handed at\n0.6391, read as structure handing a truer target than\nco-occurrence.\n\n## The refutation, re-derived by the harness\n\nThe harness ran `python papers/closed-model-frontier/handedness_v3_stratified.py --emit-json`\nagainst the committed rows. It printed: the header cell is\n0.8606 decimals; within decimals the cells are\n1.0 against\n0.9605; within integers,\n0.6522 against\n0.321. The raw difference of\n0.3124 becomes\n0.117 kind-adjusted, under the\n0.15 the preregistration froze for the raw one.\n\n## What this refutation does and does not do\n\nIt does not touch the verdict, which was scored on the raw difference as frozen. It withdraws\nthe reading. It rests on the same one-family panel as the result and inherits that boundary. And\nit is the shape every refutation in this lab now takes: a referee who says a number ships the\nscript that produces it, the harness records what the script printed, and the critic swears to\nthe same kind of receipt the author did.\n\n---\n\n*A claim was sworn. Its refutation is sworn. The reader needs neither author's word.*\n",
  "spans": [
   {
-   "start": 686,
-   "end": 692,
+   "start": 629,
+   "end": 705,
+   "receipt": "path:papers/closed-model-frontier/RESULT_handedness_v3_header_handed_2026_09_02.md#L1",
+   "kind": "quote"
+  },
+  {
+   "start": 755,
+   "end": 761,
    "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/cells/header/genuine_share",
    "kind": "numeric"
   },
   {
-   "start": 712,
-   "end": 718,
+   "start": 781,
+   "end": 787,
    "receipt": "path:papers/closed-model-frontier/handedness_v3_result.json#/cells/line/genuine_share",
    "kind": "numeric"
   },
   {
-   "start": 844,
-   "end": 921,
+   "start": 913,
+   "end": 990,
    "receipt": "r1",
    "kind": "quote"
   },
   {
-   "start": 981,
-   "end": 987,
+   "start": 1050,
+   "end": 1056,
    "receipt": "r30",
    "kind": "numeric"
   },
   {
-   "start": 1028,
-   "end": 1031,
+   "start": 1097,
+   "end": 1100,
    "receipt": "r7",
-   "kind": "numeric"
-  },
-  {
-   "start": 1040,
-   "end": 1046,
-   "receipt": "r19",
-   "kind": "numeric"
-  },
-  {
-   "start": 1065,
-   "end": 1071,
-   "receipt": "r10",
-   "kind": "numeric"
-  },
-  {
-   "start": 1080,
-   "end": 1085,
-   "receipt": "r22",
    "kind": "numeric"
   },
   {
    "start": 1109,
    "end": 1115,
+   "receipt": "r19",
+   "kind": "numeric"
+  },
+  {
+   "start": 1134,
+   "end": 1140,
+   "receipt": "r10",
+   "kind": "numeric"
+  },
+  {
+   "start": 1149,
+   "end": 1154,
+   "receipt": "r22",
+   "kind": "numeric"
+  },
+  {
+   "start": 1178,
+   "end": 1184,
    "receipt": "r26",
    "kind": "numeric"
   },
   {
-   "start": 1124,
-   "end": 1129,
+   "start": 1193,
+   "end": 1198,
    "receipt": "r27",
    "kind": "numeric"
   },
   {
-   "start": 1155,
-   "end": 1159,
+   "start": 1224,
+   "end": 1228,
    "receipt": "r31",
    "kind": "numeric"
   }

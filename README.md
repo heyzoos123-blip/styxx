@@ -472,6 +472,16 @@ hold, are **neutral with a notice** until this repository flips `--strict`. UNSW
 failures". The manifest, its legend and the verdict receipt are uploaded as artifacts and the legend
 is written to the job summary. The gate never proposes tags and never edits the description.
 
+### sworn refutation
+
+A critic is held to the author's standard. A referee who says a number ships the script that
+produces it; the harness runs it (`--emit-json`) and mints every numeric leaf it prints as a
+receipt; the REFUTATION document swears to those receipts and quotes the document it attacks.
+`python -m styxx.referee check X.sworn.json` accepts it only if it is SWORN-HELD with nothing
+unresolved, names a target by the target's own bytes, binds a harness receipt, and every script
+it quotes exists at the commit. `python -m styxx.referee index` lists which documents are
+contested and by what. The reader needs neither side's word.
+
 ## links
 
 | | |
