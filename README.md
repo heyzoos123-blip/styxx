@@ -1,3 +1,10 @@
+> **correction notice, 2026-11-09.** this file is kept as it was written. the lab later withdrew or bounded statements in it. the text below is unchanged; these are the receipts:
+> - "9-for-9 on K=1 phase transition" (line 23 as of this notice; the file's words) — the position paper this count answers carries a scope erratum dated 2026-06-21: its "property of cognition" leap was bounded or falsified by later preregistered experiments, and its near-perfect AUCs are named register detectors at a construct ceiling — https://github.com/fathom-lab/styxx/blob/main/papers/every-mind-leaves-vitals.md
+> - "0.998 HaluEval · 0.976 XSTest · 0.943 BFCL · No LLM." (line 37 as of this notice; the file's words) — construct ceiling, 2026-05-29: on 48 register-matched factual self-claims every text-only honesty axis sits at chance (AUC deception 0.498, overconfidence 0.449, sycophancy 0.505, refusal 0.537; chance 0.50); text-only measurement is a register detector, not a content detector — https://github.com/fathom-lab/styxx/blob/main/papers/CONSTRUCT_CEILING_PUBLIC_RESPONSE_2026_05_29.md
+> - same line — the lab's current readme (read 2026-11-08) lists these three numbers under "register — how the text sounds", instruments that read how text sounds, not whether it is true — https://github.com/fathom-lab/styxx/blob/main/README.md
+> - "The first LLM-cognometric analog of" (line 306), "The first instrument shipped after the position paper" (line 424), "The first cross-turn cognometric instrument." (line 451), "Plus a novel finding:" (line 681) (lines as of this notice; the file's words) — 2026-09-29: the lab's rule keeps a priority sentence only if a survey under a frozen procedure priced it, and withdraws it otherwise; the lab reads these sentences as withdrawn — https://github.com/fathom-lab/styxx/blob/main/papers/NOTE_prior_art_credit_2026_09_29.md
+> a dated banner, not an edit in place, is the lab's practice since 2026-06-21. the lab's current record is https://github.com/fathom-lab/styxx .
+
 <div align="center">
 
 ```
