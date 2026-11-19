@@ -36,9 +36,10 @@ description: >-
   changed files are still the event's when it is read again after the list; otherwise, and for
   a claim that needs the diff's content, the diff counts as not fetched and the summary names
   what did not hold. The list needs the permission pull-requests:
-  read. A push that creates a branch has no commit before it. Where the push holds one commit,
-  that commit is read against its one parent; a push of more commits or of none, a commit with
-  no parent, or a merge is not read, and the diff then counts as not fetched. A push that creates a tag is
+  read. A push that creates a branch has no commit before it, so its commits are read against
+  the oldest one's parent: one commit alone, or up to 100 where GitHub's compare shows they are
+  the commits the event lists, in one line of one parent each; a push of none or of more, an
+  oldest commit with no parent, or a merge is not read, and the diff then counts as not fetched. A push that creates a tag is
   not gated. It does not block by default because
   no kind of accusation it still makes has been measured clearing the 0.95 precision floor the
   lab set for accusing.

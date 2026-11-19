@@ -526,31 +526,196 @@ def test_a_lookup_that_fails_or_cannot_be_used(act, server, tmp_path, monkeypatc
     assert all("/compare/" not in p for p, _, _ in handler.seen)
 
 
-NOT_LISTED = "the event does not list the push's commits as the head commit alone"
+NOT_LISTED = ("the event does not list the push's commits as commit ids that end with the head commit, so which "
+              "commits the push holds cannot be told")
 
 
 @pytest.mark.parametrize("commits, held", [
-    ([{"id": OTHER}, {"id": AFTER}], "the push that created this branch holds 2 commits"),
-    ([], "the push that created this branch holds 0 commits"),
+    ([], "the push that created this branch holds 0 commits, so it has no diff of its own to read"),
     ([{"id": OTHER}], NOT_LISTED),
     ([{"id": AFTER.upper()}], NOT_LISTED),
+    ([{"id": AFTER}, {"id": OTHER}], NOT_LISTED),                   # the head commit is not the last one listed
+    ([{"id": OTHER}, {"id": OTHER}, {"id": AFTER}], NOT_LISTED),    # a commit listed twice
+    ([{"id": OTHER}, "x", {"id": AFTER}], NOT_LISTED),
+    ({"id": AFTER}, NOT_LISTED),
     (None, NOT_LISTED),
+    ([{"id": f"{i:040x}"} for i in range(1, 101)] + [{"id": AFTER}],
+     "the push that created this branch holds 101 commits, more than the 100 this script checks against GitHub's "
+     "compare"),
 ])
-def test_a_created_branch_whose_push_is_not_its_head_commit_alone_is_not_read(act, server, tmp_path, monkeypatch,
-                                                                             capsys, commits, held):
-    """The head commit's own diff is the diff of the push only where the push holds that one commit.
-    A push of more commits (or one that names none, or another) is not read as its head commit: it
-    fails a blocking check when the message holds a claim, as before, and nothing is asked."""
+def test_a_created_branch_whose_push_cannot_be_told_from_the_event_is_not_read(act, server, tmp_path, monkeypatch,
+                                                                              capsys, commits, held):
+    """The push is read only where the event lists its commits, the head commit last, and no more than
+    one page of GitHub's compare holds. Otherwise it fails a blocking check when the message holds a
+    claim, as before, and nothing is asked."""
     handler, base = server
     handler.route = staticmethod(branching([PARENT], diff=FC.DIFF_SRC))        # the head commit's own diff would pass
     payload = push_payload(base, FC.FALSE, commits=commits)
     rc, out, summary = run(act, tmp_path, monkeypatch, capsys, base, "push", payload)
     assert rc == 1 and FC.E_FETCH in out
-    assert f"{held}, and a created branch is read only where its push is the head commit alone" in out
-    assert NO_BASE + ", so a re-run fails the same way." in out
+    assert held in out and NO_BASE + ", so a re-run fails the same way." in out
     assert handler.seen == [] and OWN not in summary
     rc, out, _ = run(act, tmp_path, monkeypatch, capsys, base, "push", payload, "true")
     assert rc == 0 and "::error" not in out and held in out
+
+
+# -- a push that creates a branch with more than one commit ------------------------------------------------------
+
+C1, C2 = "1" * 40, "2" * 40
+LISTED = [{"id": C1}, {"id": C2}, {"id": AFTER}]                    # from the oldest, as GitHub lists a push's commits
+LINE = {C1: [PARENT], C2: [C1], AFTER: [C2]}                         # each commit's parents
+CHECK = f"/repos/o/r/compare/{PARENT}...{AFTER}?per_page=100"
+
+
+def compared(line=LINE, *, order=(C1, C2, AFTER), status="ahead", ahead=3, behind=0, total=3):
+    return {"status": status, "ahead_by": ahead, "behind_by": behind, "total_commits": total,
+            "commits": [{"sha": c, "parents": [{"sha": q} for q in line[c]]} for c in order]}
+
+
+def several(*, oldest=(PARENT,), check=None, check_status=200, diff=FC.DIFF, oldest_status=200):
+    """The routes of a created branch pushed with C1, C2 and AFTER."""
+    answer = json.dumps(compared()) if check is None else check if isinstance(check, str) else json.dumps(check)
+
+    def route(path, accept):
+        if path == f"/repos/o/r/git/commits/{C1}" and accept == JSON_ACCEPT:
+            if oldest_status != 200:
+                return oldest_status, "{}"
+            return 200, json.dumps({"sha": C1, "parents": [{"sha": p} for p in oldest]})
+        if path == CHECK and accept == JSON_ACCEPT:
+            return check_status, answer if check_status == 200 else "{}"
+        if path == f"/repos/o/r/compare/{PARENT}...{AFTER}" and accept == DIFF_ACCEPT:
+            return 200, diff
+        return 404, "{}"
+    return route
+
+
+MANY = ("_This push created its branch with 3 commits, so there is no commit before it to compare with. The diff read "
+        "is the push's own: its commits, which GitHub's compare shows are the ones the event lists, in one line of one "
+        "parent each, against the oldest one's parent._")
+MANY_LAST = "; the diff read is the push's own, its 3 commits against the oldest one's parent (the push created its branch)"
+MANY_AGAIN = (NO_BASE + ", so the parent of the push's oldest commit was looked up, to read the push's commits against "
+              "it, and the lookup failed; a re-run asks again.")
+MANY_UNUSABLE = (NO_BASE + ", so the parent of the push's oldest commit was looked up, to read the push's commits "
+                 "against it, and GitHub's answer could not be used.")
+
+
+@pytest.mark.parametrize("soft, code", [("false", 1), ("true", 0)])
+def test_a_created_branch_of_several_commits_is_read_against_the_first_ones_parent(act, server, tmp_path, monkeypatch,
+                                                                                  capsys, soft, code):
+    handler, base = server
+    handler.route = staticmethod(several())
+    payload = push_payload(base, FC.FALSE, commits=LISTED)
+    rc, out, summary = run(act, tmp_path, monkeypatch, capsys, base, "push", payload, soft)
+    assert rc == code and FC.E_CONTRA in out                       # the diff holds a file outside src/
+    assert [ln for ln in out.splitlines() if ln.startswith("styxx diffgate: ")][-1].endswith(MANY_LAST)
+    assert MANY in summary and OWN not in summary and summary.startswith("## styxx diffgate — the summary vs the diff")
+    # the oldest commit's parent, then the compare of it with the head as JSON, then the same compare's diff
+    assert [(p, a) for p, a, _ in handler.seen] == [(f"/repos/o/r/git/commits/{C1}", JSON_ACCEPT),
+                                                    (CHECK, JSON_ACCEPT),
+                                                    (f"/repos/o/r/compare/{PARENT}...{AFTER}", DIFF_ACCEPT)]
+    assert all(auth == f"Bearer {TOKEN}" for _, _, auth in handler.seen)
+
+
+def test_a_claim_that_holds_of_the_push_passes(act, server, tmp_path, monkeypatch, capsys):
+    handler, base = server
+    handler.route = staticmethod(several(diff=FC.DIFF_SRC))
+    rc, out, summary = run(act, tmp_path, monkeypatch, capsys, base, "push",
+                           push_payload(base, FC.FALSE, commits=LISTED))
+    assert rc == 0 and out.strip().endswith("styxx diffgate: PASS - 1 claim(s), 0 contradicted" + MANY_LAST)
+    assert MANY in summary
+
+
+def test_the_order_githubs_compare_lists_the_commits_in_does_not_matter(act, server, tmp_path, monkeypatch, capsys):
+    handler, base = server
+    handler.route = staticmethod(several(check=compared(order=(AFTER, C1, C2)), diff=FC.DIFF_SRC))
+    rc, out, _ = run(act, tmp_path, monkeypatch, capsys, base, "push", push_payload(base, FC.FALSE, commits=LISTED))
+    assert rc == 0 and out.strip().endswith(MANY_LAST)
+
+
+def test_a_push_of_two_commits_names_two(act, server, tmp_path, monkeypatch, capsys):
+    handler, base = server
+    line = {C2: [PARENT], AFTER: [C2]}
+
+    def route(path, accept):
+        if path == f"/repos/o/r/git/commits/{C2}":
+            return 200, json.dumps({"sha": C2, "parents": [{"sha": PARENT}]})
+        if path == CHECK:
+            return 200, json.dumps(compared(line, order=(C2, AFTER), ahead=2, total=2))
+        return (200, FC.DIFF_SRC) if path == f"/repos/o/r/compare/{PARENT}...{AFTER}" else (404, "{}")
+
+    handler.route = staticmethod(route)
+    rc, out, summary = run(act, tmp_path, monkeypatch, capsys, base, "push",
+                           push_payload(base, FC.FALSE, commits=[{"id": C2}, {"id": AFTER}]))
+    assert rc == 0 and out.strip().endswith(MANY_LAST.replace("3 commits", "2 commits"))
+    assert MANY.replace("3 commits", "2 commits") in summary
+
+
+NOT_THE_LIST = ("GitHub's compare of the parent of the push's oldest commit with the head commit does not hold the 3 "
+                "commits the event lists and no other")
+
+
+@pytest.mark.parametrize("change, said", [
+    (dict(oldest=()), "the push's oldest commit has no parent to read the push against"),
+    (dict(oldest=(PARENT, OTHER)), "the push's oldest commit is a merge of 2 parents, and this script reads a commit "
+                                  "against one parent only"),
+    (dict(check=compared(ahead=4, total=4)), NOT_THE_LIST + " (it counts 4 ahead and 0 behind)"),
+    (dict(check=compared(ahead=3, total=4)), NOT_THE_LIST + " (it counts 3 ahead and 0 behind)"),
+    (dict(check=compared(status="diverged", behind=1)), NOT_THE_LIST + " (it counts 3 ahead and 1 behind)"),
+    (dict(check=compared(status="diverged")), NOT_THE_LIST + " (it counts 3 ahead and 0 behind)"),
+    (dict(check=compared(behind=1)), NOT_THE_LIST + " (it counts 3 ahead and 1 behind)"),
+    (dict(check=compared(ahead=4)), NOT_THE_LIST + " (it counts 4 ahead and 0 behind)"),
+    (dict(check=compared(order=(C1, C2))), NOT_THE_LIST),
+    (dict(check=compared({C1: [PARENT], OTHER: [C1], AFTER: [OTHER]}, order=(C1, OTHER, AFTER))), NOT_THE_LIST),
+    (dict(check=compared({C1: [PARENT], C2: [C1, OTHER], AFTER: [C2]})),
+     "a commit of the push is a merge or has no parent, and this script reads a push of one line of commits only"),
+    (dict(check=compared({C1: [PARENT], C2: [C1], AFTER: [C1]})),
+     "the commits GitHub's compare lists do not run in one line from the head commit back to the parent of the "
+     "push's oldest commit"),
+    (dict(check=compared({C1: [OTHER], C2: [C1], AFTER: [C2]})),
+     "the commits GitHub's compare lists do not run in one line from the head commit back to the parent of the "
+     "push's oldest commit"),
+])
+def test_a_push_that_is_not_one_line_of_the_commits_listed_is_not_read(act, server, tmp_path, monkeypatch, capsys,
+                                                                      change, said):
+    """Where the oldest commit has no one parent, or GitHub's compare does not show the push to be the
+    commits the event lists in one line of one parent each, the push is not read, its diff is never
+    asked for, and a re-run fails the same way."""
+    handler, base = server
+    handler.route = staticmethod(several(diff=FC.DIFF_SRC, **change))           # the push's diff would pass
+    payload = push_payload(base, FC.FALSE, commits=LISTED)
+    rc, out, summary = run(act, tmp_path, monkeypatch, capsys, base, "push", payload)
+    assert rc == 1 and FC.E_FETCH in out and said in out
+    assert NO_BASE + ", so a re-run fails the same way." in out
+    assert all(a == JSON_ACCEPT for _, a, _ in handler.seen) and MANY not in summary
+    rc, out, _ = run(act, tmp_path, monkeypatch, capsys, base, "push", payload, "true")
+    assert rc == 0 and "::error" not in out and said in out
+
+
+@pytest.mark.parametrize("change, said, ending", [
+    (dict(oldest_status=404), "HTTP Error 404: Not Found", MANY_AGAIN),
+    (dict(check_status=404), "HTTP Error 404: Not Found", MANY_AGAIN),
+    (dict(check="not json"), "GitHub's answer for the compare of the push's commits is not JSON", MANY_UNUSABLE),
+    (dict(check=["x"]), "holds no list of commits and counts of them", MANY_UNUSABLE),
+    (dict(check={**compared(), "ahead_by": True}), "holds no list of commits and counts of them", MANY_UNUSABLE),
+    (dict(check={**compared(), "total_commits": "3"}), "holds no list of commits and counts of them", MANY_UNUSABLE),
+    (dict(check={**compared(), "commits": [{"sha": C1}, {"sha": C2}, {"sha": AFTER}]}),
+     "lists a commit without its id and its parents' ids", MANY_UNUSABLE),
+    (dict(check={**compared(), "commits": [{"sha": "zz", "parents": []}]}),
+     "lists a commit without its id and its parents' ids", MANY_UNUSABLE),
+])
+def test_a_lookup_of_the_push_that_fails_or_cannot_be_used(act, server, tmp_path, monkeypatch, capsys, change, said,
+                                                          ending):
+    handler, base = server
+    handler.route = staticmethod(several(**change))
+    rc, out, _ = run(act, tmp_path, monkeypatch, capsys, base, "push", push_payload(base, FC.FALSE, commits=LISTED))
+    assert rc == 1 and FC.E_FETCH in out and said in out
+    assert ending in out and "fails the same way" not in out
+    assert all(a == JSON_ACCEPT for _, a, _ in handler.seen)
+
+
+def test_a_compare_address_that_holds_a_query_gets_its_own_after_it(act):
+    assert act._with_query("https://x/compare/a...b", "per_page=100") == "https://x/compare/a...b?per_page=100"
+    assert act._with_query("https://x/compare/a...b?q=1", "per_page=100") == "https://x/compare/a...b?q=1&per_page=100"
 
 
 def test_a_lookup_address_off_the_origin_is_refused_by_its_own_name(act, server, tmp_path, monkeypatch, capsys):

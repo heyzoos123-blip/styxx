@@ -12,13 +12,14 @@ the script reads no claim and writes no summary; it prints a line saying the eve
 whatever strict and soft-fail are set to.
 
 Two cases have a reading of their own. A push that creates a branch has no commit before it, so
-the compare address has no commit for its base. Where the push holds its head commit and no other,
-that commit's one parent is looked up and the commit is read against it, which is the commit's own
-diff (``_own_diff_address``; a push of more commits, a commit with no parent, and a merge are not
-read). A pull request whose diff GitHub refuses with HTTP 406 is read against GitHub's list of its
-files, written as a diff of headers and no content, where no claim the gate reads needs the diff's
-content and the list is whole (``_list_reading`` gives each condition); otherwise the diff was not
-fetched, as before.
+the compare address has no commit for its base. The parent of the push's oldest commit is looked up
+and the push is read against it, which is the push's own diff: for a push of the head commit alone,
+that commit's own; for a push of more, at most 100, only where GitHub's compare shows they are the
+commits the event lists, in one line of one parent each (``_own_diff_address``; an oldest commit
+with no parent, a merge, and a push of none or of more are not read). A pull request whose diff
+GitHub refuses with HTTP 406 is read against GitHub's list of its files, written as a diff of
+headers and no content, where no claim the gate reads needs the diff's content and the list is
+whole (``_list_reading`` gives each condition); otherwise the diff was not fetched, as before.
 
 The text is read as it was written. A description is read in its Markdown source, so an HTML
 comment, a task-list item and a sentence inside a code fence are read like any other sentence.
@@ -680,65 +681,147 @@ def _json(text: str, of: str):
 
 
 class _NotReadAlone(RuntimeError):
-    """A push that created its branch is not read as its head commit against one parent: the push
-    holds more than that one commit, or the commit has no parent, or more than one. Nothing a
-    re-run asks would differ."""
+    """A push that created its branch is not read against one parent: the event does not list the
+    push's commits as a line ending in the head commit, the push holds none or more than
+    ``_PUSH_MOST``, its oldest commit has no parent or more than one, or GitHub's compare of that
+    parent with the head commit does not hold the commits the event lists, each of one parent.
+    Nothing a re-run asks would differ."""
 
 
 class _LookupUnusable(RuntimeError):
-    """GitHub answered the lookup of the head commit with something this script cannot use."""
+    """GitHub answered the lookup of a commit, or the compare of a created branch's push, with
+    something this script cannot use."""
+
+
+_PUSH_MOST = 100            # the most commits of a created branch's push read: one page of GitHub's compare
+
+
+def _pushed_ids(event, after):
+    """The ids of the commits the event lists for its push, from the oldest, where they are commit ids
+    without repeats that end with ``after``; otherwise None."""
+    pushed = event.get("commits")
+    if not (isinstance(pushed, list) and pushed and all(isinstance(c, dict) for c in pushed)):
+        return None
+    ids = [c.get("id") for c in pushed]
+    if (not all(isinstance(i, str) and _SHA.fullmatch(i) for i in ids) or len(set(ids)) != len(ids)
+            or ids[-1] != after):
+        return None
+    return ids
+
+
+def _looked_up(event) -> str:
+    """What was asked of GitHub for a created branch whose lookup failed, as a sentence says it."""
+    ids = _pushed_ids(event, event.get("after"))
+    if ids is not None and len(ids) > 1:
+        return "the parent of the push's oldest commit was looked up, to read the push's commits against it"
+    return "the head commit's parent was looked up"
+
+
+def _with_query(url: str, query: str) -> str:
+    return url + ("&" if "?" in url else "?") + query
 
 
 def _own_diff_address(event):
-    """For a push that created its branch: the address of the head commit's own diff, which is the
-    compare of its one parent with it; or None where the event does not carry what the lookup needs
-    (``after`` as a commit id that is also the ``id`` of the head commit, whose message is the text
-    gated; ``repository.git_commits_url`` and ``repository.compare_url`` as the templates GitHub
-    sends), and then nothing is looked up.
+    """For a push that created its branch: ``(address, n)``, the address of the push's own diff and
+    the number of its commits, which is the compare of the oldest commit's one parent with the head
+    commit; or None where the event does not carry what the lookup needs (``after`` as a commit id
+    that is also the ``id`` of the head commit, whose message is the text gated;
+    ``repository.git_commits_url`` and ``repository.compare_url`` as the templates GitHub sends), and
+    then nothing is looked up.
 
     Such a push has no commit before it, so the address the event's compare template gives has forty
-    zeros for its base and the API answers 404. Only a push that holds its head commit and no other
-    is read so (the event's ``commits`` is that one commit): the diff of the push is then that
-    commit's own, and no commit of the push goes unread. The parent is read from the Git database
-    endpoint, whose answer holds the commit's parents and no file. A push of more commits, or of
-    none, a commit with no parent, and one with more than one (a merge) are not read:
-    ``_NotReadAlone``. An answer that is not for that commit, or that cannot be read, is
-    ``_LookupUnusable``. A lookup that fails raises what ``api`` raised."""
+    zeros for its base and the API answers 404. The push is read where the event lists its commits
+    (``commits``, from the oldest) as commit ids that end with the head commit, at most
+    ``_PUSH_MOST`` of them. The oldest one's parent is read from the Git database endpoint, whose answer holds the
+    commit's parents and no file; it must be one. Where the push holds the head commit alone, that
+    parent and the head commit are the diff of the push, as they were before more commits were read.
+    Where it holds more, GitHub's compare of that parent with the head commit is asked for as JSON,
+    and it must hold the commits the event lists and no other, ahead of the parent and behind it by
+    none, each of one parent, in a line from the head commit back to the parent: no commit of the push
+    then goes unread, and none outside it is read. Anything else is ``_NotReadAlone``. An answer that
+    is not for that commit, or that cannot be read, is ``_LookupUnusable``. A lookup that fails raises
+    what ``api`` raised."""
     repo = event.get("repository") or {}
     after, commits, compare = event.get("after"), repo.get("git_commits_url"), repo.get("compare_url")
     if not (isinstance(after, str) and _SHA.fullmatch(after) and (event.get("head_commit") or {}).get("id") == after
             and isinstance(commits, str) and "{/sha}" in commits
             and isinstance(compare, str) and "{base}" in compare and "{head}" in compare):
         return None
-    pushed = event.get("commits")
-    if not (isinstance(pushed, list) and len(pushed) == 1 and isinstance(pushed[0], dict)
-            and pushed[0].get("id") == after):
-        if isinstance(pushed, list) and len(pushed) != 1:
-            said = f"the push that created this branch holds {len(pushed)} commits"
-        else:                   # no list, or one entry that is not the head commit
-            said = "the event does not list the push's commits as the head commit alone"
-        raise _NotReadAlone(f"{said}, and a created branch is read only where its push is the head commit alone")
+    pushed, ids = event.get("commits"), _pushed_ids(event, after)
+    if isinstance(pushed, list) and not pushed:
+        raise _NotReadAlone("the push that created this branch holds 0 commits, so it has no diff of its own to read")
+    if ids is None:
+        raise _NotReadAlone("the event does not list the push's commits as commit ids that end with the head commit, "
+                            "so which commits the push holds cannot be told")
+    n = len(ids)
+    if n > _PUSH_MOST:
+        raise _NotReadAlone(f"the push that created this branch holds {n} commits, more than the {_PUSH_MOST} this "
+                            "script checks against GitHub's compare")
+    oldest = ids[0]
+    who = "the head commit" if n == 1 else "the push's oldest commit"
     try:
-        answer = _json(api(commits.replace("{/sha}", "/" + after), "application/vnd.github+json",
-                           "the head commit's address"), "the head commit")
+        answer = _json(api(commits.replace("{/sha}", "/" + oldest), "application/vnd.github+json",
+                           f"{who}'s address"), who)
     except RuntimeError as e:
         if str(e).endswith("is not JSON"):
             raise _LookupUnusable(str(e)) from None
         raise
-    if not isinstance(answer, dict) or answer.get("sha") != after:
-        raise _LookupUnusable("GitHub's answer for the head commit is not for that commit")
+    if not isinstance(answer, dict) or answer.get("sha") != oldest:
+        raise _LookupUnusable(f"GitHub's answer for {who} is not for that commit")
     parents = answer.get("parents")
     if not isinstance(parents, list):
-        raise _LookupUnusable("GitHub's answer for the head commit holds no list of parents")
+        raise _LookupUnusable(f"GitHub's answer for {who} holds no list of parents")
     if not parents:
-        raise _NotReadAlone("the head commit has no parent to read it against")
+        raise _NotReadAlone(f"{who} has no parent to read it against" if n == 1
+                            else f"{who} has no parent to read the push against")
     if len(parents) > 1:
-        raise _NotReadAlone(f"the head commit is a merge of {len(parents)} parents, and this script reads a commit "
+        raise _NotReadAlone(f"{who} is a merge of {len(parents)} parents, and this script reads a commit "
                             "against one parent only")
     sha = parents[0].get("sha") if isinstance(parents[0], dict) else None
     if not (isinstance(sha, str) and _SHA.fullmatch(sha)):
-        raise _LookupUnusable("GitHub's answer for the head commit names a parent that is not a commit id")
-    return compare.replace("{base}", sha).replace("{head}", after)
+        raise _LookupUnusable(f"GitHub's answer for {who} names a parent that is not a commit id")
+    own = compare.replace("{base}", sha).replace("{head}", after)
+    if n == 1:
+        return own, 1
+    of = "the compare of the push's commits"
+    try:
+        found = _json(api(_with_query(own, f"per_page={_PUSH_MOST}"), "application/vnd.github+json",
+                          f"{of}'s address"), of)
+    except RuntimeError as e:
+        if str(e).endswith("is not JSON"):
+            raise _LookupUnusable(str(e)) from None
+        raise
+    listed = found.get("commits") if isinstance(found, dict) else None
+    if not (isinstance(listed, list) and all(isinstance(found.get(k), int) and not isinstance(found.get(k), bool)
+                                             for k in ("ahead_by", "behind_by", "total_commits"))):
+        raise _LookupUnusable(f"GitHub's answer for {of} holds no list of commits and counts of them")
+    up = {}                 # each commit GitHub's compare lists: its parents' ids
+    for c in listed:
+        cid = c.get("sha") if isinstance(c, dict) else None
+        ps = c.get("parents") if isinstance(c, dict) else None
+        if not (isinstance(cid, str) and _SHA.fullmatch(cid) and isinstance(ps, list)
+                and all(isinstance(q, dict) and isinstance(q.get("sha"), str) and _SHA.fullmatch(q["sha"])
+                        for q in ps)):
+            raise _LookupUnusable(f"GitHub's answer for {of} lists a commit without its id and its parents' ids")
+        up[cid] = [q["sha"] for q in ps]
+    if any(len(ps) != 1 for ps in up.values()):
+        raise _NotReadAlone("a commit of the push is a merge or has no parent, and this script reads a push of one "
+                            "line of commits only")
+    if (found.get("status") != "ahead" or found["behind_by"] != 0 or found["ahead_by"] != n
+            or found["total_commits"] != n
+            or len(listed) != n or set(up) != set(ids)):
+        raise _NotReadAlone(f"GitHub's compare of the parent of the push's oldest commit with the head commit does not "
+                            f"hold the {n} commits the event lists and no other (it counts {found['ahead_by']} ahead "
+                            f"and {found['behind_by']} behind)")
+    at = after              # from the head commit back, one parent at a time, to the oldest commit's parent
+    for _ in range(n):
+        at = up[at][0] if at in up else None
+        if at is None:
+            break
+    if at != sha:
+        raise _NotReadAlone("the commits GitHub's compare lists do not run in one line from the head commit back to "
+                            "the parent of the push's oldest commit")
+    return own, n
 
 
 # The kinds of claim whose verdict turns on which files changed and on no line of content, and the one
@@ -981,18 +1064,26 @@ def main() -> int:
     try:
         if (event_name == "push" and _creates_ref(event) and isinstance(event.get("ref"), str)
                 and event["ref"].startswith("refs/heads/")):
-            # A push that creates a branch has no commit before it. Where the push is its head commit
-            # alone, that commit is read against its one parent: the message gated is that commit's, and
-            # the diff of the push is that commit's own.
+            # A push that creates a branch has no commit before it. Its commits are read against the
+            # oldest one's parent: the message gated is the head commit's, and the diff is the push's own,
+            # as it is for a push to a branch that exists.
             looking_up = True
             own = _own_diff_address(event)
             looking_up = False
-            if own is not None:
-                diff_url = own
+            if own is not None and own[1] == 1:
+                diff_url = own[0]
                 read_note = ("_This push created its branch with one commit, so there is no commit before it to "
                              "compare with. The diff read is that commit's own, against its one parent._")
                 read_last = ("; the diff read is the head commit's own against its one parent (the push created "
                              "its branch with that one commit)")
+            elif own is not None:
+                diff_url, many = own
+                read_note = (f"_This push created its branch with {many} commits, so there is no commit before it to "
+                             "compare with. The diff read is the push's own: its commits, which GitHub's compare "
+                             "shows are the ones the event lists, in one line of one parent each, against the "
+                             "oldest one's parent._")
+                read_last = (f"; the diff read is the push's own, its {many} commits against the oldest one's parent "
+                             "(the push created its branch)")
         diff = api(diff_url, "application/vnd.github.diff")
     except Exception as e:  # noqa: BLE001
         failure = e
@@ -1063,11 +1154,11 @@ def main() -> int:
         if not (event_name == "push" and _creates_ref(event)) or read_last:
             no_base = ""        # not a push that created its ref, or its parent was found and the compare failed
         elif looking_up and isinstance(e, _LookupUnusable):
-            no_base = (" A push that creates a branch has no base commit to compare with, so the head commit's "
-                       "parent was looked up, and GitHub's answer could not be used.")
+            no_base = (" A push that creates a branch has no base commit to compare with, so "
+                       f"{_looked_up(event)}, and GitHub's answer could not be used.")
         elif looking_up and not isinstance(e, _NotReadAlone):
-            no_base = (" A push that creates a branch has no base commit to compare with, so the head commit's "
-                       "parent was looked up, and the lookup failed; a re-run asks again.")
+            no_base = (" A push that creates a branch has no base commit to compare with, so "
+                       f"{_looked_up(event)}, and the lookup failed; a re-run asks again.")
         else:
             no_base = (" A push that creates a branch has no base commit to compare with, so a re-run fails the "
                        "same way.")
