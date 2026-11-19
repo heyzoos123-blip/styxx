@@ -156,4 +156,6 @@ case the branch does not land.
 
 ## Signature
 
-TO-FILL at the signing commit: the operator's own words, quoted, with the time.
+Signed by the operator, flobi, in the project chat on 2026-11-19 at 18:28:10Z, answering the lead's post of
+17:04:42Z that put this file's scope, bar and limit: "Sign c". Section 8 left no option open, so the file is signed as
+written. Nothing else in this file changes at signing.
