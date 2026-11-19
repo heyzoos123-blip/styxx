@@ -177,4 +177,8 @@ means a restored verdict is false: the branch does not land.
 
 ## Signature
 
-TO-FILL at the signing commit: the operator's word, quoted, with its date, and the option of section 8.
+Signed by the operator, flobi, in the project chat on 2026-11-19 at 16:27:35Z, answering the lead's question of
+16:19:51Z that put option A and option B of section 8: "Sign b". Option B is taken as section 8 states it: the git
+door (`gate_diff`) reads the base and head files and decides by `ast` against the truth of section 2, the text door
+(`gate_diff_text`) and the port keep option A, and G-P3 reads "the doors agree wherever the text door decides".
+Section 3's "No CONTRADICTED is added" holds on both doors. Nothing else in this file changes at signing.
