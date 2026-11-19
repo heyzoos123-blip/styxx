@@ -1,0 +1,17 @@
+{
+ "python": "3.14.6",
+ "seed": 3,
+ "cases": 30000,
+ "claims": 150632,
+ "decided": {
+  "tests_added": 0,
+  "symbol_added": 0
+ },
+ "false": 0,
+ "false_examples": [],
+ "git_cases": 30000,
+ "door_disagreements": 0,
+ "door_examples": [],
+ "git_decided": 14715,
+ "git_false": 0
+}

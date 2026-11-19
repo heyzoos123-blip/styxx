@@ -1,0 +1,108 @@
+{
+ "prereg": "papers/closed-model-frontier/PREREG_path2c_git_door_2026_11_19.md",
+ "smoke": false,
+ "result": {
+  "unit": {
+   "p1_issue_pass": 1,
+   "p2_families_pass": 1,
+   "p3_text_door_differences": 0,
+   "p4_false_decided": 0,
+   "p4_min_decided_per_runtime": 14715,
+   "p5_suite_green": 1
+  }
+ },
+ "g_p3": {
+  "cases": 30000,
+  "lines": 301264,
+  "sha256_45f351d1": "f4bb76ab850fb02cc6e2ad80664449512243e4988a830223188bac7f4e19f6b0",
+  "sha256_this_branch": "f4bb76ab850fb02cc6e2ad80664449512243e4988a830223188bac7f4e19f6b0",
+  "pinned_pairs": 190
+ },
+ "g_p4": {
+  "3.9.25": {
+   "seed": 3,
+   "cases": 30000,
+   "claims": 150632,
+   "git_cases": 30000,
+   "git_decided": 14715,
+   "git_false": 0,
+   "decided": {
+    "tests_added": 0,
+    "symbol_added": 0
+   },
+   "false": 0,
+   "door_disagreements": 0
+  },
+  "3.10.20": {
+   "seed": 3,
+   "cases": 30000,
+   "claims": 150632,
+   "git_cases": 30000,
+   "git_decided": 14715,
+   "git_false": 0,
+   "decided": {
+    "tests_added": 0,
+    "symbol_added": 0
+   },
+   "false": 0,
+   "door_disagreements": 0
+  },
+  "3.11.18": {
+   "seed": 3,
+   "cases": 30000,
+   "claims": 150632,
+   "git_cases": 30000,
+   "git_decided": 14715,
+   "git_false": 0,
+   "decided": {
+    "tests_added": 0,
+    "symbol_added": 0
+   },
+   "false": 0,
+   "door_disagreements": 0
+  },
+  "3.12.3": {
+   "seed": 3,
+   "cases": 30000,
+   "claims": 150632,
+   "git_cases": 30000,
+   "git_decided": 14715,
+   "git_false": 0,
+   "decided": {
+    "tests_added": 0,
+    "symbol_added": 0
+   },
+   "false": 0,
+   "door_disagreements": 0
+  },
+  "3.13.18": {
+   "seed": 3,
+   "cases": 30000,
+   "claims": 150632,
+   "git_cases": 30000,
+   "git_decided": 14715,
+   "git_false": 0,
+   "decided": {
+    "tests_added": 0,
+    "symbol_added": 0
+   },
+   "false": 0,
+   "door_disagreements": 0
+  },
+  "3.14.6": {
+   "seed": 3,
+   "cases": 30000,
+   "claims": 150632,
+   "git_cases": 30000,
+   "git_decided": 14715,
+   "git_false": 0,
+   "decided": {
+    "tests_added": 0,
+    "symbol_added": 0
+   },
+   "false": 0,
+   "door_disagreements": 0
+  }
+ },
+ "verdict": "LANDS__r101c_decides_at_the_git_door"
+}
