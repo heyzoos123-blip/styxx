@@ -1,0 +1,71 @@
+{
+ "python": "3.12.3",
+ "seed": 1,
+ "cases": 30000,
+ "claims": 150557,
+ "decided": {
+  "tests_added": 2448,
+  "symbol_added": 71
+ },
+ "false": 174,
+ "false_examples": [
+  {
+   "summary": "Added 1 test.",
+   "why": "diff adds 1 test functions and changes 0, claim says 1 (#101)",
+   "diff": "diff --git a/tests/test_0.py b/tests/test_0.py\n--- a/tests/test_0.py\n+++ b/tests/test_0.py\n@@ -1,9 +1,12 @@\n+A = 1\n+\n+\n import pytest\n \n \n-class Helper:\n+class TestB:\n     @pytest.mark.slow\n-    def test_b(self):\n+    def test_b(self, tmp_path):\n         assert True\n \n \n"
+  },
+  {
+   "summary": "Added 1 test.",
+   "why": "diff adds 1 test functions and changes 0, claim says 1 (#101)",
+   "diff": "diff --git a/tests/test_0.py b/tests/test_0.py\n--- a/tests/test_0.py\n+++ b/tests/test_0.py\n@@ -1,32 +1,33 @@\n+def test_a(self):\n+    x = 'def test_y():'\n+    assert x\n+\n+\n import pytest\n \n \n def test_c():\n     assert True\n \n \n class TestB:\n     def test_basic(self):\n         assert True\n \n     def backoff(self):\n         assert True\n \n-    def test_a(self):\n-        x = 'def test_y():'\n-        assert x\n-\n \n def test_old():\n     v = f\"{1 + 2}\"\n     assert v\n \n \n-class TestB:\n+class TestA:\n     def test_c(self):\n         v = f\"{1 + 2}\"\n         assert v\n \n     def test_c(self):\n         v = f\"{1 + 2}\"\n         assert v\n"
+  },
+  {
+   "summary": "Added 0 tests.",
+   "why": "diff adds 0 test functions and changes 1, claim says 0 (#101)",
+   "diff": "diff --git a/tests/test_0.py b/tests/test_0.py\n--- a/tests/test_0.py\n+++ b/tests/test_0.py\n@@ -1,40 +1,40 @@\n \"\"\"Module docstring.\"\"\"\n \n \n @pytest.mark.slow\n def test_run():\n     y = (1,\n          2)\n     assert y\n \n \n def make():\n     \"\"\"A docstring.\"\"\"\n     assert True\n \n \n @pytest.mark.slow\n-def test_basic():\n+def test_basic(tmp_path):\n     assert True\n \n \n-class TestA:\n+class TestFoo:\n     @pytest.mark.slow\n     def test_b(self):\n         assert True\n \n \n class TestFoo:\n     def test_c(self):\n         assert True\n \n     def test_a(self):\n         # def test_z(): a comment\n         assert True\n \n     def test_run(self):\n         assert True\n \n \n def test_b():\n     assert True\n"
+  },
+  {
+   "summary": "Added 2 tests.",
+   "why": "diff adds 2 test functions and changes 0, claim says 2 (#101)",
+   "diff": "diff --git a/tests/test_0.py b/tests/test_0.py\n--- a/tests/test_0.py\n+++ b/tests/test_0.py\n@@ -1,13 +1,21 @@\n+def test_b():\n+    assert True\n+\n+\n+# a comment\n+\n+\n \"\"\"Module docstring.\"\"\"\n \n \n X = 1\n \n \n+def test_b(self):\n+    x = 'def test_y():'\n+    assert x\n+\n+\n class TestB:\n     def test_c(self):\n         assert True\n-\n-    def test_b(self):\n-        x = 'def test_y():'\n-        assert x\n"
+  },
+  {
+   "summary": "Added 0 tests.",
+   "why": "diff adds 0 test functions and changes 1, claim says 0 (#101)",
+   "diff": "diff --git a/tests/test_0.py b/tests/test_0.py\n--- a/tests/test_0.py\n+++ b/tests/test_0.py\n@@ -1,12 +1,15 @@\n+A = 1\n+\n+\n import pytest\n \n \n-class Helper:\n+class TestA:\n     def test_x(self):\n         assert True\n \n \n-def test_basic():\n+def test_basic(tmp_path):\n     assert True\n \n \n"
+  },
+  {
+   "summary": "Added 0 tests.",
+   "why": "diff adds 0 test functions and changes 1, claim says 0 (#101)",
+   "diff": "diff --git a/tests/test_0.py b/tests/test_0.py\n--- a/tests/test_0.py\n+++ b/tests/test_0.py\n@@ -1,36 +1,36 @@\n import pytest\n \n \n class Helper:\n     def test_new(self):\n         # def test_z(): a comment\n         assert True\n \n \n-def backoff():\n+def backoff(tmp_path):\n     assert True\n \n \n def test_new():\n     v = f\"{1 + 2}\"\n     assert v\n \n \n class TestB:\n     def backoff(self):\n         \"\"\"A docstring.\"\"\"\n         assert True\n \n     def test_x(self):\n         assert True\n \n \n class TestA:\n     def test_a(self):\n         y = (1,\n              2)\n         assert y\n \n \n-def test_old():\n+def test_old(tmp_path):\n     assert True\ndiff --git a/tests/test_1.py b/tests/test_1.py\n--- a/tests/test_1.py\n+++ b/tests/test_1.py\n@@ -1,24 +1,24 @@\n import pytest\n \n \n @pytest.mark.slow\n def test_run():\n     y = (1,\n          2)\n     assert y\n \n \n X = 1\n \n \n-class TestFoo:\n+class TestB:\n     def test_new(self):\n         \"\"\"A docstring.\"\"\"\n         assert True\n \n     @pytest.mark.slow\n     def test_a(\n         self=None,\n     ):\n         v = f\"{1 + 2}\"\n         assert v\n"
+  }
+ ],
+ "git_cases": 300,
+ "door_disagreements": 2,
+ "door_examples": [
+  {
+   "summary": "Added 1 test.",
+   "text": [
+    "VERIFIED",
+    "diff adds 1 test functions and changes 1, claim says 1 (#101)"
+   ],
+   "git": [
+    "UNCHECKABLE",
+    "CONTRADICTED withheld by PATH-2a (#101): a test the added lines count is also defined in the removed lines, and a changed test is not an added one. main's reading: diff adds 2 test functions, claim says 1"
+   ]
+  },
+  {
+   "summary": "Added 1 test.",
+   "text": [
+    "VERIFIED",
+    "diff adds 1 test functions and changes 0, claim says 1 (#101)"
+   ],
+   "git": [
+    "UNCHECKABLE",
+    "VERIFIED withheld by PATH-2a (#101): a test the added lines count is also defined in the removed lines, and a changed test is not an added one. main's reading: diff adds 1 test functions, claim says 1"
+   ]
+  }
+ ],
+ "git_decided": 153,
+ "git_false": 0
+}
