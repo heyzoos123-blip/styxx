@@ -139,7 +139,7 @@ def test_action_yml_hands_the_script_its_inputs_and_keeps_its_exit_code():
         "runs:",
         '  using: "composite"',
         "  steps:",
-        "    - uses: actions/setup-python@v5",
+        "    - uses: actions/setup-python@v6",
         "      with:",
         '        python-version: "3.11"',
         "    - shell: bash",

@@ -84,6 +84,6 @@ null in the record a manifest imports when it begins (B06i).
 - **An oversized `.json` that a pull request touches makes the check UNCHECKABLE (exit 3).** Kept: a
   receipt over the cap would otherwise go unpaired, and this layer cannot tell a receipt from a data file
   without reading it (DESIGN 3.3: a receipt over `sworn.MAX_RECEIPT_BYTES` is UNCHECKABLE).
-- **The Action's own steps pin `actions/checkout@v4` and `actions/setup-python@v5` by tag.** This build
+- **The Action's own steps pin `actions/checkout@v5` and `actions/setup-python@v6` by tag.** This build
   makes no network call, so it cannot read the commit each tag names; the operator pins both by sha
   before the Action is published, as DESIGN 7, risk 10 asks of a caller.

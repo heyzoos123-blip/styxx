@@ -43,18 +43,18 @@ jobs:
   sworn:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.sha }}   # the commit the author could cite
           fetch-depth: 0                                    # the base must be present too
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with: { python-version: "3.12" }
       - run: python -m pip install -e ".[test]"
       - id: sworn
         uses: fathom-lab/styxx/sworn@<pinned commit>
         with:
           command: python -m pytest tests -q -p no:cacheprovider --junitxml "$SWORN_JUNIT"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: sworn-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
           path: ${{ steps.sworn.outputs.out-dir }}
