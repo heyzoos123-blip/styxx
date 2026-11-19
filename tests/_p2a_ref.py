@@ -78,8 +78,32 @@ DEFECTS = {"file_created": ("#97", "#121", "#97, #121"), "file_deleted": ("#97",
            "only_touches": ("#121",), "tests_added": ("#101",), "symbol_added": ("#101",)}
 
 
+# PATH-2c (papers/closed-model-frontier/PREREG_path2c_git_door_2026_11_19.md): R-101c is a second block after this
+# one's END, and a hook in `gate_diff` that hands the overlay's result to it. Both are cut before anything here reads
+# the reader, so the reconstruction still reaches main's bytes and every figure below reads the reader as R-101c
+# found it; R-101c's own tests are in tests/test_diffgate_path2c.py.
+P2C_BEGIN = "# === PATH-2c: R-101c (papers/closed-model-frontier/PREREG_path2c_git_door_2026_11_19.md) ===\n"
+P2C_END = "# === PATH-2c: END ===\n"
+P2C_HOOK = ("    g = _p2a_abstain(g, strict, lambda: _P2aFacts(diff_text, name_status, summary_text))  # PATH-2a\n"
+            "    return _p2c_decide(g, strict, diff_text, repo, base, head)"
+            "                              # PATH-2c, R-101c\n")
+P2C_UNHOOK = "    return _p2a_abstain(g, strict, lambda: _P2aFacts(diff_text, name_status, summary_text))  # PATH-2a\n"
+
+
+def without_p2c(text: str) -> str:
+    """Cut R-101c's block, with the two blank lines after it, and turn its hook back into the overlay's."""
+    assert text.count(P2C_BEGIN) == 1 and text.count(P2C_END) == 1, "R-101c's block markers"
+    assert text.count(P2C_HOOK) == 1, "R-101c's hook"
+    i, j = text.index(P2C_BEGIN), text.index(P2C_END) + len(P2C_END)
+    assert text[j:j + 2] == "\n\n" and text[i - 3:i] == "\n\n\n", "R-101c's block stands between blank lines"
+    text = text[:i] + text[j + 2:]
+    assert "PATH-2c" not in text.replace(P2C_HOOK, ""), "R-101c is only its block and its hook"
+    return text.replace(P2C_HOOK, P2C_UNHOOK)
+
+
 def lf(path: Path) -> str:
-    return path.read_bytes().replace(b"\r\n", b"\n").decode("utf-8")
+    text = path.read_bytes().replace(b"\r\n", b"\n").decode("utf-8")
+    return without_p2c(text) if path.resolve() == INSTRUMENT.resolve() else text
 
 
 def sha(text: str) -> str:

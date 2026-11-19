@@ -53,6 +53,14 @@ def instrument_sha() -> str:
     return hashlib.sha256(INSTRUMENT.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
+def transliterated_sha() -> str:
+    """The reader the port transliterates: this checkout's, with R-101c's block and hook cut (PATH-2c,
+    PREREG_path2c_git_door_2026_11_19). R-101c reads two commits' files at the git door, which the port does not have,
+    so the port and the README name the reader without it; any other change to the reader still moves this hash."""
+    from tests import _p2a_ref as R
+    return R.sha(R.lf(INSTRUMENT))
+
+
 def pairs_files_named_by_check_pairs() -> list[str]:
     m = re.search(r"for \(const name of \[(.*?)\]", CHECK_PAIRS.read_text(encoding="utf-8"), re.S)
     assert m, "check_pairs.js no longer lists its corpora in a form this test can read"
@@ -76,7 +84,7 @@ def test_the_gate_readme_names_the_same_instrument():
     """The README carries the hash too, and went stale beside the pin."""
     body = GATE_README.read_text(encoding="utf-8")
     found = set(re.findall(r"\b([0-9a-f]{64})\b", body))
-    assert instrument_sha() in found, (
+    assert transliterated_sha() in found, (
         "web/gate/README.md does not name this checkout's styxx/diffgate.py. It tells readers which "
         f"file the port was made from; it currently names {sorted(found) or 'nothing'}."
     )
@@ -218,7 +226,7 @@ def test_the_javascript_port_agrees_on_every_pinned_pair():
 
 def test_the_port_names_the_instrument_it_transliterates():
     found = set(re.findall(r"\b([0-9a-f]{64})\b", PORT.read_text(encoding="utf-8")))
-    assert instrument_sha() in found, (
+    assert transliterated_sha() in found, (
         "web/gate/diffgate.js states which styxx/diffgate.py it is a transliteration of, and it is "
         f"not this one. It names {sorted(found) or 'nothing'}."
     )

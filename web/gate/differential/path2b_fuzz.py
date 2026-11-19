@@ -231,7 +231,8 @@ def score(base: dict, head: dict, claim) -> bool | None:
                  and not (q in base and "function" in base[q])}
         return len(added) == int(claim.detail["n"])
     name = claim.detail["name"]
-    return any(q[2] == name and q not in base for q in head)
+    want = "class" if claim.detail.get("kind", "").lower() == "class" else "function"   # PATH-2c, section 2
+    return any(q[2] == name and want in k and q not in base for q, k in head.items())
 
 
 def one(r: random.Random, case: int, git_dir: str | None):

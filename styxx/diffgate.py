@@ -1426,8 +1426,7 @@ def gate_diff_text(summary_text: str, diff_text: str,
                  raw_input_len=len(diff_text or ""),
                  sides=parse_unified_diff_sides(diff_text or ""), sections=_diff_sections(diff_text or ""),
                  seam_header=_seam_header(diff_text or ""), sources=parse_unified_diff_renames(diff_text or ""))
-    g = _p2a_abstain(g, strict, lambda: _P2aFacts(diff_text or "", None, summary_text))  # PATH-2a
-    return _p2b_decide(g, strict, diff_text or "")                                          # PATH-2b, R-101b
+    return _p2a_abstain(g, strict, lambda: _P2aFacts(diff_text or "", None, summary_text))  # PATH-2a
 
 
 def gate_diff(summary_text: str, repo: str | Path, base: str, head: str,
@@ -1472,7 +1471,7 @@ def gate_diff(summary_text: str, repo: str | Path, base: str, head: str,
                  sides=parse_unified_diff_sides(diff_text), sections=_diff_sections(diff_text),
                  seam_header=_seam_header(diff_text), sources=sources)
     g = _p2a_abstain(g, strict, lambda: _P2aFacts(diff_text, name_status, summary_text))  # PATH-2a
-    return _p2b_decide(g, strict, diff_text, (repo, base, head))                            # PATH-2b, R-101b, option B
+    return _p2c_decide(g, strict, diff_text, repo, base, head)                              # PATH-2c, R-101c
 
 
 def _path_claim_verdict(kind: str, claimed: str, find_path) -> tuple[str, str]:
@@ -3702,397 +3701,28 @@ def selfcheck_p2a_asks_no_runtime(source: str | None = None) -> dict:
 # === PATH-2a abstain-only overlay: END ===
 
 
-# === PATH-2b: R-101b (papers/closed-model-frontier/PREREG_path2b_changed_def_2026_11_19.md) ===
+# === PATH-2c: R-101c (papers/closed-model-frontier/PREREG_path2c_git_door_2026_11_19.md) ===
 # The overlay above withholds a tests_added or symbol_added claim where a changed test or definition may be counted
-# as added (#101), and never decides one. R-101b decides some of them, after the overlay and outside its block, so
-# the block stays abstain-only: a claim moves only from UNCHECKABLE to VERIFIED, only when the overlay withheld it
-# for #101, and only with a reason ending "(#101)". No CONTRADICTED is written here.
-#
-# The text door (gate_diff_text, and the port) reads the diff alone, under the plan's condition K: every `+++`
-# section holding a relevant line is a .py or .pyi file seen whole from line 1 through that line, in a strict reading
-# of the diff (`_p2b_parse`: every line accounted for, counts exact, ASCII where it matters, nothing either port reads
-# apart). The git door (gate_diff) reads the base and head files and decides by `ast` against the plan's truth
-# (option B, signed "Sign b").
-_P2B_HUNK = re.compile(r"@@ -([0-9]{1,9})(?:,([0-9]{1,9}))? \+([0-9]{1,9})(?:,([0-9]{1,9}))? @@")
-_P2B_PATH = re.compile(r"[A-Za-z0-9_.][A-Za-z0-9_./-]*")
-_P2B_APART = re.compile("[\r\x0b\x0c\x1c-\x1f\x85  ﻿]")    # read apart by the ports or by CPython
-_P2B_ASCII = re.compile("[ -~]*")                                        # printable ASCII, no tab
-_P2B_DEF = re.compile(r"( *)(?:async +)?(def|class) +([A-Za-z_][A-Za-z0-9_]*)")
-_P2B_ASYNC_DEF = re.compile(r" *async +def ")
-_P2B_TEST = re.compile(r" *(?:async +)?def test_")       # main's count, on a line of printable ASCII
-_P2B_TESTISH = re.compile(r"def +test_")
-_P2B_IDENT = re.compile(r"[A-Za-z0-9_]")
-_P2B_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
-_P2B_PREFIXES = frozenset({"", "r", "u", "b", "f", "t", "br", "rb", "fr", "rf", "tr", "rt"})
-_P2B_PHRASES_TEXT = ("tests", "symbol")
-_P2B_PHRASES_GIT = ("tests", "split", "redefined", "symbol", "again")
-_P2B_READING = re.compile(r"diff adds ([0-9]+) test functions, claim says ([0-9]+)")
+# as added (#101), and decides none. R-101c decides some of them at the git door alone, by reading the base and head
+# files of the two commits with CPython's `ast` against the plan's truth (its section 2). It runs after the overlay
+# and outside its block, so the block stays abstain-only; a claim moves only from UNCHECKABLE to VERIFIED, with a
+# reason ending "(#101)", and no CONTRADICTED is written. The text door, the Action, the port and the bookmarklet
+# are not touched: a diff that stops before the end of a file cannot show a set of qualified names
+# (NOTE_path2b_g_p4_2026_11_19: 174 false of 2,519 decided there).
+_P2C_PHRASES = ("tests", "split", "redefined", "symbol", "again")
+_P2C_READING = re.compile(r"diff adds ([0-9]+) test functions, claim says ([0-9]+)")
+_P2C_TESTS = re.compile(r"^\s*(?:async[ \t\f]+)?def test_", re.M)             # main's count
+_P2C_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+_P2C_KINDS = {"function": "function", "method": "function", "class": "class"}
+_P2C_UNREAD = (SyntaxError, ValueError, RecursionError, MemoryError, OverflowError)
 
 
-def _p2b_parse(diff_text: str):
-    """The diff read strictly, as [(old, new, meta, hunks)] with hunks [(a0, ac, b0, bc, body)] and body
-    [(tag, text)]; None where any line falls outside this reading, where the diff holds a code point either port or
-    CPython reads apart, or where a hunk's lines are not exactly the counts its header declares."""
-    if not diff_text or _P2B_APART.search(diff_text):
-        return None
-    lines = diff_text.split("\n")
-    if lines[-1] == "":
-        lines.pop()
-    out, meta, i, n = [], None, 0, len(lines)
-    while i < n:
-        line = lines[i]
-        if line.startswith("diff --git "):
-            meta = set()
-            i += 1
-            while i < n and not lines[i].startswith(("--- ", "diff --git ")):
-                m = lines[i]
-                if m.startswith("new file mode "):
-                    meta.add("new")
-                elif m.startswith("deleted file mode "):
-                    meta.add("gone")
-                elif not m.startswith(("index ", "old mode ", "new mode ")):
-                    return None                     # a rename, a copy, a binary: not read here
-                i += 1
-            continue
-        if not (line.startswith("--- ") and i + 1 < n and lines[i + 1].startswith("+++ ")):
-            return None
-        hunks: list = []
-        out.append((line[4:], lines[i + 1][4:], meta or set(), hunks))
-        meta = None
-        i += 2
-        while i < n and lines[i].startswith("@@ "):
-            m = _P2B_HUNK.match(lines[i])
-            if m is None:
-                return None
-            a0, b0 = int(m.group(1)), int(m.group(3))
-            ac = 1 if m.group(2) is None else int(m.group(2))
-            bc = 1 if m.group(4) is None else int(m.group(4))
-            body: list = []
-            na, nb = ac, bc
-            i += 1
-            while na or nb:
-                if i >= n:
-                    return None
-                line = lines[i]
-                t = line[:1]
-                if t == "\\":
-                    i += 1
-                    continue
-                if t == " ":
-                    na, nb = na - 1, nb - 1
-                elif t == "-":
-                    na -= 1
-                elif t == "+":
-                    nb -= 1
-                else:
-                    return None
-                if na < 0 or nb < 0 or line.startswith(("---", "+++")):
-                    return None
-                body.append((t, line[1:]))
-                i += 1
-            while i < n and lines[i].startswith("\\"):
-                i += 1
-            hunks.append((a0, ac, b0, bc, body))
-    return out
-
-
-def _p2b_path(old: str, new: str, meta: set):
-    """(path, whether the section is a new or deleted file); None where the headers are not `a/P` and `b/P` (or
-    /dev/null on one side) with P of plain ASCII path characters, or name two paths."""
-    if old == "/dev/null" and new.startswith("b/"):
-        p, edge = new[2:], True
-    elif new == "/dev/null" and old.startswith("a/"):
-        p, edge = old[2:], True
-    elif old.startswith("a/") and new.startswith("b/") and old[2:] == new[2:]:
-        p, edge = new[2:], bool(meta)
-    else:
-        return None
-    return (p, edge) if _P2B_PATH.fullmatch(p) else None
-
-
-def _p2b_body(line: str, j: int, q: str, fmt: bool) -> int | None:
-    """Where the string delimited by `q` that runs from `line[j]` ends (the index after its closing quote), -1 if
-    the line ends inside it, None where an f- or t-string field holds a quote, a backslash or a '#', or a brace does
-    not pair."""
-    n = len(line)
-    while j < n:
-        ch = line[j]
-        if ch == "\\":
-            j += 2
-            continue
-        if line.startswith(q, j):
-            return j + len(q)
-        if fmt and ch == "{":
-            if line.startswith("{{", j):
-                j += 2
-                continue
-            d, k = 0, j
-            while True:
-                if k >= n:
-                    return None
-                c = line[k]
-                if c in "'\"\\#":
-                    return None
-                if c in "([{":
-                    d += 1
-                elif c in ")]}":
-                    d -= 1
-                    if d == 0:
-                        if c != "}":
-                            return None
-                        break
-                k += 1
-            j = k + 1
-            continue
-        if fmt and ch == "}":
-            if line.startswith("}}", j):
-                j += 2
-                continue
-            return None
-        j += 1
-    return -1
-
-
-def _p2b_lex(lines: list):
-    """(per line, whether it starts outside any string, bracket and continuation; the state at the end, as the open
-    triple-quoted string's delimiter or None, and the bracket depth); None where a line ends in a backslash, holds a
-    string prefix this reading does not know, a one-quote string it does not close, a closing bracket with none open,
-    or an f- or t-string field `_p2b_body` does not follow."""
-    starts: list = []
-    depth, tq = 0, None
-    for line in lines:
-        starts.append(depth == 0 and tq is None)
-        if line.endswith("\\"):
-            return None
-        j, n = 0, len(line)
-        if tq is not None:
-            e = _p2b_body(line, 0, tq[0], tq[1])
-            if e is None:
-                return None
-            if e < 0:
-                continue
-            tq, j = None, e
-        while j < n:
-            ch = line[j]
-            if ch == "#":
-                break
-            if ch in "([{":
-                depth += 1
-            elif ch in ")]}":
-                depth -= 1
-                if depth < 0:
-                    return None
-            elif ch == '"' or ch == "'":
-                s = j
-                while s and _P2B_IDENT.match(line[s - 1]):
-                    s -= 1
-                pre = line[s:j].lower()
-                if pre not in _P2B_PREFIXES:
-                    return None
-                fmt = "f" in pre or "t" in pre
-                q = ch * 3 if line.startswith(ch * 3, j) else ch
-                e = _p2b_body(line, j + len(q), q, fmt)
-                if e is None:
-                    return None
-                if e < 0:
-                    if len(q) == 1:
-                        return None
-                    tq = (q, fmt)
-                    break
-                j = e
-                continue
-            j += 1
-    return starts, (tq[0] if tq else None), depth
-
-
-def _p2b_parity(lines: list, hit) -> bool:
-    """K3 as the plan words it: an even count of triple quotes (`_python_source_lines`' count) before every line
-    `hit` picks, and at the end."""
-    q = 0
-    for line in lines:
-        if q % 2 and hit(line):
-            return False
-        q += line.count('"""') + line.count("'''")
-    return q % 2 == 0
-
-
-def _p2b_scopes(lines: list, starts: list) -> tuple:
-    """(per line, (the enclosing class names, (kind, name)) where the line opens a `def` or `class` statement, else
-    None; per line, the openers enclosing it; the openers open at the end). A statement is in each opener before it
-    at a smaller indentation that no line between closes."""
-    defs, chains = [], []
-    stack: list = []
-    for line, ok in zip(lines, starts):
-        s = line.lstrip(" ")
-        if not ok or not s or s.startswith("#"):
-            defs.append(None)
-            chains.append(tuple(stack))
-            continue
-        ind = len(line) - len(s)
-        while stack and stack[-1][0] >= ind:
-            stack.pop()
-        chains.append(tuple(stack))
-        m = _P2B_DEF.match(line)
-        if m is None:
-            defs.append(None)
-            continue
-        kind = "function" if m.group(2) == "def" else "class"
-        defs.append((tuple(nm for _i, k, nm in stack if k == "class"), kind, m.group(3)))
-        stack.append((ind, kind, m.group(3)))
-    return defs, chains, tuple(stack)
-
-
-def _p2b_sides(hunks: list):
-    """(the body lines of the hunks that run without a gap from line 1 of both sides, the body lines after them)."""
-    pre, rest = [], []
-    a = b = 1
-    gap = False
-    for a0, ac, b0, bc, body in hunks:
-        if not gap and a0 == a and b0 == b:
-            pre += body
-            a, b = a0 + ac, b0 + bc
-        else:
-            gap = True
-            rest += body
-    return pre, rest
-
-
-def _p2b_read_section(path: str, edge: bool, hunks: list, rule):
-    """One section read under K for a claim's `rule` = (relevant, countable, target): None where the section holds
-    no relevant line; False where it fails K; else (the removed definitions, the added ones, the unchanged ones, as
-    (path, classes, name) for each definition `target` picks on a relevant line; whether the openers around every
-    unchanged line and at the end of the prefix, and the state there, are the same on both sides). `relevant` picks
-    the lines K reads, `countable` those main's regex counts (on printable ASCII)."""
-    relevant, countable, target = rule
-    pre, rest = _p2b_sides(hunks)
-    if not any(relevant(t) for _g, t in pre + rest):
-        return None
-    if edge or not path.endswith(_PY_SUFFIXES) or not pre or any(relevant(t) for _g, t in rest):   # K1, K2
-        return False
-    if not all(_P2B_ASCII.fullmatch(t) for _g, t in pre):                                        # K4
-        return False
-    sides = {}
-    for side, tags in (("-", " -"), ("+", " +")):
-        lines = [t for g, t in pre if g in tags]
-        if not _p2b_parity(lines, relevant):                                                        # K3
-            return False
-        lexed = _p2b_lex(lines)
-        if lexed is None or lexed[1] is not None:
-            return False
-        starts, _tq, depth = lexed
-        defs, chains, end = _p2b_scopes(lines, starts)
-        for line, ok, d in zip(lines, starts, defs):
-            if not relevant(line):
-                continue
-            if countable(line) and not ok:
-                return False                    # main counts a line that does not open a statement
-            if ok and d is not None and target(d) and not countable(line):
-                return False                    # a definition main's regex does not read
-        sides[side] = (defs, chains, end, depth)
-    out: dict = {"-": [], "+": [], " ": []}
-    stable = sides["-"][2:] == sides["+"][2:]
-    idx = {"-": 0, "+": 0}
-    for g, t in pre:
-        seen = []
-        for k in (("-", "+") if g == " " else (g,)):
-            defs, chains, _e, _d = sides[k]
-            seen.append((defs[idx[k]], chains[idx[k]]))
-            idx[k] += 1
-        if g == " " and seen[0] != seen[1]:
-            stable = False
-        d = seen[0][0]
-        if d is not None and relevant(t) and target(d):
-            out[g].append((path, d[0], d[2]))
-    return out["-"], out["+"], out[" "], stable
-
-
-def _p2b_text_read(diff_text: str, rule):
-    """[(path, removed, added, unchanged, stable)] for every section holding a relevant line, each read under K;
-    None where the diff is not read strictly, or names a path twice up to ASCII case, or some such section fails K."""
-    secs = _p2b_parse(diff_text)
-    if secs is None:
-        return None
-    seen: set = set()
-    out = []
-    for old, new, meta, hunks in secs:
-        pe = _p2b_path(old, new, meta)
-        if pe is None:
-            return None
-        path, edge = pe
-        key = path.lower()
-        if key in seen:
-            return None                         # the same path twice, or case-fold twins
-        seen.add(key)
-        r = _p2b_read_section(path, edge, hunks, rule)
-        if r is False:
-            return None
-        if r is not None:
-            out.append((path,) + r)
-    return out
-
-
-def _p2b_count(xs: list) -> dict:
-    out: dict = {}
-    for q in xs:
-        out[q] = out.get(q, 0) + 1
-    return out
-
-
-def _p2b_text_tests(diff_text: str, got: int):
-    """(net, changed, stable) for a tests_added claim at the text door, or None where K fails or the count of
-    added `def test_` lines read under K is not main's `got`."""
-    secs = _p2b_text_read(diff_text, (lambda t: _P2B_TESTISH.search(t) is not None,
-                                      lambda t: _P2B_TEST.match(t) is not None,
-                                      lambda d: d[1] == "function" and d[2].startswith("test_")))
-    if not secs:
-        return None
-    mine = 0
-    changed_names, kept_names = set(), set()
-    chg = 0
-    stable = True
-    for _path, removed, added, unchanged, st in secs:
-        stable = stable and st
-        mine += len(added)
-        changed_names |= {q[2] for q in removed + added}
-        kept_names |= {q[2] for q in unchanged}
-        r = _p2b_count(removed)
-        for q, k in _p2b_count(added).items():
-            chg += min(k, r.get(q, 0))
-    if mine != got or changed_names & kept_names:                                                   # K4, B-1
-        return None
-    return got - chg, chg, stable
-
-
-def _p2b_text_symbol(diff_text: str, name: str):
-    """(whether some section adds NAME more times than it removes it at one qualified name, stable) at the text
-    door, or None where K fails."""
-    if not _P2B_NAME.fullmatch(name):
-        return None
-    rx = re.compile(r"(?:def|class) +" + name + r"(?![A-Za-z0-9_])")
-    main = re.compile(r" *(?:async +def|def|class) +" + name + r"(?![A-Za-z0-9_])")
-    secs = _p2b_text_read(diff_text, (lambda t: rx.search(t) is not None, lambda t: main.match(t) is not None,
-                                      lambda d: d[2] == name))
-    if not secs:
-        return None
-    hit, stable = False, True
-    for _path, removed, added, unchanged, st in secs:
-        stable = stable and st
-        if unchanged:
-            return None                         # B-1: an unchanged line defines it too
-        r = _p2b_count(removed)
-        for q, k in _p2b_count(added).items():
-            if k > r.get(q, 0):
-                hit = True
-    return hit, stable
-
-
-def _p2b_truth_defs(path: str, source: bytes):
-    """The plan's truth (section 2) for one .py or .pyi file: {(path, classes, name): kinds} for every `def`,
-    `async def` and `class` CPython's `ast` reads in it, a definition being in each class enclosing it; None where
-    it does not parse."""
+def _p2c_defs(path: str, source: bytes):
+    """The plan's truth for one file: {(path, enclosing class names, name): {"function", "class"}} for every `def`,
+    `async def` and `class` CPython's `ast` reads in it; None where it does not parse."""
     try:
         tree = ast.parse(source, filename=path)
-    except (SyntaxError, ValueError, RecursionError, MemoryError, OverflowError):
+    except _P2C_UNREAD:
         return None
     out: dict = {}
     todo = [(tree, ())]
@@ -4110,19 +3740,22 @@ def _p2b_truth_defs(path: str, source: bytes):
     return out
 
 
-def _p2b_git_truth(repo, base: str, head: str):
-    """(base definitions, head definitions) over the .py and .pyi files the diff touches, read from the two
-    commits' blobs; None where a path is not a plain add, delete or modify, or a file does not parse."""
-    r = subprocess.run(["git", "diff", "--name-status", "-z", "--no-renames", f"{base}..{head}"], cwd=repo,
-                       capture_output=True, timeout=120)
-    if r.returncode != 0:
+def _p2c_truth(repo, base: str, head: str):
+    """(base definitions, head definitions) over the .py and .pyi paths of `git diff --name-status -z --no-renames`,
+    read from the two commits' blobs; None where such a path's status is not A, D or M, a blob cannot be read, or a
+    file does not parse."""
+    def run(*args):
+        r = subprocess.run(["git", *args], cwd=repo, capture_output=True, timeout=120)
+        return r.stdout if r.returncode == 0 else None
+    listed = run("diff", "--name-status", "-z", "--no-renames", f"{base}..{head}")
+    if listed is None:
         return None
-    parts = r.stdout.split(b"\0")
+    parts = listed.split(b"\0")
     if parts and parts[-1] == b"":
         parts.pop()
     if len(parts) % 2:
         return None
-    sides: dict = {"base": {}, "head": {}}
+    sides: tuple = ({}, {})
     for st, raw in zip(parts[0::2], parts[1::2]):
         try:
             path = raw.decode("utf-8")
@@ -4130,106 +3763,78 @@ def _p2b_git_truth(repo, base: str, head: str):
             return None
         if not path.endswith(_PY_SUFFIXES):
             continue
-        st = st.decode("ascii", "replace")
-        if st not in ("A", "D", "M"):
+        if st not in (b"A", b"D", b"M"):
             return None
-        for side, rev, want in (("base", base, "DM"), ("head", head, "AM")):
-            if st not in want:
+        for side, rev, has in ((0, base, b"DM"), (1, head, b"AM")):
+            if st not in has:
                 continue
-            b = subprocess.run(["git", "cat-file", "blob", f"{rev}:{path}"], cwd=repo, capture_output=True,
-                               timeout=120)
-            if b.returncode != 0:
-                return None
-            defs = _p2b_truth_defs(path, b.stdout)
+            blob = run("cat-file", "blob", f"{rev}:{path}")
+            defs = None if blob is None else _p2c_defs(path, blob)
             if defs is None:
                 return None
             sides[side].update(defs)
-    return sides["base"], sides["head"]
+    return sides
 
 
-def _p2b_withheld(c, phrases):
-    """(main's verdict, main's reason) of a claim the overlay withheld for #101 with one of `phrases`, else None."""
+def _p2c_python_only(diff_text: str, rx) -> bool:
+    """The guard: every `+++` section whose added lines `rx` (main's own pattern) reads lies in a .py or .pyi path."""
+    return all(p.endswith(_PY_SUFFIXES) for p, added in _diff_sections(diff_text) if rx.search("\n".join(added)))
+
+
+def _p2c_withheld(c) -> bool:
+    """Whether the overlay withheld `c` for #101 with one of the phrases R-101c reads."""
     if c.kind not in ("tests_added", "symbol_added") or c.verdict != "UNCHECKABLE":
-        return None
-    for v in ("VERIFIED", "CONTRADICTED"):
-        for key in phrases:
-            head = f"{v} withheld by PATH-2a (#101): {_P2A_PHRASES[key]}. main's reading: "
-            if c.why.startswith(head):
-                return v, c.why[len(head):], key
-    return None
+        return False
+    return any(c.why.startswith(f"{v} withheld by PATH-2a (#101): {_P2A_PHRASES[k]}. main's reading: ")
+               for v in ("VERIFIED", "CONTRADICTED") for k in _P2C_PHRASES)
 
 
-def _p2b_tests_why(net: int, chg: int, n: int) -> str:
-    return f"diff adds {net} test functions and changes {chg}, claim says {n} (#101)"
-
-
-def _p2b_symbol_why(kind: str, name: str) -> str:
-    return f"added lines define {kind} {name!r} where the removed lines of the same file do not (#101)"
-
-
-def _p2b_decide(g: DiffGate, strict: bool, diff_text: str, git=None) -> DiffGate:
-    """R-101b on what the overlay returned: the text door reads `diff_text` under K; with `git` = (repo, base,
-    head), the git door reads the two commits' files and decides by `ast` (option B). Only claims the overlay
-    withheld for #101 move, only to VERIFIED."""
+def _p2c_decide(g: DiffGate, strict: bool, diff_text: str, repo, base: str, head: str) -> DiffGate:
+    """R-101c at the git door, on what the overlay returned."""
+    todo = [c for c in g.claims if _p2c_withheld(c)]
+    if not todo:
+        return g
+    try:                       # a repository that cannot be read, or a git that answers otherwise, decides nothing
+        truth = _p2c_truth(repo, base, head)
+    except Exception:
+        return g
+    if truth is None:
+        return g
+    was, now = truth
     moved = False
-    truth = None
-    for c in g.claims:
-        w = _p2b_withheld(c, _P2B_PHRASES_GIT if git is not None else _P2B_PHRASES_TEXT)
-        if w is None:
-            continue
-        _v, reading, _key = w
-        why = None
+    for c in todo:
+        reading = c.why.split(" main's reading: ", 1)[1]
         if c.kind == "tests_added":
-            m = _P2B_READING.fullmatch(reading)
-            noun = (c.detail.get("noun") or "").lower()
-            if m is None or noun not in ("", "function", "functions") or int(m.group(2)) != int(c.detail["n"]):
+            m = _P2C_READING.fullmatch(reading)
+            if (m is None or (c.detail.get("noun") or "").lower() not in ("", "function", "functions")
+                    or int(m.group(2)) != int(c.detail["n"]) or not _p2c_python_only(diff_text, _P2C_TESTS)):
                 continue
             got, n = int(m.group(1)), int(m.group(2))
-            if git is None:
-                t = _p2b_text_tests(diff_text, got)
-                if t is not None and t[0] == n:
-                    why = _p2b_tests_why(t[0], t[1], n)
-            else:
-                if truth is None:
-                    truth = _p2b_git_truth(*git) or False
-                if truth and _p2b_python_only(diff_text, _P2B_GIT_TEST):
-                    base, head = truth
-                    net = sum(1 for q in head if q[2].startswith("test_") and "function" in head[q]
-                              and not (q in base and "function" in base[q]))
-                    if net == n and got >= net:
-                        why = _p2b_tests_why(net, got - net, n)
+            new = sum(1 for q, k in now.items() if q[2].startswith("test_") and "function" in k
+                      and "function" not in was.get(q, ()))
+            if new == n and n <= got:
+                c.verdict = "VERIFIED"
+                c.why = (f"the base and head files define {n} new test functions, the added lines count {got}, "
+                         f"claim says {n} (#101)")
+                moved = True
         else:
             name, kind = c.detail.get("name", ""), c.detail.get("kind", "")
-            if git is None:
-                t = _p2b_text_symbol(diff_text, name)
-                if t is not None and t[0]:
-                    why = _p2b_symbol_why(kind, name)
-            else:
-                if truth is None:
-                    truth = _p2b_git_truth(*git) or False
-                if truth and _P2B_NAME.fullmatch(name):
-                    base, head = truth
-                    if any(q[2] == name and q not in base for q in head):
-                        why = _p2b_symbol_why(kind, name)
-        if why is not None:
-            c.verdict, c.why = "VERIFIED", why
-            moved = True
+            want = _P2C_KINDS.get(kind.lower())
+            if want is None or not _P2C_NAME.fullmatch(name):
+                continue
+            rx = re.compile(r"^\s*(?:async[ \t\f]+def|def|class)\s+" + re.escape(name) + r"\b", re.M)  # main's
+            if not _p2c_python_only(diff_text, rx):
+                continue
+            if any(q[2] == name and want in k and q not in was for q, k in now.items()):
+                c.verdict = "VERIFIED"
+                c.why = f"the head files define {kind} {name!r} where the base files do not (#101)"
+                moved = True
     if moved:
         contradicted = any(c.verdict == "CONTRADICTED" for c in g.claims)
         uncheckable = any(c.verdict == "UNCHECKABLE" for c in g.claims)
         g.verdict = "FAIL" if (contradicted or (strict and uncheckable)) else "PASS"
     return g
-
-
-_P2B_GIT_TEST = re.compile(r"^\s*(?:async[ \t\f]+)?def test_", re.M)
-
-
-def _p2b_python_only(diff_text: str, rx) -> bool:
-    """Whether every `+++` section whose added lines main's count reads lies in a .py or .pyi path (the git door's
-    truth reads those files only)."""
-    return all(p.endswith(_PY_SUFFIXES) for p, added in _diff_sections(diff_text)
-               if rx.search("\n".join(added)))
-# === PATH-2b: END ===
+# === PATH-2c: END ===
 
 
 _DEMO_SUMMARY = ("Refactored src/retry.py for resilience. Adds function backoff with "

@@ -37,7 +37,12 @@ prefixes, and resolves a prefix's `.` and `..` segments as git resolves a pathsp
 `fetch_pr` sends its token as an unredirected header and follows a redirect only within https://api.github.com, sha256
 `6227343086241ec022ef14c023657a6d0aeb144118cb12c80decdf2db422e4bb`) — plus the PATH-2a block (an
 overlay that only abstains, not yet released; see *PATH-2a* below), and a committed test cuts the
-block out and gets that reader back byte for byte, in both languages. The port's record carries the
+block out and gets that reader back byte for byte, in both languages. On the branch of PATH-2c the Python file
+also holds R-101c, a second block after PATH-2a's that reads the two commits' files at the git door alone, and a
+hook in `gate_diff` that hands it the overlay's result (sha256
+`6cebd2991608753bd84ddb06deccae2672a9a2972b05a82fd133b9cbc73cd560`, which `py_side.py` pins). The port has no git door,
+so it has no R-101c: it is the transliteration of that file with R-101c's block and hook cut, which is the file
+named above, and the committed reconstruction cuts R-101c before it cuts PATH-2a. The port's record carries the
 eleven content keys and no identity: the differential compares named fields, so a Python record of
 thirteen keys and a port record of eleven compare as they did. The port's `main` moved with #205 and
 #206 in the same change, which no change since PATH-2a merged had done: the same abstention, its two
@@ -118,7 +123,7 @@ reason, or reads one sentence more or less, is a disagreement.
     cd web/gate/differential             # on a checkout whose styxx/diffgate.py is the file named above
     python build_corpus.py               # 176 real pairs, pinned to shas (below)
     python fuzz_corpus.py                # 3,000 synthetic pairs, seeded
-    python py_side.py                    # refuses to run unless styxx/diffgate.py hashes to 80d0e79e…
+    python py_side.py                    # refuses to run unless styxx/diffgate.py hashes to 6cebd299…
     node js_side.js
     python differential.py
     node check_pairs.js                  # the 190 pinned pairs against their expect blocks (+ path2a_moves.json, issue205_moves.json, issue174_moves.json)
